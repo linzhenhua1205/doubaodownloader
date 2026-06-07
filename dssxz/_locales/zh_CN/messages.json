@@ -1,0 +1,134 @@
+{
+  "extensionName": {
+    "message": "DS随心转 - 专为 AI 打造的智能排版与导出工作台",
+    "description": "扩展名称"
+  },
+  "extensionDescription": {
+    "message": "一键将 AI 对话转化为排版精美的 Word、PDF、Excel 和图片",
+    "description": "扩展描述"
+  },
+  "cloudSave": {
+    "message": "云端保存，激活对话价值",
+    "description": "云端保存按钮文字"
+  },
+  "cloudSaveSubtitle": {
+    "message": "✨ 永久保存 · 智能管理 · 高效利用",
+    "description": "云端保存副标题"
+  },
+  "manageConversations": {
+    "message": "前往管理对话",
+    "description": "管理对话链接文字"
+  },
+  "exportAll": {
+    "message": "导出全部对话",
+    "description": "导出区域标题"
+  },
+  "word": {
+    "message": "Word",
+    "description": "Word格式"
+  },
+  "pdf": {
+    "message": "PDF",
+    "description": "PDF格式"
+  },
+  "excel": {
+    "message": "Excel",
+    "description": "Excel格式"
+  },
+  "image": {
+    "message": "图片",
+    "description": "图片格式"
+  },
+  "moreOptions": {
+    "message": "更多选项",
+    "description": "更多选项标题"
+  },
+  "customExportTemplate": {
+    "message": "自定义导出模板",
+    "description": "自定义导出模板选项"
+  },
+  "feedback": {
+    "message": "问题反馈",
+    "description": "问题反馈选项"
+  },
+  "inviteFriends": {
+    "message": "邀请好友",
+    "description": "邀请好友选项"
+  },
+  "contactSupport": {
+    "message": "联系我们",
+    "description": "联系我们选项"
+  },
+  "login": {
+    "message": "登录",
+    "description": "登录按钮"
+  },
+  "upgradeAccount": {
+    "message": "升级账户",
+    "description": "升级账户按钮"
+  },
+  "notLoggedIn": {
+    "message": "未登录",
+    "description": "未登录状态"
+  },
+  "loginHint": {
+    "message": "登录后可使用更多功能",
+    "description": "登录提示文字"
+  },
+  "close": {
+    "message": "关闭",
+    "description": "关闭按钮"
+  },
+  "version": {
+    "message": "版本",
+    "description": "版本标签"
+  },
+  "website": {
+    "message": "前往网站",
+    "description": "网站链接"
+  },
+  "newVersionAvailable": {
+    "message": "发现新版本",
+    "description": "新版本提示"
+  },
+  "installNow": {
+    "message": "前往安装",
+    "description": "立即安装按钮"
+  },
+  "feedbackPlaceholder": {
+    "message": "请输入您的问题或建议...",
+    "description": "反馈输入框占位符"
+  },
+  "submitFeedback": {
+    "message": "提交反馈",
+    "description": "提交反馈按钮"
+  },
+  "platformNotSupported": {
+    "message": "【DS随心转】需要在支持的AI平台使用，是否跳转到DeepSeek？",
+    "description": "不支持平台的提示信息"
+  },
+  "wordExport": {
+    "message": "WORD导出",
+    "description": "Word导出弹窗标题"
+  },
+  "excelExport": {
+    "message": "EXCEL导出",
+    "description": "Excel导出弹窗标题"
+  },
+  "imageExport": {
+    "message": "图片导出",
+    "description": "图片导出弹窗标题"
+  },
+  "pdfExport": {
+    "message": "PDF导出",
+    "description": "PDF导出弹窗标题"
+  },
+  "floatingButtonAlt": {
+    "message": "DS随心转",
+    "description": "悬浮按钮alt属性"
+  },
+  "userAvatarAlt": {
+    "message": "用户头像",
+    "description": "用户头像alt属性"
+  }
+}

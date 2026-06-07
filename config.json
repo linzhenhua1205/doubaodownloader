@@ -1,0 +1,19 @@
+{
+    "chrome_path": "D:\\123\\md\\chrome-win64\\chrome-win64\\chrome.exe",
+    "chromedriver_path": "D:\\123\\md\\chromedriver-win64\\chromedriver.exe",
+    "extension_path": "D:\\123\\md\\dssxz",
+    "download_dir": "D:\\123\\md\\ai_md_exports",
+    "md_dir": "D:\\123\\md\\md",
+    "chrome_profile_dir": "D:\\123\\md\\chrome_profile",
+    "progress_path": "D:\\123\\md\\download_progress.json",
+    "error_log_path": "D:\\123\\md\\export_errors.json",
+    "index_html_files": [
+        "D:\\123\\md\\豆包链接索引.html",
+        "D:\\123\\md\\豆包会话索引.html"
+    ],
+    "download_timeout": 10,
+    "export_timeout": 5,
+    "page_load_timeout": 8,
+    "batch_mode_timeout": 3,
+    "max_concurrent_downloads": 5000
+}

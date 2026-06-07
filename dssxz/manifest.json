@@ -1,0 +1,115 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "2.0.7",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "zh_CN",
+  "action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "permissions": [
+    "scripting",
+    "tabs",
+    "activeTab",
+    "storage",
+    "clipboardRead",
+    "alarms",
+    "notifications",
+    "downloads",
+    "declarativeNetRequest"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "csp_rules",
+        "enabled": true,
+        "path": "rules/csp_rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "config.js",
+        "lib/jquery-3.7.1.min.js",
+        "js/i18n.js",
+        "js/fiber-reader.js",
+        "js/file-resolver.js",
+        "js/qwen-fiber-reader.js",
+        "popup_content.html",
+        "images/icon16.png",
+        "images/icon48.png",
+        "images/icon128.png",
+        "images/comparison_preview.png",
+        "_locales/*"
+      ],
+      "matches": [
+        "*://chat.deepseek.com/*",
+        "*://chatgpt.com/*",
+        "*://www.kimi.com/*",
+        "*://www.doubao.com/*",
+        "*://yuanbao.tencent.com/*",
+        "*://www.qianwen.com/*",
+        "*://gemini.google.com/*",
+        "*://chatglm.cn/*"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chat.deepseek.com/*",
+        "*://*.chatgpt.com/*",
+        "*://www.kimi.com/*",
+        "*://www.doubao.com/*",
+        "*://yuanbao.tencent.com/*",
+        "*://www.qianwen.com/*",
+        "*://gemini.google.com/*",
+        "*://chatglm.cn/*"
+      ],
+      "js": [
+        "lib/jquery-3.7.1.min.js",
+        "js/i18n.js",
+        "dist/content.bundle.js",
+        "js/batch-manager.js",
+        "js/content.js",
+        "js/platforms/doubao.js",
+        "js/platforms/kimi.js",
+        "js/platforms/qwen.js",
+        "js/platforms/deepseek.js",
+        "js/platforms/yuanbao.js",
+        "js/platforms/chatgpt.js",
+        "js/platforms/gemini.js",
+        "js/platforms/chatglm.js"
+      ],
+      "css": [
+        "css/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
+    "*://chat.deepseek.com/*",
+    "*://chatgpt.com/*",
+    "*://www.kimi.com/*",
+    "*://www.doubao.com/*",
+    "*://yuanbao.tencent.com/*",
+    "*://www.qianwen.com/*",
+    "*://gemini.google.com/*",
+    "*://www.dssxz.com/*",
+    "*://chatglm.cn/*"
+  ]
+}
