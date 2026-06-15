@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Test Status](https://img.shields.io/badge/tests-passing-brightgreen)](test/)
 
+需要自行保存豆包聊天历史记录条目的网页到本地，用于提取对话链接信息和标题信息。若无法解析保存下来的链接网页，需要重新调整下代码。
+
 ---
 
 ## 📋 功能特性
