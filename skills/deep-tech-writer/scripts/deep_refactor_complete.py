@@ -1,0 +1,1011 @@
+#!/usr/bin/env python3
+"""
+深度重构 - 最终完整版
+
+从原始文件开始，一次性完成所有重构工作：
+1. 清理重复H1标题
+2. 合并重复二级章节
+3. 清理标题emoji（保守版，确保不删除中文字符）
+4. 生成高质量概要（从文章特有内容提取）
+5. 生成高质量关键词（3-5个，用 · 分隔）
+6. 生成目录（只含核心二级标题）
+7. 标准化格式
+"""
+
+import re
+import os
+import sys
+import json
+from pathlib import Path
+from datetime import datetime
+
+
+def extract_frontmatter(text):
+    if text.startswith('---'):
+        end_pos = text.find('\n---', 3)
+        if end_pos != -1:
+            fm = text[3:end_pos].strip()
+            body = text[end_pos+4:].strip()
+            return fm, body
+    return "", text
+
+
+def extract_title_from_fm(fm):
+    match = re.search(r'^title:\s*(.+?)\s*$', fm, re.MULTILINE)
+    if match:
+        return match.group(1).strip()
+    return ""
+
+
+COMMON_EMOJIS = [
+    '📊', '📋', '📖', '📚', '📌', '📎', '📐', '📏', '📝',
+    '🔬', '🔍', '🔎', '🔭',
+    '💼', '💻', '📱', '🖥️', '⌨️', '🖱️',
+    '🚀', '🔥', '💪', '✨', '⭐', '🌟', '💡',
+    '🎯', '🎨', '🎭', '🎪', '🎬', '🎤', '🎧',
+    '🧠', '🤖', '👾', '🧬', '🔮',
+    '💰', '💸', '💵', '💎', '📈', '📉',
+    '🏆', '🥇', '🥈', '🥉',
+    '🎓', '✏️',
+    '🌐', '🌍', '🌎', '🌏',
+    '⚡', '🔔', '🔕', '📢', '📣',
+    '🛡️', '🔒', '🔓', '🔑',
+    '⚙️', '🔧', '🔨', '🛠️', '🧰',
+    '📅', '📆', '⏰', '⏱️', '⏲️',
+    '👥', '👤', '🧑', '👨', '👩',
+    '❓', '❔', '❗', '❕',
+    '➕', '➖', '➗', '✖️',
+    '⬆️', '⬇️', '⬅️', '➡️',
+    '↗️', '↘️', '↙️', '↖️',
+    '🔄', '🔁', '🔂',
+    '▶️', '⏸️', '⏹️', '⏺️',
+    '🏷️', '🏷',
+    '💬', '💭', '🗨️', '🗯️',
+    '🎉', '🎊', '🎁', '🎂',
+    '☕', '🍵', '🍺', '🍷',
+    '📷', '📹', '🎥', '📺', '📻',
+    '📞', '☎️', '📟',
+    '🔋', '🪫', '🔌',
+    '🧪', '🧫',
+    '🌱', '🌿', '🍀', '🌸',
+    '🚗', '🚙', '✈️', '🚢',
+    '🏠', '🏢', '🏥', '🏫', '🏪',
+    '⚖️', '🗂️', '📁', '📂',
+    '🧩', '🧸', '🎮',
+    '🆕', '🆓', '🆒', '🆙',
+    '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '⚫', '⚪',
+    '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '⬛', '⬜',
+    '◻️', '◼️', '🔲', '🔳',
+    '✓', '✔️', '✗', '✘', '❌', '✅',
+    '⚠️', '⚠',
+]
+
+
+def remove_emoji(text):
+    """保守版emoji移除 - 只移除明确列出的emoji"""
+    result = text
+    for emoji in COMMON_EMOJIS:
+        result = result.replace(emoji, '')
+    return result
+
+
+def clean_heading(text):
+    """清理标题：移除emoji和多余符号"""
+    t = remove_emoji(text)
+    t = t.lstrip(' -—·•')
+    t = re.sub(r'\s+', ' ', t).strip()
+    return t
+
+
+def deduplicate_h1(body, canonical_title):
+    """移除重复H1，只保留第一个"""
+    lines = body.split('\n')
+    new_lines = []
+    h1_count = 0
+    first_h1_idx = -1
+    
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith('# ') and not stripped.startswith('## '):
+            first_h1_idx = i
+            break
+    
+    if first_h1_idx == -1:
+        return body, 0
+    
+    new_lines.append(f"# {canonical_title}")
+    h1_count = 1
+    
+    i = first_h1_idx + 1
+    while i < len(lines):
+        stripped = lines[i].strip()
+        
+        if stripped.startswith('# ') and not stripped.startswith('## '):
+            h1_count += 1
+            j = i + 1
+            while j < len(lines):
+                s = lines[j].strip()
+                if s.startswith('>') or s == '':
+                    j += 1
+                else:
+                    break
+            i = j
+            continue
+        
+        new_lines.append(lines[i])
+        i += 1
+    
+    return '\n'.join(new_lines), h1_count - 1
+
+
+def deduplicate_h2(body):
+    """合并重复的二级章节"""
+    lines = body.split('\n')
+    
+    sections = []
+    current_title = None
+    current_start = -1
+    
+    for i, line in enumerate(lines):
+        s = line.strip()
+        if s.startswith('## ') and not s.startswith('### '):
+            if current_title is not None:
+                sections.append({
+                    'clean': clean_heading(current_title).lower(),
+                    'display': clean_heading(current_title),
+                    'start': current_start,
+                    'end': i - 1
+                })
+            
+            current_title = s[3:].strip()
+            current_start = i
+    
+    if current_title is not None:
+        sections.append({
+            'clean': clean_heading(current_title).lower(),
+            'display': clean_heading(current_title),
+            'start': current_start,
+            'end': len(lines) - 1
+        })
+    
+    if len(sections) <= 1:
+        return body, 0
+    
+    seen = {}
+    dupe_indices = []
+    
+    for idx, sec in enumerate(sections):
+        key = sec['clean']
+        if key in seen:
+            dupe_indices.append(idx)
+        else:
+            seen[key] = idx
+    
+    if not dupe_indices:
+        return body, 0
+    
+    dupe_set = set(dupe_indices)
+    new_lines = []
+    
+    for idx, sec in enumerate(sections):
+        if idx in dupe_set:
+            continue
+        
+        if idx == 0:
+            for i in range(0, sec['start']):
+                new_lines.append(lines[i])
+        else:
+            prev_idx = idx - 1
+            while prev_idx >= 0 and prev_idx in dupe_set:
+                prev_idx -= 1
+            if prev_idx >= 0:
+                for i in range(sections[prev_idx]['end'] + 1, sec['start']):
+                    new_lines.append(lines[i])
+        
+        if sec['display']:
+            new_lines.append(f"## {sec['display']}")
+        else:
+            new_lines.append(lines[sec['start']])
+        
+        for i in range(sec['start'] + 1, sec['end'] + 1):
+            new_lines.append(lines[i])
+    
+    last_valid = len(sections) - 1
+    while last_valid >= 0 and last_valid in dupe_set:
+        last_valid -= 1
+    if last_valid >= 0:
+        for i in range(sections[last_valid]['end'] + 1, len(lines)):
+            new_lines.append(lines[i])
+    
+    return '\n'.join(new_lines), len(dupe_indices)
+
+
+def clean_all_headings(body):
+    """清理所有标题中的emoji"""
+    lines = body.split('\n')
+    cleaned = []
+    
+    for line in lines:
+        s = line.strip()
+        if s.startswith('#'):
+            level = 0
+            idx = 0
+            while idx < len(s) and s[idx] == '#':
+                level += 1
+                idx += 1
+            
+            title_text = s[idx:].strip()
+            clean_title = clean_heading(title_text)
+            
+            if clean_title:
+                cleaned.append('#' * level + ' ' + clean_title)
+            else:
+                cleaned.append(line)
+        else:
+            cleaned.append(line)
+    
+    return '\n'.join(cleaned)
+
+
+def extract_article_specific_content(body):
+    """提取文章特有内容（跳过通用模板章节）"""
+    template_keywords = [
+        '核心要点', '快速导读', '背景与意义', '背景与上下文', '深度解读',
+        '主流大模型对比', '挑战与风险', '趋势与展望', '建议与行动指南',
+        '企业案例与应用实践', '核心技术解析', '现状与格局',
+        '关键数据', '阅读建议', '适合人群', '阅读时长', '难度等级',
+        '内容评级', 'import素材融合', '知识关联',
+        'AI技术路线对比',
+    ]
+    
+    content_match = re.search(
+        r'##\s*(?:📋\s*)?内容[^\n]*\n(.+?)(?=\n## |\Z)',
+        body, re.DOTALL
+    )
+    
+    if content_match:
+        content_text = content_match.group(1)
+        content_text = re.sub(r'^原文[：:].*?\n', '', content_text, flags=re.MULTILINE)
+        content_text = content_text.strip()
+        if len(content_text) > 100:
+            return content_text
+    
+    all_sections = re.finditer(r'##\s+(.+?)\n(.+?)(?=\n## |\Z)', body, re.DOTALL)
+    
+    specific_parts = []
+    for sec in all_sections:
+        sec_title = clean_heading(sec.group(1))
+        sec_content = sec.group(2)
+        
+        is_template = False
+        for kw in template_keywords:
+            if kw in sec_title:
+                is_template = True
+                break
+        
+        if not is_template and sec_title not in ['目录', '参考文件', 'Changelog', '参考资料']:
+            specific_parts.append(sec_content)
+    
+    if specific_parts:
+        return '\n\n'.join(specific_parts)
+    
+    return body
+
+
+def generate_summary(specific_content, title):
+    """生成高质量概要"""
+    best = ""
+    best_score = -1
+    
+    paragraphs = extract_paragraphs(specific_content)
+    for para in paragraphs:
+        score = score_sentence(para, title)
+        if score > best_score:
+            best_score = score
+            best = para
+    
+    if best_score < 30:
+        bullets = re.findall(
+            r'[-*•]\s+\**([^*]{4,20})\**[：:]\s*(.+?)(?=\n|$)',
+            specific_content
+        )
+        for bullet_title, bullet_content in bullets:
+            combined = bullet_title.strip() + '：' + bullet_content.strip()
+            score = score_sentence(combined, title)
+            if score > best_score:
+                best_score = score
+                best = combined
+    
+    if not best:
+        best = generate_summary_from_title(title)
+    
+    return format_summary(best)
+
+
+def extract_paragraphs(text):
+    """提取段落"""
+    paragraphs = []
+    current = []
+    in_code = False
+    
+    for line in text.split('\n'):
+        s = line.strip()
+        
+        if s.startswith('```'):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        
+        if not s:
+            if current:
+                para = ' '.join(current).strip()
+                if is_valid_para(para):
+                    paragraphs.append(para)
+                current = []
+            continue
+        
+        if re.match(r'^[-*•]\s+', s) or re.match(r'^\d+[\.、)]\s+', s):
+            if current:
+                para = ' '.join(current).strip()
+                if is_valid_para(para):
+                    paragraphs.append(para)
+                current = []
+            continue
+        
+        if s.startswith('|'):
+            continue
+        
+        if re.match(r'^\*\*[^*]{2,15}\*\*[：:]\s*$', s):
+            continue
+        
+        if re.match(r'^>\s*[📅🏷️🔗📝⭐]', s):
+            continue
+        
+        current.append(s)
+    
+    if current:
+        para = ' '.join(current).strip()
+        if is_valid_para(para):
+            paragraphs.append(para)
+    
+    return paragraphs
+
+
+def is_valid_para(text):
+    if not text or len(text) < 20:
+        return False
+    if text.startswith('原文') and 'http' in text:
+        return False
+    if text.startswith('>'):
+        return False
+    return True
+
+
+def score_sentence(text, title):
+    """给句子打分"""
+    score = 0
+    
+    if 40 <= len(text) <= 90:
+        score += 30
+    elif 25 <= len(text) <= 110:
+        score += 15
+    
+    if re.search(r'\d+[%万亿亿元美元万]', text):
+        score += 25
+    
+    if re.search(r'20\d{2}', text):
+        score += 10
+    
+    title_words = re.findall(r'[\u4e00-\u9fff]{2,}', title)
+    title_relevance = 0
+    for w in title_words:
+        if w in text:
+            title_relevance += 5
+    score += min(title_relevance, 25)
+    
+    template_words = ['规模化落地', '技术验证', '生产级应用', 'ROI', '效率优先', 'Agent崛起',
+                      '参数规模', '推理效率', '大模型']
+    specific_count = 0
+    content_words = re.findall(r'[\u4e00-\u9fff]{2,}', text)
+    for w in content_words:
+        if w not in template_words and len(w) >= 2:
+            specific_count += 1
+    
+    score += min(specific_count * 2, 20)
+    
+    if text.startswith('>'):
+        score -= 50
+    if text.startswith('原文'):
+        score -= 50
+    if text.startswith('-') or text.startswith('*'):
+        score -= 10
+    
+    return score
+
+
+def generate_summary_from_title(title):
+    """基于标题生成概要"""
+    title_clean = clean_heading(title)
+    parts = re.split(r'[：:—\-｜|]', title_clean)
+    
+    if len(parts) >= 2:
+        main = parts[0].strip()
+        sub = parts[1].strip()
+        return f"本文围绕{main}主题，深入探讨{sub}的核心内容、技术要点与实践价值。"
+    else:
+        return f"本文围绕{title_clean}展开深度分析，涵盖技术原理、应用实践与行业趋势等核心内容。"
+
+
+def format_summary(text):
+    """格式化为一句话，≤100字"""
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'^[>+▶️🔍📊\s\-•*]+', '', text)
+    
+    sentences = re.split(r'([。！？!?；;])', text)
+    result = ""
+    
+    for i in range(0, len(sentences), 2):
+        if i >= len(sentences):
+            break
+        
+        sent = sentences[i].strip()
+        if not sent:
+            continue
+        
+        punct = sentences[i + 1] if i + 1 < len(sentences) else '。'
+        
+        if len(result) + len(sent) + len(punct) <= 95:
+            result += sent + punct
+        else:
+            remaining = 95 - len(result)
+            if remaining > 10:
+                result += sent[:remaining] + '...'
+            break
+        
+        if result.endswith(('。', '！', '？', '!', '?')) and len(result) >= 25:
+            break
+    
+    if not result:
+        result = text[:97] + '...'
+    
+    result = result.strip()
+    if not result.endswith(('。', '！', '？', '!', '?', '…', '...')):
+        if len(result) < 98:
+            result += '。'
+        else:
+            result = result[:96] + '...'
+    
+    if len(result) > 100:
+        result = result[:97] + '...'
+    
+    return result
+
+
+def generate_keywords(specific_content, title, fm):
+    """生成高质量关键词"""
+    candidates = []
+    seen = set()
+    
+    def add(kw, prio):
+        kw = normalize_kw(kw.strip())
+        if kw and kw not in seen and is_valid_kw(kw):
+            candidates.append((kw, prio))
+            seen.add(kw)
+    
+    title_clean = clean_heading(title)
+    
+    title_terms = [
+        'OLMo', 'Zabbix', 'WAIC', 'IDEA', 'T-EDGE', 'AWS', 're:Invent',
+        'Dify', 'LLaMA', 'KTransformers', 'GPT', 'Claude', 'Gemini',
+        'DeepSeek', 'Qwen', '通义千问', 'Llama',
+        '京东双11', '天猫双11', '双11', '云栖大会', '乌镇峰会',
+        '世界互联网大会', '世界人工智能大会',
+        '医疗AI', 'AI电商', 'AI编程', '银发AI', '适老化',
+        '提示词', '提示工程', 'RAG', 'Agent', '智能体',
+        'MoE', 'Transformer', '微调', '多模态', '算力',
+        '端侧推理', '企业级应用', '知识图谱',
+        '具身智能', '自动驾驶', 'AIGC', '大模型',
+        '开源', 'GPU', 'Token', 'NLP', 'CV',
+        '程序员薪资', '科技裁员', 'AI股票',
+        '飞书知识库', 'VSCode', 'AI生成PPT', '编程助手',
+        'AI日报', 'AI周报', 'AI月报',
+    ]
+    
+    for term in title_terms:
+        if term.lower() in title_clean.lower():
+            add(term, 100)
+    
+    parts = re.split(r'[：:—\-｜|]', title_clean)
+    if len(parts) >= 2:
+        subtitle = parts[1].strip()
+        sub_words = re.findall(r'[\u4e00-\u9fff]{2,4}', subtitle)
+        for w in sub_words:
+            if is_valid_kw(w):
+                add(w, 70)
+    
+    tech_patterns = [
+        (r'OLMo', 10, 'OLMo'),
+        (r'Zabbix', 10, 'Zabbix'),
+        (r'WAIC|世界人工智能大会', 8, 'WAIC'),
+        (r'Dify', 8, 'Dify'),
+        (r'KTransformers', 10, 'KTransformers'),
+        (r'LLaMA[-\s]?Factory', 8, 'LLaMA-Factory'),
+        (r'GPT(?:-\d+(?:\.\d+)?)?', 6, 'GPT'),
+        (r'Claude(?:\s*\d+\.?\d*)?', 6, 'Claude'),
+        (r'Gemini(?:\s*\d+\.?\d*)?', 6, 'Gemini'),
+        (r'DeepSeek|深度求索', 6, 'DeepSeek'),
+        (r'通义千问|Qwen', 6, '通义千问'),
+        (r'Llama|Llama\s*\d+', 6, 'Llama'),
+        (r'MoE|混合专家', 5, 'MoE架构'),
+        (r'Transformer', 5, 'Transformer架构'),
+        (r'RAG|检索增强生成', 6, 'RAG'),
+        (r'Agent|智能体', 5, 'AI Agent'),
+        (r'AIGC|生成式AI', 5, 'AIGC'),
+        (r'提示词|提示工程|Prompt', 5, '提示工程'),
+        (r'多模态', 5, '多模态'),
+        (r'微调|fine-tuning|LoRA|QLoRA', 5, '微调'),
+        (r'算力', 4, '算力'),
+        (r'GPU', 4, 'GPU'),
+        (r'Token', 3, 'Token'),
+        (r'大模型|大语言模型|LLM', 4, '大模型'),
+        (r'开源', 4, '开源'),
+        (r'医疗AI', 6, '医疗AI'),
+        (r'AI电商|电商AI', 6, 'AI电商'),
+        (r'AI编程|代码生成', 5, 'AI编程'),
+        (r'银发AI|老年AI|适老化', 6, '银发AI'),
+        (r'端侧推理', 4, '端侧推理'),
+        (r'企业级|私有化部署', 4, '企业级应用'),
+        (r'知识图谱', 4, '知识图谱'),
+        (r'具身智能', 4, '具身智能'),
+        (r'自动驾驶', 4, '自动驾驶'),
+        (r'自然语言处理|NLP', 3, '自然语言处理'),
+        (r'计算机视觉|CV', 3, '计算机视觉'),
+        (r'云栖大会', 5, '云栖大会'),
+        (r'乌镇峰会|世界互联网大会', 5, '乌镇峰会'),
+        (r'双11|双十一', 5, '双11'),
+        (r'程序员薪资', 5, '程序员薪资'),
+        (r'裁员', 4, '科技裁员'),
+        (r'AI股票', 4, 'AI股票'),
+        (r'飞书', 4, '飞书知识库'),
+        (r'VSCode', 5, 'VSCode'),
+        (r'PPT', 4, 'AI生成PPT'),
+        (r'编程助手|编码助手', 4, 'AI编程助手'),
+    ]
+    
+    freq_scores = {}
+    for pattern, weight, norm in tech_patterns:
+        count = len(re.findall(pattern, specific_content, re.IGNORECASE))
+        if count > 0:
+            score = count * weight
+            if norm in freq_scores:
+                freq_scores[norm] += score
+            else:
+                freq_scores[norm] = score
+    
+    sorted_tech = sorted(freq_scores.items(), key=lambda x: x[1], reverse=True)
+    for kw, score in sorted_tech:
+        if score >= 10:
+            add(kw, 50 + min(score, 30))
+    
+    final = []
+    candidates.sort(key=lambda x: x[1], reverse=True)
+    
+    for kw, prio in candidates:
+        if len(final) >= 5:
+            break
+        
+        too_similar = False
+        for existing in final:
+            if kw in existing or existing in kw:
+                if len(kw) <= len(existing):
+                    too_similar = True
+                    break
+        
+        if too_similar:
+            continue
+        
+        final.append(kw)
+    
+    if len(final) < 3:
+        backups = ['大模型', 'AI Agent', 'AIGC', 'RAG', '多模态']
+        for b in backups:
+            if b not in final:
+                final.append(b)
+                if len(final) >= 3:
+                    break
+    
+    return " · ".join(final[:5])
+
+
+def normalize_kw(kw):
+    kw = kw.strip('[ ]()（）')
+    mapping = {
+        '大语言模型': '大模型',
+        'LLM': '大模型',
+        '生成式AI': 'AIGC',
+        '智能体': 'AI Agent',
+        'Agent': 'AI Agent',
+        '检索增强生成': 'RAG',
+        '提示词': '提示工程',
+        'Prompt': '提示工程',
+        'MoE': 'MoE架构',
+        '混合专家': 'MoE架构',
+        'Transformer': 'Transformer架构',
+        'NLP': '自然语言处理',
+        'CV': '计算机视觉',
+        'LoRA': '微调',
+        'QLoRA': '微调',
+        'fine-tuning': '微调',
+    }
+    return mapping.get(kw, kw)
+
+
+def is_valid_kw(kw):
+    if not kw or len(kw) < 2:
+        return False
+    if re.match(r'^\d+$', kw):
+        return False
+    if re.match(r'^(19|20)\d{2}$', kw):
+        return False
+    
+    stopwords = {
+        '分析', '指南', '详解', '深度', '全面', '最新', '报告', '研究',
+        '技术', '应用', '发展', '趋势', '实践', '案例', '综述', '概览',
+        '入门', '进阶', '高级', '基础', '原理', '实战', '教程', '手册',
+        '大全', '合集', '精选', '推荐', '汇总', '盘点', '揭秘', '洞察',
+        '思考', '解读', '观察', '评论', '观点', '看法', '经验', '心得',
+        'AI', '人工智能', '行业动态', '产品与设计',
+        '编程与开发', '系统与运维', '数据库', '知识管理',
+        '核心要点', '关键数据', '阅读建议',
+        '全景', '深度分析', '全面解析', '最新进展',
+        '行业报告', '市场分析', '技术分析',
+        '什么是', '如何', '怎么', '为什么',
+        '内容', '文章', '本文', '我们', '他们',
+        '可以', '能够', '需要', '已经', '正在',
+        '一个', '一种', '一些', '这个', '那个',
+        '以及', '还有', '包括', '包含', '涉及',
+        '通过', '基于', '对于', '关于', '随着',
+        '因此', '所以', '但是', '然而', '而且',
+        '市场', '产业', '行业', '企业', '公司',
+        '产品', '服务', '用户', '客户',
+        '功能', '性能', '效果', '效率',
+        '问题', '挑战', '风险', '机遇',
+        '未来', '当前', '目前', '现在',
+        '中国', '全球', '世界', '美国',
+        '大会', '峰会', '论坛', '展会',
+        '发布', '推出', '上线',
+        '合作', '投资', '融资', '收购',
+        '增长', '下降', '提升', '降低',
+    }
+    
+    if kw in stopwords:
+        return False
+    
+    return True
+
+
+def generate_toc(body):
+    """生成目录"""
+    lines = body.split('\n')
+    h2_headings = []
+    
+    exclude_keywords = [
+        '目录', '参考文件', '参考资料', '参考来源', '参考文献',
+        'Changelog', '变更日志', '变更记录', '版本记录',
+        '知识关联', '延伸阅读', '相关文章', '相关素材',
+        '快速导读', '核心要点', '内容', '执行摘要', '关键词标签',
+        '内容评级', 'import素材融合', '阅读建议', '关键数据',
+        '适合人群', '阅读时长', '难度等级', '快速导航',
+    ]
+    
+    for line in lines:
+        s = line.strip()
+        if s.startswith('## ') and not s.startswith('### '):
+            title = s[3:].strip()
+            clean = clean_heading(title)
+            
+            if not clean or len(clean) < 2:
+                continue
+            
+            should_exclude = False
+            for kw in exclude_keywords:
+                if kw.lower() in clean.lower():
+                    should_exclude = True
+                    break
+            
+            if not should_exclude:
+                h2_headings.append(clean)
+    
+    seen = set()
+    unique = []
+    for h in h2_headings:
+        if h.lower() not in seen:
+            seen.add(h.lower())
+            unique.append(h)
+    
+    if len(unique) < 3:
+        return ""
+    
+    toc = ["## 📑 目录", ""]
+    for h in unique:
+        anchor = re.sub(r'[^\w\u4e00-\u9fff-]', '', h)
+        toc.append(f"- [{h}](#{anchor})")
+    
+    toc.append("")
+    return '\n'.join(toc)
+
+
+def extract_references(body):
+    """提取参考资料"""
+    internal = []
+    external = []
+    
+    for match in re.finditer(r'\[([^\]]+)\]\(([^)]+)\)', body):
+        text = match.group(1)
+        url = match.group(2)
+        
+        if url.startswith('http'):
+            external.append((text, url))
+        elif url.endswith('.md') or 'import/' in url or 'knowledge/' in url or '../' in url:
+            internal.append((text, url))
+    
+    seen_e = set()
+    unique_e = []
+    for t, u in external:
+        if u not in seen_e:
+            seen_e.add(u)
+            unique_e.append((t, u))
+    
+    seen_i = set()
+    unique_i = []
+    for t, u in internal:
+        if u not in seen_i:
+            seen_i.add(u)
+            unique_i.append((t, u))
+    
+    return unique_i[:10], unique_e[:10]
+
+
+def build_reference_section(internal, external):
+    """构建参考文件章节"""
+    lines = ["## 参考文件", ""]
+    
+    lines.append("### 内部知识库引用")
+    if internal:
+        for text, url in internal[:8]:
+            display = text[:60] + "..." if len(text) > 60 else text
+            lines.append(f"- [{display}]({url})")
+    else:
+        lines.append("- 暂无内部引用")
+    
+    lines.append("")
+    lines.append("### 外部资料引用")
+    if external:
+        for text, url in external[:8]:
+            display = text[:60] + "..." if len(text) > 60 else text
+            lines.append(f"- [{display}]({url})")
+    else:
+        lines.append("- 暂无外部引用")
+    
+    lines.append("")
+    return '\n'.join(lines)
+
+
+def build_changelog(fm):
+    """构建Changelog"""
+    create_date = "2025-01-01"
+    update_date = datetime.now().strftime('%Y-%m-%d')
+    
+    m = re.search(r'^created_at:\s*(\d{4}-\d{2}-\d{2})', fm, re.MULTILINE)
+    if m:
+        create_date = m.group(1)
+    
+    return f"""## Changelog
+
+| 日期 | 版本 | 变更说明 |
+|------|------|----------|
+| {update_date} | v2.0 | 深度重构：清理重复H1、合并重复章节、重写概要关键词、标准化格式 |
+| {create_date} | v1.0 | 初始创建 |
+
+"""
+
+
+def process_file(filepath):
+    """处理单个文件"""
+    filename = Path(filepath).name
+    
+    with open(filepath, 'r', encoding='utf-8') as f:
+        text = f.read()
+    
+    result = {
+        'file': str(filepath),
+        'success': False,
+        'h1_duplicates': 0,
+        'h2_duplicates': 0,
+        'error': None,
+    }
+    
+    try:
+        fm, body = extract_frontmatter(text)
+        
+        if not fm:
+            result['error'] = '无frontmatter'
+            return result
+        
+        title = extract_title_from_fm(fm)
+        if not title:
+            for line in body.split('\n'):
+                s = line.strip()
+                if s.startswith('# ') and not s.startswith('## '):
+                    title = s[2:].strip()
+                    break
+        if not title:
+            title = filename.replace('.md', '')
+        
+        body, h1_dupes = deduplicate_h1(body, title)
+        result['h1_duplicates'] = h1_dupes
+        
+        body, h2_dupes = deduplicate_h2(body)
+        result['h2_duplicates'] = h2_dupes
+        
+        body = clean_all_headings(body)
+        
+        specific_content = extract_article_specific_content(body)
+        
+        summary = generate_summary(specific_content, title)
+        keywords = generate_keywords(specific_content, title, fm)
+        toc = generate_toc(body)
+        
+        internal, external = extract_references(body)
+        ref_section = build_reference_section(internal, external)
+        changelog = build_changelog(fm)
+        
+        lines = body.split('\n')
+        h1_idx = -1
+        for i, line in enumerate(lines):
+            s = line.strip()
+            if s.startswith('# ') and not s.startswith('## '):
+                h1_idx = i
+                break
+        
+        if h1_idx == -1:
+            result['error'] = '找不到H1标题'
+            return result
+        
+        content_start = h1_idx + 1
+        in_toc = False
+        for i in range(h1_idx + 1, min(h1_idx + 100, len(lines))):
+            stripped = lines[i].strip()
+            
+            if stripped.startswith('> **概要**:') or stripped.startswith('> **关键词**:'):
+                content_start = i + 1
+                continue
+            
+            if stripped.startswith('## ') and '目录' in clean_heading(stripped[3:]):
+                in_toc = True
+                content_start = i + 1
+                continue
+            
+            if in_toc:
+                if stripped.startswith('## ') and not stripped.startswith('### '):
+                    in_toc = False
+                    content_start = i
+                    break
+                content_start = i + 1
+                continue
+            
+            if stripped and not stripped.startswith('>') and not in_toc:
+                content_start = i
+                break
+        
+        new_body = [f"# {title}", ""]
+        new_body.append(f"> **概要**: {summary}")
+        new_body.append(f"> **关键词**: {keywords}")
+        new_body.append("")
+        
+        if toc:
+            new_body.append(toc)
+        
+        for i in range(content_start, len(lines)):
+            new_body.append(lines[i])
+        
+        new_body_text = '\n'.join(new_body)
+        
+        new_body_text = re.sub(r'\n{4,}', '\n\n\n', new_body_text)
+        
+        final_text = f"---\n{fm}\n---\n\n{new_body_text}"
+        final_text = final_text + "\n\n" + ref_section + "\n" + changelog
+        
+        new_fm = re.sub(
+            r'^updated_at:\s*[\'"]?\d{4}-\d{2}-\d{2}[\'"]?',
+            f"updated_at: '{datetime.now().strftime('%Y-%m-%d')}'",
+            fm,
+            flags=re.MULTILINE
+        )
+        
+        final_text = f"---\n{new_fm}\n---\n\n{new_body_text}"
+        final_text = final_text + "\n\n" + ref_section + "\n" + changelog
+        final_text = re.sub(r'\n{4,}', '\n\n\n', final_text)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(final_text)
+        
+        result['success'] = True
+        print(f"  ✅ {filename[:45]}...")
+        print(f"     H1重复: {h1_dupes}, H2重复: {h2_dupes}")
+        print(f"     概要: {summary[:65]}...")
+        print(f"     关键词: {keywords}")
+        
+    except Exception as e:
+        result['error'] = str(e)
+        print(f"  ❌ {filename}: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    return result
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('用法: python3 deep_refactor_complete.py <目录路径>')
+        sys.exit(1)
+    
+    target_dir = sys.argv[1]
+    
+    if not os.path.exists(target_dir):
+        print(f'❌ 路径不存在: {target_dir}')
+        sys.exit(1)
+    
+    md_files = sorted([f for f in Path(target_dir).glob('*.md') if f.name != 'index.md'])
+    
+    print(f'🔍 发现 {len(md_files)} 个markdown文件（已跳过index.md）')
+    print()
+    
+    results = []
+    success = 0
+    fail = 0
+    total_h1 = 0
+    total_h2 = 0
+    
+    for fp in md_files:
+        r = process_file(str(fp))
+        results.append(r)
+        if r['success']:
+            success += 1
+            total_h1 += r['h1_duplicates']
+            total_h2 += r['h2_duplicates']
+        else:
+            fail += 1
+    
+    print()
+    print('=' * 70)
+    print('📊 深度重构完成统计（完整版）')
+    print('=' * 70)
+    print(f'  处理文件总数: {len(md_files)} 个')
+    print(f'  ✅ 成功: {success} 个')
+    print(f'  ❌ 失败: {fail} 个')
+    print()
+    print(f'  🗑️  清理重复H1标题: {total_h1} 个')
+    print(f'  📑 合并重复二级章节: {total_h2} 个')
+    print()
+    
+    if fail > 0:
+        print('  ❌ 失败文件:')
+        for r in results:
+            if not r['success']:
+                print(f'    - {Path(r["file"]).name}: {r["error"]}')
+        print()
+    
+    print('=' * 70)
+    
+    report_path = os.path.join(target_dir, '_refactor_report.json')
+    with open(report_path, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+    print(f'📝 详细报告: {report_path}')
+
+
+if __name__ == '__main__':
+    main()

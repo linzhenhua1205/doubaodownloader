@@ -1,0 +1,543 @@
+{
+  "batch_id": "db-import-2026-08-15",
+  "created": "2026-08-15T14:53:58+08:00",
+  "source_dir": "discover/site/数据库与存储/",
+  "target_map": {
+    "default": "knowledge/05_tools/database/",
+    "rag": "knowledge/03_AI/llm-techniques-principles/",
+    "dify": "knowledge/05_tools/ai-tools/"
+  },
+  "quality_gate": "check_tech_doc_quality.py 8/8",
+  "max_iterations": 3,
+  "units": [
+    {
+      "id": "u001",
+      "source": "Postgres vs MySQL 深度对比（2023年Stack Overflow调研视角）.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-vs-mysql-deep-comparison.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "架构级对比：连接模型/MVCC/复制原理深潜"
+    },
+    {
+      "id": "u002",
+      "source": "2025年主流数据库选型指南：从分类到实践（含核心特性、场景与案例）📊.md",
+      "target": "knowledge/05_tools/database/2026-08-15-database-selection-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "2025 数据库选型指南：分类原理+五维框架+向量内建化"
+    },
+    {
+      "id": "u003",
+      "source": "MySQL 8_0查询缓存_Query Cache_功能深度解析：移除原因与替代方案.md",
+      "target": "knowledge/05_tools/database/2026-08-15-mysql-query-cache-removal.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "MySQL 8.0 Query Cache 移除根因+替代方案"
+    },
+    {
+      "id": "u004",
+      "source": "NVMe带外升级（SMBus_PCIe）实践与性能对比 📝.md",
+      "target": "knowledge/05_tools/database/2026-08-15-nvme-oob-upgrade-smbus-pcie.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "NVMe 带外固件升级：协议栈+性能量化+BMC 集成"
+    },
+    {
+      "id": "u005",
+      "source": "MinIO企业级对象存储深度解析与实战指南 📦.md",
+      "target": "knowledge/05_tools/database/2026-08-15-minio-object-storage-deep-analysis.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "MinIO 对象存储：纠删码原理+S3 兼容+AI 场景"
+    },
+    {
+      "id": "u006",
+      "source": "PostgreSQL核心概念：Database、Schema、User_Role关系解析.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-core-concepts-db-schema-role.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii 中文注释→英文",
+        "R1_quantified 补默认参数表",
+        "R2_cross_links 补相关文档"
+      ],
+      "summary": "四层对象模型：Database/Schema/User-Role/Tablespace 原理+权限三级链+5场景+4误区"
+    },
+    {
+      "id": "u007",
+      "source": "PostgreSQL入门：用户、数据库、模式对象操作语法详解 📚.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-user-db-schema-operations.md",
+      "status": "done",
+      "iterations_used": 1,
+      "issues": [
+        "R1_quantified 补参数表3行"
+      ],
+      "summary": "DDL 三动词框架+User/Database/Schema 操作语法+6易错点+幂等脚本"
+    },
+    {
+      "id": "u008",
+      "source": "PostgreSQL数据库用户列表查询方法与案例详解.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-user-list-queries.md",
+      "status": "skipped",
+      "issues": [
+        "源文件自带重定向声明：与 u009 内容高度相似，建议阅读主版本"
+      ],
+      "summary": "跳过（重复）：pg_user 视图查询细节并入 u009 主版本"
+    },
+    {
+      "id": "u009",
+      "source": "PostgreSQL用户与权限查询方法总结 📊.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-user-privilege-query.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查表(3处,24%/1字节/0.06%)",
+        "R2_cross_links 已含本批三文档互链"
+      ],
+      "summary": "两大体系(pg_*/information_schema)+ACL原理+五级权限查询矩阵+审计三步闭环+量化速查"
+    },
+    {
+      "id": "u010",
+      "source": "PostgreSQL数据库用户权限配置与验证SQL语句.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-privilege-config-verify.md",
+      "status": "done",
+      "iterations_used": 1,
+      "issues": [],
+      "summary": "三级链GRANT实操+批量/默认权限+验证闭环+6场景+6易错点"
+    },
+    {
+      "id": "u011",
+      "source": "PgSQL中pg_stat_user_tables和pg_stat_user_objec.md",
+      "target": "knowledge/05_tools/database/2026-08-15-pgsql-pgstat-usertables-objects.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii ASCII图→表格"
+      ],
+      "summary": "表/索引级统计视图：seq/idx扫描+HOT+死元组+VACUUM决策"
+    },
+    {
+      "id": "u012",
+      "source": "PostgreSQL 14_5 核心统计视图（pg_stat_）详解与实战指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-pgstat-views-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii ASCII图→表格"
+      ],
+      "summary": "pg_stat_*六分类+锁排查三步法+命中率/死锁+慢查询+联合诊断"
+    },
+    {
+      "id": "u013",
+      "source": "PostgreSQL后台写入进程（pg_stat_bgwriter）统计分析笔记.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-pgstat-bgwriter-analysis.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii ASCII图→表格"
+      ],
+      "summary": "bgwriter三来源刷写+三比率诊断+检查点调优"
+    },
+    {
+      "id": "u014",
+      "source": "PostgreSQL客户端认证配置文件pg_hba_conf详解 🔐.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-pg-hba-conf-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查"
+      ],
+      "summary": "pg_hba认证谱系+顺序匹配陷阱+安全加固+灾难恢复"
+    },
+    {
+      "id": "u015",
+      "source": "PostgreSQL 14 服务启动失败（端口5432连接问题）解决方案.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-startup-failure-port5432.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "PG启动失败(5432端口)五类根因+日志定位+四步排查"
+    },
+    {
+      "id": "u016",
+      "source": "PostgreSQL主从同步状态查看指南 📊.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-replication-status.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii ASCII图→表格"
+      ],
+      "summary": "主从双视角+LSM延迟量化+三步验证+故障矩阵"
+    },
+    {
+      "id": "u017",
+      "source": "PostgreSQL内存配置建议.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-memory-config.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii ASCII图→表格"
+      ],
+      "summary": "四参数体系+16/32G方案+内存预算公式+OOM防护"
+    },
+    {
+      "id": "u018",
+      "source": "PostgreSQL创建表空间及用户授权操作指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-tablespace-authorization.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查"
+      ],
+      "summary": "表空间四步创建+四层授权+存储分层+迁移管理"
+    },
+    {
+      "id": "u019",
+      "source": "PostgreSQL 允许 IP 远程访问的配置步骤.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-remote-access-config.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 量化表单位化"
+      ],
+      "summary": "IP远程访问四步链路+双文件+防火墙+安全"
+    },
+    {
+      "id": "u020",
+      "source": "PostgreSQL局域网访问配置教程.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-lan-access.md",
+      "status": "skipped",
+      "iterations_used": 0,
+      "issues": [
+        "与u019重复并入"
+      ],
+      "summary": "局域网=远程访问子场景，并入u019"
+    },
+    {
+      "id": "u021",
+      "source": "PostgreSQL数据库远程访问配置（基于cpolar内网穿透）.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-cpolar-tunnel.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified",
+        "R1_code_ascii"
+      ],
+      "summary": "cpolar内网穿透七步+临时/固定对比+安全"
+    },
+    {
+      "id": "u022",
+      "source": "PostgreSQL远程连接配置与安全指南 🛡️.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-remote-security.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified"
+      ],
+      "summary": "三层安全模型+SSL+加固清单+生产禁忌"
+    },
+    {
+      "id": "u023",
+      "source": "PostgreSQL数据库当前Schema查看与管理指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-schema-view-manage.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified",
+        "R1_code_ascii"
+      ],
+      "summary": "Schema查看三方法+管理+search_path（u023/u024合并）"
+    },
+    {
+      "id": "u024",
+      "source": "PostgreSQL查询所有schema的三种方法.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-schema-list-methods.md",
+      "status": "skipped",
+      "iterations_used": 0,
+      "issues": [
+        "与u023重复合并"
+      ],
+      "summary": "并入u023 Schema管理"
+    },
+    {
+      "id": "u025",
+      "source": "PostgreSQL导入CSV时_extra data after last expected co.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-csv-import-error.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified",
+        "R1_code_ascii"
+      ],
+      "summary": "CSV导入extra data错误+COPY参数+预处理+调试"
+    },
+    {
+      "id": "u026",
+      "source": "PostgreSQL行转列方法.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-row-to-column.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified"
+      ],
+      "summary": "行转列三方法+crosstab/CASE/jsonb+选型"
+    },
+    {
+      "id": "u027",
+      "source": "PostgreSQL核心函数与操作总结.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-core-functions.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified"
+      ],
+      "summary": "核心函数六类+窗口函数专题+空值处理"
+    },
+    {
+      "id": "u028",
+      "source": "PostgreSQL表操作与数据操作全指南 📚.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-table-data-operations.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified"
+      ],
+      "summary": "表DDL/DML全览+约束+UPSERT/RETURNING/CTE"
+    },
+    {
+      "id": "u029",
+      "source": "PostgreSQL数据库迁移工具与跨数据库迁移指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-migration-guide.md",
+      "status": "done",
+      "iterations_used": 1,
+      "issues": [],
+      "summary": "迁移五阶段+官方/开源/商业工具+方言差异"
+    },
+    {
+      "id": "u030",
+      "source": "PostgreSQL与MySQL数据库对象模型及权限体系对比笔记.md",
+      "target": "knowledge/05_tools/database/2026-08-15-postgres-vs-mysql-object-permission.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified",
+        "R1_code_ascii"
+      ],
+      "summary": "PG vs MySQL对象模型/权限体系+迁移映射"
+    },
+    {
+      "id": "u031",
+      "source": "DBeaver数据库管理工具核心功能与高级应用指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-dbeaver-core-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查表"
+      ],
+      "summary": "DBeaver 核心功能与高级应用（功能架构/效率技巧/问题排查）"
+    },
+    {
+      "id": "u032",
+      "source": "DBeaver数据库管理工具详解（下载_安装_使用指南）.md",
+      "target": "knowledge/05_tools/database/2026-08-15-dbeaver-install-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查"
+      ],
+      "summary": "DBeaver 下载安装使用（版本/安装/踩坑）"
+    },
+    {
+      "id": "u033",
+      "source": "DBeaver终极指南：从入门到企业级数据库管理实战.md",
+      "target": "knowledge/05_tools/database/2026-08-15-dbeaver-ultimate-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "DBeaver 企业级实战（案例/优化/选型）"
+    },
+    {
+      "id": "u034",
+      "source": "Navicat数据库管理全攻略：从基础到企业级实战.md",
+      "target": "knowledge/05_tools/database/2026-08-15-navicat-complete-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "Navicat 全攻略（版本矩阵/企业案例/高级技巧）"
+    },
+    {
+      "id": "u035",
+      "source": "Navicat替代方案深度评测：三款免费MySQL客户端工具横向对比.md",
+      "target": "knowledge/05_tools/database/2026-08-15-navicat-alternatives-review.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "Navicat 替代三件套评测（DBeaver/Workbench/HeidiSQL）"
+    },
+    {
+      "id": "u036",
+      "source": "CloudBeaver：基于Web的数据库管理工具深度解析.md",
+      "target": "knowledge/05_tools/database/2026-08-15-cloudbeaver-web-db-tool.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查表",
+        "R1_code_ascii 代码块中文→英文"
+      ],
+      "summary": "CloudBeaver Web 数据库管理（定位/功能/部署/选型）"
+    },
+    {
+      "id": "u037",
+      "source": "DB Browser for SQLite _DB4S_ 功能详解与使用指南 🛠️.md",
+      "target": "knowledge/05_tools/database/2026-08-15-db4s-sqlite-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化速查表"
+      ],
+      "summary": "DB4S SQLite 管理工具（功能矩阵/场景/高级特性）"
+    },
+    {
+      "id": "u038",
+      "source": "Bytebase SQL审核集成方案详解.md",
+      "target": "knowledge/05_tools/database/2026-08-15-bytebase-sql-review.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_quantified 补量化基线"
+      ],
+      "summary": "Bytebase SQL 审核三模式对比选型"
+    },
+    {
+      "id": "u039",
+      "source": "23款iMac丐版外接存储方案选购指南.md",
+      "target": "knowledge/05_tools/database/2026-08-15-imac-external-storage-guide.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "iMac外接存储方案：接口带宽/Razer Core X/雷电3对比"
+    },
+    {
+      "id": "u040",
+      "source": "NVMe升级项目进展.md",
+      "target": "knowledge/05_tools/database/2026-08-15-nvme-upgrade-project.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "NVMe升级项目：机型适配/容量选型/数据迁移/性能验证"
+    },
+    {
+      "id": "u041",
+      "source": "NVMe固件升级调研.md",
+      "target": "knowledge/05_tools/database/2026-08-15-nvme-firmware-upgrade-research.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "NVMe固件升级调研：厂商工具链/带内带外/风险控制"
+    },
+    {
+      "id": "u042",
+      "source": "GraphRAG深度技术解析：微软知识图谱增强型RAG系统.md",
+      "target": "knowledge/03_AI/llm-techniques-principles/2026-08-15-graphrag-deep-analysis.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "GraphRAG深度解析：实体/关系/社区检测+索引模式对比"
+    },
+    {
+      "id": "u043",
+      "source": "RAG-Anything - 港大开源多模态RAG系统解析.md",
+      "target": "knowledge/03_AI/llm-techniques-principles/2026-08-15-rag-anything-hku.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "RAG-Anything港大：多模态检索/任意格式/本地部署"
+    },
+    {
+      "id": "u044",
+      "source": "NVIDIA NIM深度技术分析：推理微服务框架与多模态RAG应用全景.md",
+      "target": "knowledge/03_AI/llm-techniques-principles/2026-08-15-nvidia-nim-deep-analysis.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "NVIDIA NIM：推理微服务容器化/多模态RAG全景/性能基线"
+    },
+    {
+      "id": "u045",
+      "source": "2025年开源RAG工具选型指南与避坑手册 📊.md",
+      "target": "knowledge/03_AI/llm-techniques-principles/2026-08-15-rag-tools-selection.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "2025开源RAG选型：Dify/RAGFlow/FastGPT/AnythingLLM/MaxKB横评"
+    },
+    {
+      "id": "u046",
+      "source": "PDF结构化技术全链路解析：从文本提取到阅读顺序恢复.md",
+      "target": "knowledge/03_AI/llm-techniques-principles/2026-08-15-pdf-structuring-pipeline.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "PDF结构化全链路：解析/版面/阅读顺序恢复/多模态模型"
+    },
+    {
+      "id": "u047",
+      "source": "Dify通过MCP协议连接MySQL实现数据库查询的完整教程 📊.md",
+      "target": "knowledge/05_tools/ai-tools/2026-08-15-dify-mcp-mysql.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii 架构图中文→英文"
+      ],
+      "summary": "Dify MCP-MySQL：结构化数据查询/Agent节点/SSE配置"
+    },
+    {
+      "id": "u048",
+      "source": "Dify知识库调优指南：分段、索引与案例实践.md",
+      "target": "knowledge/05_tools/ai-tools/2026-08-15-dify-kb-tuning.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "Dify知识库调优：分段/索引/混合检索/ReRank/阈值"
+    },
+    {
+      "id": "u049",
+      "source": "Dify v1_9_1至v1_10_1-fix_1版本更新深度解析：多数据库支持与事件驱动工作流革命.md",
+      "target": "knowledge/05_tools/ai-tools/2026-08-15-dify-1.9.1-1.10.1-update.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [
+        "R1_code_ascii 代码块中文→英文"
+      ],
+      "summary": "Dify 1.9.1-1.10.1：多数据库+事件驱动工作流+300%性能"
+    },
+    {
+      "id": "u050",
+      "source": "PostgreSQL中国技术大会历年会议资料汇总（2015-2019）.md",
+      "target": "knowledge/05_tools/database/2026-08-15-pgcon-china-archive.md",
+      "status": "done",
+      "iterations_used": 2,
+      "issues": [],
+      "summary": "PG中国技术大会2015-2019资料汇总+主题演进"
+    }
+  ],
+  "stats": {
+    "total": 50,
+    "done": 47,
+    "fail": 0,
+    "skipped": 3,
+    "pending": 0
+  },
+  "meta": {
+    "total": 50,
+    "done": 47,
+    "skipped": 3,
+    "in_prog": 0,
+    "pending": 0
+  }
+}

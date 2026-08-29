@@ -1,0 +1,63 @@
+{
+  "id": "wf-05-file-ralph-loop",
+  "name": "文件级 Ralph Loop 调度器（批量文件循环处理）",
+  "type": "static",
+  "version": "1.0",
+  "created": "2026-08-15",
+  "methodology": "meth-019 §4/§5/§8",
+  "trigger": {
+    "type": "manual|scheduler",
+    "manual": "继续导入第N批 / 处理文件X / 重跑失败 / 全部重来",
+    "scheduler_task": "可选：定时批量质检/归档"
+  },
+  "planner": {
+    "split_by": "批次文件清单（源→目标映射，逐文件串行）",
+    "parallel": false,
+    "why": "单文件 Ralph Loop 需独立上下文预算；文件间状态由状态文件交接"
+  },
+  "state": {
+    "state_dir": "workflow/.state/wf-05/",
+    "state_file": "workflow/.state/wf-05/<batch_id>.json",
+    "backup": "workflow/.state/wf-05/.bak/"
+  },
+  "phases": [
+    {
+      "phase": "init",
+      "desc": "解析命令→读取/初始化批次状态文件（断点续传）",
+      "workers": "脚本（确定性）",
+      "scripts": ["scripts/ralph_loop.py --init"]
+    },
+    {
+      "phase": "loop",
+      "desc": "逐文件 Ralph Loop：Plan→Do→Check→Act（max_iterations=3）",
+      "workers": "agent（deep-tech-writer + depth-completer + light-self-review）",
+      "scripts": [
+        "scripts/check/../check_tech_doc_quality.py",
+        "scripts/tools/kb-log-append.py"
+      ],
+      "skills": ["deep-tech-writer", "depth-completer", "light-self-review", "light-consistency"],
+      "evaluator": "check_tech_doc_quality.py 8/8 通过 + 状态文件一致"
+    },
+    {
+      "phase": "finalize",
+      "desc": "批次收尾：index 刷新 + git commit + 批次报告",
+      "workers": "脚本 + agent",
+      "scripts": [
+        "scripts/tools/kb-global-index.py",
+        "scripts/git/auto-commit.sh"
+      ]
+    }
+  ],
+  "quality_gate": {
+    "script": "scripts/check_tech_doc_quality.py",
+    "pass_criteria": "8/8 checks pass (auto_pass) | >=80% with minor only (conditional_pass)",
+    "max_iterations": 3,
+    "escalation": "fail → 状态文件记录问题 → 人工介入"
+  },
+  "context_budget": {
+    "per_file_tool_turns": 20,
+    "per_file_output_kb": 20,
+    "source_read_limit_kb": 30,
+    "strategy": "每文件独立预算，文件间零残留（状态文件交接）"
+  }
+}

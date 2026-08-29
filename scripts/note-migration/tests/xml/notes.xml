@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docs>
+  <article date="2026-01-01" author="lzh">
+    <title>会议记录：超节点供电方案</title>
+    <content>讨论了800V HVDC直供方案，确认采用PSU 3+1冗余架构。</content>
+    <item>与电源厂商确认HVDC规格书</item>
+    <item>下周完成散热仿真复核</item>
+  </article>
+  <article date="2026-02-01" author="lzh">
+    <title>读书笔记：液冷系统设计</title>
+    <content>冷板式液冷的关键参数：CDU功率、流量、水温。</content>
+    <item>调研国产CDU供应商</item>
+  </article>
+</docs>

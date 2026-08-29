@@ -1,0 +1,15 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD024": { "siblings_only": true },
+    "MD041": false,
+    "MD012": { "maximum": 3 },
+    "MD009": { "br_spaces": 0 }
+  },
+  "globs": [
+    "knowledge/05_tools/**/*.md"
+  ],
+  "ignores": ["**/bak/**", "**/oldbak/**", "**/tmp/**", "knowledge/01_survey/**", "knowledge/weekly-reports/**"]
+}

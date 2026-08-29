@@ -1,0 +1,35 @@
+{
+  "name": "tech-evolve",
+  "description": "技术进化技能，用于分析会话模式并生成可复用的命令、技能和代理",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "工作流",
+  "keywords": [
+    "模式提取",
+    "技能进化",
+    "命令生成",
+    "工作流优化",
+    "直觉分析",
+    "聚类",
+    "自动化",
+    "固化"
+  ],
+  "dependencies": {
+    "scripts": [
+      "evolve_analyzer.py",
+      "evolve_generator.py",
+      "evolve_promoter.py"
+    ]
+  },
+  "related_skills": [
+    "tech-planner",
+    "tech-learn",
+    "method-analysis",
+    "session-keeper"
+  ],
+  "trigger_conditions": [
+    "用户提及模式提取、技能进化、命令生成",
+    "用户提及工作流优化、自动化、固化",
+    "关键词：evolve、进化、模式、提取、聚类"
+  ]
+}

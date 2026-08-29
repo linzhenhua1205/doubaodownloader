@@ -1,0 +1,27 @@
+{
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "num_ctx": 8192,
+    "timeout": 300,
+    "models": {
+      "L1": "qwen2.5:3b-instruct-q4_K_M",
+      "L2": "qwen2.5:7b-instruct-q4_K_M"
+    }
+  },
+  "pipeline": {
+    "small_file_tokens": 2500,
+    "l2_min_bytes": 20480,
+    "chunk_max_tokens": 12000,
+    "retry_limit": 2
+  },
+  "priority_dirs": [
+    "server",
+    "md",
+    "work"
+  ],
+  "output": {
+    "mirror": true,
+    "state_file": "state.json",
+    "failed_log": "failed.log"
+  }
+}

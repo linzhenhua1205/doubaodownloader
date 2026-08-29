@@ -1,0 +1,1 @@
+tools/fix_skills_paths.py

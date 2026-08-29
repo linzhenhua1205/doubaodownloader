@@ -1,0 +1,616 @@
+{
+  "migrated": {
+    "production": [
+      {
+        "from": "_analyze_articles.py",
+        "to": "discover\\_analyze_articles.py"
+      },
+      {
+        "from": "_scan_ai_articles.py",
+        "to": "discover\\_scan_ai_articles.py"
+      },
+      {
+        "from": "newwiki2\\check_questions.py",
+        "to": "discover\\check_questions.py"
+      },
+      {
+        "from": "newwiki2\\create_indices.py",
+        "to": "discover\\create_indices.py"
+      },
+      {
+        "from": "newwiki2\\enhance_b_docs.py",
+        "to": "discover\\enhance_b_docs.py"
+      },
+      {
+        "from": "newwiki2\\enhance_b_simple.py",
+        "to": "discover\\enhance_b_simple.py"
+      },
+      {
+        "from": "newwiki2\\enhance_docs.py",
+        "to": "discover\\enhance_docs.py"
+      },
+      {
+        "from": "newwiki2\\extract_questions.py",
+        "to": "discover\\extract_questions.py"
+      },
+      {
+        "from": "newwiki2\\find_b_docs.py",
+        "to": "discover\\find_b_docs.py"
+      },
+      {
+        "from": "newwiki2\\fix_format.py",
+        "to": "discover\\fix_format.py"
+      },
+      {
+        "from": "newwiki2\\generate_docs.py",
+        "to": "discover\\generate_docs.py"
+      },
+      {
+        "from": "newwiki2\\retry_errors.py",
+        "to": "discover\\retry_errors.py"
+      },
+      {
+        "from": "newwiki2\\stats.py",
+        "to": "discover\\stats.py"
+      }
+    ],
+    "archive": [
+      {
+        "from": "newwiki2\\ai-models\\scan_files.py",
+        "to": "backup\\discover\\newwiki2\\ai-models\\scan_files.py"
+      },
+      {
+        "from": "newwiki2\\batch_enhance_templates.py",
+        "to": "backup\\discover\\newwiki2\\batch_enhance_templates.py"
+      },
+      {
+        "from": "newwiki2\\batch_enhance_v3.py",
+        "to": "backup\\discover\\newwiki2\\batch_enhance_v3.py"
+      },
+      {
+        "from": "newwiki2\\fix_enhanced_files.py",
+        "to": "backup\\discover\\newwiki2\\fix_enhanced_files.py"
+      },
+      {
+        "from": "newwiki2\\fix_titles_v2.py",
+        "to": "backup\\discover\\newwiki2\\fix_titles_v2.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\01_inspect.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\01_inspect.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\02_rename.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\02_rename.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\03_rename_long_path.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\03_rename_long_path.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\04_fix_edge_cases.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\04_fix_edge_cases.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\05_update_indices.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\05_update_indices.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\06_normalize_eol.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\06_normalize_eol.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\07_verify.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\07_verify.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\dict.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\dict.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\probe.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\probe.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\probe2.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\probe2.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\probe3.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\probe3.py"
+      },
+      {
+        "from": "newwiki2\\rename_tools\\try_remove_lock.py",
+        "to": "backup\\discover\\newwiki2\\rename_tools\\try_remove_lock.py"
+      },
+      {
+        "from": "site\\fix_indexes.py",
+        "to": "backup\\discover\\site\\fix_indexes.py"
+      },
+      {
+        "from": "site\\regenerate_indexes.py",
+        "to": "backup\\discover\\site\\regenerate_indexes.py"
+      },
+      {
+        "from": "site\\scan_status.py",
+        "to": "backup\\discover\\site\\scan_status.py"
+      }
+    ],
+    "dead": [
+      {
+        "from": "batch_import_integration.py",
+        "to": "backup\\discover\\dead\\batch_import_integration.py"
+      },
+      {
+        "from": "batch_import_integration_batch2.py",
+        "to": "backup\\discover\\dead\\batch_import_integration_batch2.py"
+      },
+      {
+        "from": "batch_import_integration_batch3.py",
+        "to": "backup\\discover\\dead\\batch_import_integration_batch3.py"
+      },
+      {
+        "from": "batch_import_integration_batch4.py",
+        "to": "backup\\discover\\dead\\batch_import_integration_batch4.py"
+      },
+      {
+        "from": "batch_import_integration_batch4_fixed.py",
+        "to": "backup\\discover\\dead\\batch_import_integration_batch4_fixed.py"
+      },
+      {
+        "from": "batch_import_integration_batch5.py",
+        "to": "backup\\discover\\dead\\batch_import_integration_batch5.py"
+      },
+      {
+        "from": "newwiki2\\analyze_files.py",
+        "to": "backup\\discover\\dead\\newwiki2\\analyze_files.py"
+      },
+      {
+        "from": "newwiki2\\batch_b_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_b_enhance.py"
+      },
+      {
+        "from": "newwiki2\\batch_deep_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_deep_enhance.py"
+      },
+      {
+        "from": "newwiki2\\batch_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_enhance.py"
+      },
+      {
+        "from": "newwiki2\\batch_enhance_hw.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_enhance_hw.py"
+      },
+      {
+        "from": "newwiki2\\batch_enhance_lang.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_enhance_lang.py"
+      },
+      {
+        "from": "newwiki2\\batch_structural.py",
+        "to": "backup\\discover\\dead\\newwiki2\\batch_structural.py"
+      },
+      {
+        "from": "newwiki2\\check_b_level_files.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_b_level_files.py"
+      },
+      {
+        "from": "newwiki2\\check_files.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_files.py"
+      },
+      {
+        "from": "newwiki2\\check_frontmatter.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_frontmatter.py"
+      },
+      {
+        "from": "newwiki2\\check_original.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_original.py"
+      },
+      {
+        "from": "newwiki2\\check_quotes.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_quotes.py"
+      },
+      {
+        "from": "newwiki2\\check_status.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_status.py"
+      },
+      {
+        "from": "newwiki2\\check_syntax.py",
+        "to": "backup\\discover\\dead\\newwiki2\\check_syntax.py"
+      },
+      {
+        "from": "newwiki2\\debug_extract.py",
+        "to": "backup\\discover\\dead\\newwiki2\\debug_extract.py"
+      },
+      {
+        "from": "newwiki2\\deep_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\deep_enhance.py"
+      },
+      {
+        "from": "newwiki2\\diagnose_ai_quality.py",
+        "to": "backup\\discover\\dead\\newwiki2\\diagnose_ai_quality.py"
+      },
+      {
+        "from": "newwiki2\\enhance_ai_models_batch1.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_ai_models_batch1.py"
+      },
+      {
+        "from": "newwiki2\\enhance_ai_models_batch2.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_ai_models_batch2.py"
+      },
+      {
+        "from": "newwiki2\\enhance_all.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_all.py"
+      },
+      {
+        "from": "newwiki2\\enhance_batch3.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_batch3.py"
+      },
+      {
+        "from": "newwiki2\\enhance_batch4.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_batch4.py"
+      },
+      {
+        "from": "newwiki2\\enhance_batch5.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_batch5.py"
+      },
+      {
+        "from": "newwiki2\\enhance_server_hw.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_server_hw.py"
+      },
+      {
+        "from": "newwiki2\\enhance_wiki.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhance_wiki.py"
+      },
+      {
+        "from": "newwiki2\\enhancement_final_report.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhancement_final_report.py"
+      },
+      {
+        "from": "newwiki2\\enhancement_stats.py",
+        "to": "backup\\discover\\dead\\newwiki2\\enhancement_stats.py"
+      },
+      {
+        "from": "newwiki2\\extract_original.py",
+        "to": "backup\\discover\\dead\\newwiki2\\extract_original.py"
+      },
+      {
+        "from": "newwiki2\\extract_original_v2.py",
+        "to": "backup\\discover\\dead\\newwiki2\\extract_original_v2.py"
+      },
+      {
+        "from": "newwiki2\\final_report.py",
+        "to": "backup\\discover\\dead\\newwiki2\\final_report.py"
+      },
+      {
+        "from": "newwiki2\\find_bad_quotes.py",
+        "to": "backup\\discover\\dead\\newwiki2\\find_bad_quotes.py"
+      },
+      {
+        "from": "newwiki2\\fix_all_quotes.py",
+        "to": "backup\\discover\\dead\\newwiki2\\fix_all_quotes.py"
+      },
+      {
+        "from": "newwiki2\\fix_frontmatter.py",
+        "to": "backup\\discover\\dead\\newwiki2\\fix_frontmatter.py"
+      },
+      {
+        "from": "newwiki2\\fix_quotes.py",
+        "to": "backup\\discover\\dead\\newwiki2\\fix_quotes.py"
+      },
+      {
+        "from": "newwiki2\\fix_status.py",
+        "to": "backup\\discover\\dead\\newwiki2\\fix_status.py"
+      },
+      {
+        "from": "newwiki2\\list_b_level.py",
+        "to": "backup\\discover\\dead\\newwiki2\\list_b_level.py"
+      },
+      {
+        "from": "newwiki2\\list_files.py",
+        "to": "backup\\discover\\dead\\newwiki2\\list_files.py"
+      },
+      {
+        "from": "newwiki2\\post_enhance_stats.py",
+        "to": "backup\\discover\\dead\\newwiki2\\post_enhance_stats.py"
+      },
+      {
+        "from": "newwiki2\\quality_audit.py",
+        "to": "backup\\discover\\dead\\newwiki2\\quality_audit.py"
+      },
+      {
+        "from": "newwiki2\\quality_report.py",
+        "to": "backup\\discover\\dead\\newwiki2\\quality_report.py"
+      },
+      {
+        "from": "newwiki2\\run_batch_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\run_batch_enhance.py"
+      },
+      {
+        "from": "newwiki2\\run_batch_enhance2.py",
+        "to": "backup\\discover\\dead\\newwiki2\\run_batch_enhance2.py"
+      },
+      {
+        "from": "newwiki2\\scan_7dirs.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_7dirs.py"
+      },
+      {
+        "from": "newwiki2\\scan_ai_models.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_ai_models.py"
+      },
+      {
+        "from": "newwiki2\\scan_ai_remaining.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_ai_remaining.py"
+      },
+      {
+        "from": "newwiki2\\scan_ai_remaining_detailed.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_ai_remaining_detailed.py"
+      },
+      {
+        "from": "newwiki2\\scan_bad_files.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_bad_files.py"
+      },
+      {
+        "from": "newwiki2\\scan_general_quality.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_general_quality.py"
+      },
+      {
+        "from": "newwiki2\\scan_programming_quality.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_programming_quality.py"
+      },
+      {
+        "from": "newwiki2\\scan_quality.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_quality.py"
+      },
+      {
+        "from": "newwiki2\\scan_quality_hw.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_quality_hw.py"
+      },
+      {
+        "from": "newwiki2\\scan_real_content.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_real_content.py"
+      },
+      {
+        "from": "newwiki2\\scan_templated.py",
+        "to": "backup\\discover\\dead\\newwiki2\\scan_templated.py"
+      },
+      {
+        "from": "newwiki2\\test_enhance.py",
+        "to": "backup\\discover\\dead\\newwiki2\\test_enhance.py"
+      },
+      {
+        "from": "newwiki\\batch_add_frontmatter.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_add_frontmatter.py"
+      },
+      {
+        "from": "newwiki\\batch_all_files_cleanup.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_all_files_cleanup.py"
+      },
+      {
+        "from": "newwiki\\batch_enhance_slevel.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_enhance_slevel.py"
+      },
+      {
+        "from": "newwiki\\batch_frontmatter_cleanup.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_frontmatter_cleanup.py"
+      },
+      {
+        "from": "newwiki\\batch_frontmatter_cleanup_final.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_frontmatter_cleanup_final.py"
+      },
+      {
+        "from": "newwiki\\batch_frontmatter_cleanup_v2.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_frontmatter_cleanup_v2.py"
+      },
+      {
+        "from": "newwiki\\batch_frontmatter_cleanup_v3.py",
+        "to": "backup\\discover\\dead\\newwiki\\batch_frontmatter_cleanup_v3.py"
+      },
+      {
+        "from": "newwiki\\clean_remaining_templates.py",
+        "to": "backup\\discover\\dead\\newwiki\\clean_remaining_templates.py"
+      },
+      {
+        "from": "newwiki\\clean_template_markers.py",
+        "to": "backup\\discover\\dead\\newwiki\\clean_template_markers.py"
+      },
+      {
+        "from": "newwiki\\cleanup_old_sections.py",
+        "to": "backup\\discover\\dead\\newwiki\\cleanup_old_sections.py"
+      },
+      {
+        "from": "newwiki\\enhance_all_s_level.py",
+        "to": "backup\\discover\\dead\\newwiki\\enhance_all_s_level.py"
+      },
+      {
+        "from": "newwiki\\enhance_backend_dev.py",
+        "to": "backup\\discover\\dead\\newwiki\\enhance_backend_dev.py"
+      },
+      {
+        "from": "newwiki\\enhance_wiki.py",
+        "to": "backup\\discover\\dead\\newwiki\\enhance_wiki.py"
+      },
+      {
+        "from": "newwiki\\final_quality_check.py",
+        "to": "backup\\discover\\dead\\newwiki\\final_quality_check.py"
+      },
+      {
+        "from": "newwiki\\final_stats.py",
+        "to": "backup\\discover\\dead\\newwiki\\final_stats.py"
+      },
+      {
+        "from": "newwiki\\fix_network_protocol_structure.py",
+        "to": "backup\\discover\\dead\\newwiki\\fix_network_protocol_structure.py"
+      },
+      {
+        "from": "newwiki\\quality_assessment.py",
+        "to": "backup\\discover\\dead\\newwiki\\quality_assessment.py"
+      },
+      {
+        "from": "newwiki\\quality_check_v2.py",
+        "to": "backup\\discover\\dead\\newwiki\\quality_check_v2.py"
+      },
+      {
+        "from": "newwiki\\test_cleanup.py",
+        "to": "backup\\discover\\dead\\newwiki\\test_cleanup.py"
+      },
+      {
+        "from": "newwiki\\test_cleanup_v2.py",
+        "to": "backup\\discover\\dead\\newwiki\\test_cleanup_v2.py"
+      },
+      {
+        "from": "newwiki\\test_cleanup_v3.py",
+        "to": "backup\\discover\\dead\\newwiki\\test_cleanup_v3.py"
+      },
+      {
+        "from": "root\\enhance_knowledge_system.py",
+        "to": "backup\\discover\\dead\\root\\enhance_knowledge_system.py"
+      },
+      {
+        "from": "site\\_batch_enhance_forth_fifth.py",
+        "to": "backup\\discover\\dead\\site\\_batch_enhance_forth_fifth.py"
+      },
+      {
+        "from": "site\\_batch_enhance_v2.py",
+        "to": "backup\\discover\\dead\\site\\_batch_enhance_v2.py"
+      },
+      {
+        "from": "site\\_batch_enhance_v3.py",
+        "to": "backup\\discover\\dead\\site\\_batch_enhance_v3.py"
+      },
+      {
+        "from": "site\\_batch_enhance_v4.py",
+        "to": "backup\\discover\\dead\\site\\_batch_enhance_v4.py"
+      },
+      {
+        "from": "site\\_check_a_articles.py",
+        "to": "backup\\discover\\dead\\site\\_check_a_articles.py"
+      },
+      {
+        "from": "site\\_check_b_articles.py",
+        "to": "backup\\discover\\dead\\site\\_check_b_articles.py"
+      },
+      {
+        "from": "site\\_find_best_examples.py",
+        "to": "backup\\discover\\dead\\site\\_find_best_examples.py"
+      },
+      {
+        "from": "site\\_scan_forth_fifth_tier.py",
+        "to": "backup\\discover\\dead\\site\\_scan_forth_fifth_tier.py"
+      },
+      {
+        "from": "site\\_tmp_check.py",
+        "to": "backup\\discover\\dead\\site\\_tmp_check.py"
+      },
+      {
+        "from": "site\\add_comparison_tables.py",
+        "to": "backup\\discover\\dead\\site\\add_comparison_tables.py"
+      },
+      {
+        "from": "site\\add_depth_sections.py",
+        "to": "backup\\discover\\dead\\site\\add_depth_sections.py"
+      },
+      {
+        "from": "site\\batch_structural_enhance.py",
+        "to": "backup\\discover\\dead\\site\\batch_structural_enhance.py"
+      },
+      {
+        "from": "site\\batch_structural_enhance_v2.py",
+        "to": "backup\\discover\\dead\\site\\batch_structural_enhance_v2.py"
+      },
+      {
+        "from": "site\\comprehensive_enhance.py",
+        "to": "backup\\discover\\dead\\site\\comprehensive_enhance.py"
+      },
+      {
+        "from": "site\\deep_enhance_full.py",
+        "to": "backup\\discover\\dead\\site\\deep_enhance_full.py"
+      },
+      {
+        "from": "site\\deep_enhance_v2.py",
+        "to": "backup\\discover\\dead\\site\\deep_enhance_v2.py"
+      },
+      {
+        "from": "site\\deep_quality_upgrade.py",
+        "to": "backup\\discover\\dead\\site\\deep_quality_upgrade.py"
+      },
+      {
+        "from": "site\\enhance_articles.py",
+        "to": "backup\\discover\\dead\\site\\enhance_articles.py"
+      },
+      {
+        "from": "site\\final_quality_check.py",
+        "to": "backup\\discover\\dead\\site\\final_quality_check.py"
+      },
+      {
+        "from": "site\\fix_and_complete_enhancement.py",
+        "to": "backup\\discover\\dead\\site\\fix_and_complete_enhancement.py"
+      },
+      {
+        "from": "site\\fix_summary_position.py",
+        "to": "backup\\discover\\dead\\site\\fix_summary_position.py"
+      },
+      {
+        "from": "site\\full_quality_upgrade.py",
+        "to": "backup\\discover\\dead\\site\\full_quality_upgrade.py"
+      },
+      {
+        "from": "site\\generate_final_report.py",
+        "to": "backup\\discover\\dead\\site\\generate_final_report.py"
+      },
+      {
+        "from": "site\\integrate_import_materials.py",
+        "to": "backup\\discover\\dead\\site\\integrate_import_materials.py"
+      },
+      {
+        "from": "site\\quality_upgrade_engine.py",
+        "to": "backup\\discover\\dead\\site\\quality_upgrade_engine.py"
+      },
+      {
+        "from": "site\\round2_deep_optimization.py",
+        "to": "backup\\discover\\dead\\site\\round2_deep_optimization.py"
+      },
+      {
+        "from": "site\\run_deep_enhance.py",
+        "to": "backup\\discover\\dead\\site\\run_deep_enhance.py"
+      },
+      {
+        "from": "site\\scan_all_quality.py",
+        "to": "backup\\discover\\dead\\site\\scan_all_quality.py"
+      },
+      {
+        "from": "site\\scan_quality_and_classify.py",
+        "to": "backup\\discover\\dead\\site\\scan_quality_and_classify.py"
+      },
+      {
+        "from": "site\\stats.py",
+        "to": "backup\\discover\\dead\\site\\stats.py"
+      },
+      {
+        "from": "site\\step1_index.py",
+        "to": "backup\\discover\\dead\\site\\step1_index.py"
+      },
+      {
+        "from": "site\\step4_enhance_articles.py",
+        "to": "backup\\discover\\dead\\site\\step4_enhance_articles.py"
+      },
+      {
+        "from": "site\\step5_7_indexes.py",
+        "to": "backup\\discover\\dead\\site\\step5_7_indexes.py"
+      },
+      {
+        "from": "site\\update_latest_updates.py",
+        "to": "backup\\discover\\dead\\site\\update_latest_updates.py"
+      },
+      {
+        "from": "site\\update_latest_updates_v2.py",
+        "to": "backup\\discover\\dead\\site\\update_latest_updates_v2.py"
+      }
+    ]
+  },
+  "counts": {
+    "production": 13,
+    "archive": 20,
+    "dead": 117
+  },
+  "timestamp": "2026-07-26T10:51:43.119367"
+}

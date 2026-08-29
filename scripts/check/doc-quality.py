@@ -1,0 +1,1 @@
+../../skills/deep-tech-writer/scripts/check_tech_doc_quality.py

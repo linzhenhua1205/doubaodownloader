@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ filename }}{% endblock %}
+
+{% block file_sidebar %}
+<aside class="file-sidebar">
+    <h2><i class="fas fa-folder-open"></i> 文件导航</h2>
+    <div id="file-tree-container" data-current-path="{{ current_file_path }}">
+        <div class="loading" style="color: #999; padding: 20px; text-align: center;">
+            <i class="fas fa-spinner fa-spin"></i> 加载中...
+        </div>
+    </div>
+</aside>
+{% endblock %}
+
+{% block content %}
+<a href="/browse{% if parent_path %}/{{ parent_path }}{% endif %}" class="back-link" {% if not parent_path %}style="display:none;"{% endif %}>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M11 2.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V5.707l-4.146 4.147a.5.5 0 0 1-.708-.708L10.293 5H7.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/>
+    </svg>
+    返回目录
+</a>
+
+<div class="view-header">
+    <span class="filename">{{ filename }}</span>
+    <div class="actions">
+        <a href="/raw/{{ breadcrumbs[-1]['path'] if breadcrumbs else '' }}" target="_blank">原始文件</a>
+    </div>
+</div>
+
+<div class="view-content">
+    {% if is_markdown %}
+    <article class="markdown-body">
+        {{ content|safe }}
+    </article>
+    {% else %}
+    <article class="code-block">
+        {{ content|safe }}
+    </article>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% if is_markdown %}
+<aside class="sidebar" id="sidebar">
+    <h2><i class="fas fa-list-ul"></i> 目录</h2>
+    {% if toc %}
+    <ul class="toc">
+        {% for item in toc %}
+        <li><a href="#{{ item.anchor }}" class="level-{{ item.level }}">{{ item.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p style="color: #bdc3c7; font-size: 14px;">暂无目录</p>
+    {% endif %}
+    
+    {% if download_path %}
+    <div class="download-section">
+        <a href="/download/{{ download_path }}" class="download-btn">
+            <i class="fas fa-download"></i> 下载原文
+        </a>
+    </div>
+    {% endif %}
+</aside>
+{% endif %}
+{% endblock %}

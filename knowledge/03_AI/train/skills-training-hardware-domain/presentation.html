@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>服务器硬件 Skills 培训 · v0.2</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#e2e8f0;overflow:hidden;height:100vh}
+  .slides{width:100vw;height:100vh;position:relative}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:36px 56px;opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto;gap:12px}
+  .slide.active{opacity:1;pointer-events:auto;z-index:10}
+  .slide h1{font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;text-align:center}
+  .slide h2{font-size:1.35rem;font-weight:600;color:#60a5fa;margin-bottom:6px;width:100%;max-width:960px}
+  .slide h3{font-size:1rem;font-weight:600;color:#93c5fd;margin-bottom:4px;width:100%;max-width:960px}
+  .slide p,.slide ul,.slide .tw{width:100%;max-width:960px}
+  .slide p{line-height:1.6;color:#cbd5e1}
+  .slide li{padding:3px 0 3px 18px;position:relative;line-height:1.45;color:#cbd5e1;list-style:none}
+  .slide li::before{content:'▸';position:absolute;left:0;color:#60a5fa}
+  .highlight{color:#fbbf24;font-weight:600}
+  .accent{color:#60a5fa;font-weight:600}
+  .good{color:#34d399}
+  .warn{color:#fbbf24}
+  .bad{color:#f87171}
+  .code{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;font-family:'SF Mono','Fira Code',monospace;font-size:.8rem;line-height:1.5;color:#a5b4fc;width:100%;max-width:960px;overflow-x:auto;white-space:pre}
+  .tw{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  th,td{padding:5px 8px;text-align:left;border-bottom:1px solid #334155}
+  th{background:#1e293b;color:#93c5fd;font-weight:600;white-space:nowrap}
+  td{color:#cbd5e1}
+  tr:hover td{background:#1e293b88}
+  .nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:100;background:#1e293bee;padding:6px 18px;border-radius:24px;border:1px solid #334155}
+  .nav button{background:#334155;border:none;color:#e2e8f0;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;transition:.2s;display:flex;align-items:center;justify-content:center}
+  .nav button:hover{background:#475569}
+  .nav .cnt{color:#94a3b8;font-size:.82rem;min-width:54px;text-align:center}
+  .nav .prog{height:3px;background:#334155;border-radius:2px;width:180px;overflow:hidden}
+  .nav .prog-bar{height:100%;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:2px;transition:width .3s}
+  .tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:.72rem;font-weight:600}
+  .t-p0{background:#ef4444;color:#fff}
+  .t-p1{background:#f59e0b;color:#000}
+  .t-p2{background:#22c55e;color:#000}
+  .t-n{background:#06b6d4;color:#000}
+  .diag{font-family:'SF Mono','Fira Code',monospace;font-size:.72rem;line-height:1.35;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:6px 10px;width:100%;max-width:960px;overflow-x:auto;white-space:pre;color:#a5b4fc}
+  @media(max-width:768px){.slide{padding:20px 14px}.slide h1{font-size:1.4rem}.slide h2{font-size:1rem}.nav .prog{width:60px}}
+</style>
+</head>
+<body>
+<div class="slides" id="slides">
+
+<!-- S1: 封面 -->
+<div class="slide active">
+  <div style="text-align:center;max-width:680px">
+    <div style="font-size:3.2rem;margin-bottom:6px">🧩</div>
+    <h1>服务器硬件 Skill 培训</h1>
+    <p style="font-size:1.1rem;color:#94a3b8;margin-top:6px">面向硬件研发团队的 AI Skills 全面进阶指南 v0.2</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+      <span class="tag t-p1">v0.2</span>
+      <span class="tag t-n">2026-07-29</span>
+      <span class="tag t-p2">9 章 · 18K 字</span>
+    </div>
+    <p style="margin-top:28px;color:#64748b;font-size:.85rem">⬅️ ➡️ 键盘翻页 · 底部导航 · 触控滑动</p>
+  </div>
+</div>
+
+<!-- S2: 目录 -->
+<div class="slide">
+  <h1>📋 目录</h1>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;max-width:960px;width:100%">
+    <div><p style="color:#60a5fa;">§1-3</p><p>基础：四层架构 · 创建流程 · 评估矩阵</p></div>
+    <div><p style="color:#60a5fa;">§4</p><p>硬件 Skills 全景图 (P0/P1/P2)</p></div>
+    <div><p style="color:#06b6d4;">§5</p><p style="font-weight:600">GitHub 开源项目 5 分类 15+ ⭐</p></div>
+    <div><p style="color:#06b6d4;">§6</p><p style="font-weight:600">5 种 Skills 编写方法 (借鉴 spec) ⭐</p></div>
+    <div><p style="color:#06b6d4;">§7</p><p style="font-weight:600">Trae 4 种编写策略 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§8</p><p style="font-weight:600">Skill 样例 4→8 个 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§9</p><p style="font-weight:600">工业级工作流 + 125 Skills 经验 ⭐</p></div>
+  </div>
+</div>
+
+<!-- S3: 四层架构 -->
+<div class="slide">
+  <h1>§1 四层架构</h1>
+  <div class="diag">┌─────────────────────────────────────────────┐
+│  Prompt — "帮我排查 BMC 故障"                │
+└─────────────────────┬───────────────────────┘
+                      ▼
+┌─────────────────────────────────────────────┐
+│  Skills — 可复用的知识/工作流 (125 Skills)   │
+│  description 匹配 → SKILL.md 加载 → 执行    │
+└────────────┬─────────────────┬──────────────┘
+             ▼                 ▼
+┌─────────────────┐ ┌──────────────┐
+│ MCP (工具接口)   │ │ Scripts(确定性)│
+│ IPMI/Redfish API │ │ 154 个脚本    │
+└─────────────────┘ └──────────────┘</div>
+  <div class="tw">
+  <table>
+    <tr><th>角色</th><th>一句话</th><th>在 CowAgent</th></tr>
+    <tr><td>Prompt</td><td>"我要做什么"</td><td>当前对话</td></tr>
+    <tr><td>Skill</td><td>"可复用的知识/流程"</td><td>skills/&lt;name&gt;/SKILL.md</td></tr>
+    <tr><td>MCP</td><td>"标准工具接口"</td><td>外部 MCP Server</td></tr>
+    <tr><td>Script</td><td>"确定性执行"</td><td>scripts/check_*/fix_*/</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S4: 七维评估 -->
+<div class="slide">
+  <h1>§3 好 Skills 七维评估矩阵</h1>
+  <div class="tw">
+  <table>
+    <tr><th>维度</th><th>标准</th><th>自检</th></tr>
+    <tr><td>🎯 精准触发</td><td>区分何时用/不用</td><td>测试用例全命中？</td></tr>
+    <tr><td>📏 单一职责</td><td>一个 Skill 一类事</td><td>一句话说清？</td></tr>
+    <tr><td>🔬 可执行</td><td>指令是动作</td><td>动词开头？</td></tr>
+    <tr><td>✅ 可验证</td><td>pass/fail 明确</td><td>"质量高"❌→"无错误"✅</td></tr>
+    <tr><td>📐 ≤7±2 条</td><td>规则不超标</td><td>分层了吗？</td></tr>
+    <tr><td>🔗 触发边界</td><td>Do/Do NOT</td><td>反例列了吗？</td></tr>
+    <tr><td>♻️ 可迭代</td><td>版本号+changelog</td><td>标注了？</td></tr>
+  </table>
+  </div>
+  <h3>硬件 Skill 特殊要求</h3>
+  <p>🔴 安全红线 · 📊 数据源优先级 · 🔒 操作确认 · 📏 量化四要素</p>
+</div>
+
+<!-- S5: GitHub 开源项目 -->
+<div class="slide">
+  <h1>§5 GitHub 硬件开源项目 <span class="tag t-n">NEW</span></h1>
+  <h3>① BMC/IPMI/Redfish 工具链</h3>
+  <div class="tw">
+  <table>
+    <tr><th>项目</th><th>⭐</th><th>说明</th></tr>
+    <tr><td>OpenBMC/openbmc</td><td>1.3k</td><td>开源 BMC 固件框架</td></tr>
+    <tr><td>KVMFleet/bmc-adapters</td><td>1</td><td>异步 BMC 管理 (Redfish/iDRAC/iLO)</td></tr>
+    <tr><td>vpatelsj/dc-simulator</td><td>1</td><td>数据中心模拟器 (BMC+IPMI+PXE)</td></tr>
+    <tr><td>jacobweinstock/bmctool</td><td>2</td><td>BMC CLI 交互工具</td></tr>
+  </table>
+  </div>
+  <h3>② GPU 集群监控</h3>
+  <div class="tw">
+  <table>
+    <tr><th>项目</th><th>⭐</th><th>说明</th></tr>
+    <tr><td>NVIDIA/DCGM</td><td>2k</td><td>数据中心 GPU 管理器</td></tr>
+    <tr><td>msalvaris/gpu_monitor</td><td>163</td><td>GPU 集群监控+InfluxDB+Grafana</td></tr>
+    <tr><td>PatWie/cluster-smi</td><td>84</td><td>整个集群的 nvidia-smi</td></tr>
+    <tr><td>eBay/nvidiagpubeat</td><td>55</td><td>Elastic Beat GPU 指标采集</td></tr>
+    <tr><td>FanKang2021/GPU-Health-eXpert</td><td>86</td><td>GPU 健康诊断</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S6: GitHub 续 -->
+<div class="slide">
+  <h1>§5 GitHub 续</h1>
+  <h3>③ 存储性能 + NVMe</h3>
+  <div class="tw">
+  <table>
+    <tr><th>项目</th><th>⭐</th><th>说明</th></tr>
+    <tr><td>axboe/fio</td><td>5.2k</td><td>灵活的 I/O 测试工具</td></tr>
+    <tr><td>spdk/spdk</td><td>3.2k</td><td>用户态 NVMe 驱动套件</td></tr>
+    <tr><td>linux-nvme/nvme-cli</td><td>1.5k</td><td>NVMe 命令行管理</td></tr>
+  </table>
+  </div>
+  <h3>④ 数据中心模拟</h3>
+  <div class="tw">
+  <table>
+    <tr><th>项目</th><th>⭐</th><th>说明</th></tr>
+    <tr><td>vpatelsj/dc-simulator</td><td>1</td><td>BMC+IPMI+Redfish+PXE 仿真</td></tr>
+    <tr><td>piyushbag/awesome-pcb-workflow</td><td>10</td><td>PCB 设计工具链参考</td></tr>
+    <tr><td>ManishSkr/Agentic_RTL_Coder</td><td>3</td><td>AI 生成 Verilog</td></tr>
+  </table>
+  </div>
+  <h3>⑤ 系统监控</h3>
+  <div class="tw">
+  <table>
+    <tr><th>项目</th><th>⭐</th><th>说明</th></tr>
+    <tr><td>netdata/netdata</td><td>72k</td><td>实时系统健康监控</td></tr>
+    <tr><td>nicolargo/glances</td><td>27k</td><td>跨平台系统监控</td></tr>
+    <tr><td>prometheus/node_exporter</td><td>11k</td><td>主机指标采集</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S7: 5种编写方法 -->
+<div class="slide">
+  <h1>§6 基于 spec 的 5 种编写方法 <span class="tag t-n">NEW</span></h1>
+  <div class="tw">
+  <table>
+    <tr><th>#</th><th>方法</th><th>借鉴来源</th><th>适用场景</th></tr>
+    <tr><td>①</td><td><strong>知识库模式提取法</strong></td><td>meth-006 (36 模式)</td><td>已有知识库打包</td></tr>
+    <tr><td>②</td><td><strong>两阶段生产法</strong></td><td>meth-009 (生成→维护)</td><td>从 0 快速产出</td></tr>
+    <tr><td>③</td><td><strong>双引擎设计法</strong></td><td>design-007 (125+154)</td><td>含确定性操作</td></tr>
+    <tr><td>④</td><td><strong>SSOT 约束法</strong></td><td>sr-003 (87 条约束)</td><td>严格质量控制</td></tr>
+    <tr><td>⑤</td><td><strong>会话挖掘法</strong></td><td>conversation-log</td><td>有记录无知识</td></tr>
+  </table>
+  </div>
+  <h3>选择决策树</h3>
+  <div class="code">知识库已有内容? → ①模式提取法
+从0快速产出?     → ②两阶段法
+有确定性操作?    → ③双引擎法
+严格质量控制?    → ④SSOT约束法
+有会话记录?      → ⑤会话挖掘法
+复合场景: ④→①→③→②</div>
+</div>
+
+<!-- S8: 方法详情 -->
+<div class="slide">
+  <h1>§6.2 方法一：模式提取法 (meth-006)</h1>
+  <div class="code">知识库搭建设计模式 (36种, 6类):
+  P- 管道模式 (3) — 数据流转路径
+  E- 执行引擎 (6) — Skills/Scripts 职责
+  A- AI 任务处理 (8) — Token 优化/质量门禁
+  G- 知识治理 (8) — 目录/SSOT/索引
+  C- 变更管理 (5) — 版本/迁移/同步
+  Q- 质量保障 (6) — 审计/验证/健康检查
+
+操作步骤:
+  Step 1: 扫描知识库 → 识别高频任务
+  Step 2: 归类 → 同类任务聚合
+  Step 3: 提取通用流程 → 参数化
+  Step 4: 验证 → 用全新场景测试</div>
+  <h3>方法二：两阶段生产法 (meth-009)</h3>
+  <div class="code">Phase 1: 自由生成 (聚焦质量)
+  ✅ MECE/数据出处/安全红线/可验证
+  ❌ 不管索引/日志/冲突/位置
+Phase 2: 集中维护 (脚本批量)
+  check-description-conflict.py
+  check-skill-format.py
+  fix-index-skill.py</div>
+</div>
+
+<!-- S9: 方法三和四 -->
+<div class="slide">
+  <h1>§6.4-6.5 双引擎 & SSOT 法</h1>
+  <h3>方法三：Skills-Scripts 双引擎 (design-007)</h3>
+  <div class="code">类型 A: Skill 调用 Script — NVMe基准→benchmark.py
+类型 B: Skill 内联脚本 — SKILL.md 写代码块
+类型 C: 纯推理 Skill — 架构分析/AI 推理
+
+判断: 确定性→Script / 指导性→SKILL.md</div>
+  <h3>方法四：SSOT 治理约束法 (sr-003)</h3>
+  <div class="tw">
+  <table>
+    <tr><th>规则</th><th>说明</th></tr>
+    <tr><td>🔴 头部注解</td><td>必须有 YAML frontmatter</td></tr>
+    <tr><td>🔴 不重复造轮子</td><td>搜索已有 Skill</td></tr>
+    <tr><td>🟡 description 唯一</td><td>不与已有触发词重叠</td></tr>
+    <tr><td>🟡 版本标记</td><td>每次更新改版本号</td></tr>
+    <tr><td>🟡 量化断言</td><td>来源+基线+条件</td></tr>
+    <tr><td>🟢 ≤500 行</td><td>超了拆 references/</td></tr>
+    <tr><td>🟢 测试例</td><td>至少 3 个</td></tr>
+    <tr><td>🟢 交叉链接</td><td>引用知识库</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S10: Trae 策略 -->
+<div class="slide">
+  <h1>§7 Trae 四种编写策略 <span class="tag t-n">NEW</span></h1>
+  <div class="tw">
+  <table>
+    <tr><th>#</th><th>策略</th><th>适用</th><th>工作量</th></tr>
+    <tr><td>①</td><td><strong>Custom Instructions</strong></td><td>常驻通用规则</td><td>一次配置</td></tr>
+    <tr><td>②</td><td><strong>.trae/rules/ 矩阵</strong></td><td>项目级规则</td><td>每个项目配置</td></tr>
+    <tr><td>③</td><td><strong>Pipeline 注入</strong></td><td>复杂多阶段任务</td><td>每阶段一句话</td></tr>
+    <tr><td>④</td><td><strong>开源封装法</strong></td><td>封装 GitHub 工具</td><td>中</td></tr>
+  </table>
+  </div>
+  <h3>规则文件模板 (.trae/rules/hardware-rules.md)</h3>
+  <div class="code">## 编码规范
+1. 🔴 寄存器操作有 bit-field 注释
+2. 🔴 敏感配置项校验范围
+3. ⚠️ 硬件抽象层有 Mock 测试
+
+## 安全红线
+1. 🔴 禁止直接操作生产设备
+2. 🔴 固件刷写前校验 checksum
+3. 🔴 电压/时序修改经硬件团队审核</div>
+</div>
+
+<!-- S11: Trae Pipeline -->
+<div class="slide">
+  <h1>§7.4 Pipeline 注入法</h1>
+  <div class="diag">借鉴 AI Production Pipeline (6阶段编排):
+
+阶段 1 — 需求分析
+  → 注入 hardware-rules.md
+  → 输出: 需求文档
+
+阶段 2 — 架构设计
+  → 注入 + architecture-design-rules.md
+  → 输出: 架构图 + 接口定义
+
+阶段 3 — 编码实现
+  → 注入 + bmc-rules.md
+  → 输出: 代码 + 测试
+
+阶段 4 — 审查
+  → 注入 + review-rules.md
+  → 输出: 审查报告</div>
+  <p>用户话术: "现在进入<span class="highlight">架构设计阶段</span>，请加载 .trae/rules/architecture-design-rules.md 规则"</p>
+</div>
+
+<!-- S12: 开源封装法 -->
+<div class="slide">
+  <h1>§7.5 开源封装法</h1>
+  <div class="diag">4 步将 GitHub 硬件项目封装为 Trae 规则:
+
+Step 1: 找项目
+  → cluster-smi (84⭐) GPU 集群状态查询
+
+Step 2: 提取使用模式
+  → cluster-smi → 全集群 GPU 状态一览
+
+Step 3: 封装为 .trae/rules/
+  → gpu-cluster-check.md
+
+Step 4: 加触发条件+输出格式
+  → 用户说"检查GPU集群"→自动触发
+  → 输出: JSON 健康报告</div>
+  <div class="code">用户说: "检查 GPU 集群状态"
+→ 加载 .trae/rules/gpu-cluster-check.md
+→ 运行: cluster-smi
+→ 输出: {total:256, healthy:254, degraded:1, offline:1}</div>
+</div>
+
+<!-- S13: 质量门禁 -->
+<div class="slide">
+  <h1>§7.6 Trae 质量门禁</h1>
+  <div class="tw">
+  <table>
+    <tr><th>级别</th><th>含义</th><th>适用</th></tr>
+    <tr><td><span class="bad">L1 🛑</span></td><td>安全红线，不可覆盖</td><td>所有硬件规则</td></tr>
+    <tr><td><span class="warn">L2 ⚠️</span></td><td>必须遵守，有后果</td><td>编码/测试规范</td></tr>
+    <tr><td><span class="good">L3 💡</span></td><td>最佳实践，建议遵守</td><td>文档/命名</td></tr>
+    <tr><td>L4 ℹ️</td><td>参考信息，仅上下文</td><td>技术背景/术语</td></tr>
+  </table>
+  </div>
+  <h3>自检清单</h3>
+  <div class="code">□ 🔴 红线真不可绕过？
+□ ⚠️ 警告有 pass/fail 标准？
+□ 💡 建议真有益非噪音？
+□ 规则 >30 条? → 分文件
+□ 无冲突？</div>
+</div>
+
+<!-- S14: Skill 样例 1-4 -->
+<div class="slide">
+  <h1>§8 Skill 样例扩展 <span class="tag t-n">NEW</span></h1>
+  <div class="tw">
+  <table>
+    <tr><th>#</th><th>Skill</th><th>触发词</th><th>核心工作流</th></tr>
+    <tr><td>①</td><td>BMC 编译</td><td>编译 BMC/OpenBMC</td><td>环境→源码→bitbake→刷写</td></tr>
+    <tr><td>②</td><td>NVMe 基准</td><td>SSD性能/摸底</td><td>4K随机/128K顺序→JSON报告</td></tr>
+    <tr><td>③</td><td>RAS 诊断</td><td>ECC/UE/CE/PCIe错误</td><td>收集→匹配→测试→根因→建议</td></tr>
+    <tr><td>④</td><td>存储方案</td><td>超节点/BF3/BF4/JBOF</td><td>指标→方案→优先级→测试</td></tr>
+    <tr><td>⑤ <span class="t-n">新</span></td><td><strong>GPU 健康检查</strong></td><td>集群巡检/健康检查</td><td>nvidia-smi→DCGM→报告</td></tr>
+    <tr><td>⑥ <span class="t-n">新</span></td><td><strong>互联架构分析</strong></td><td>UALink/CXL/PCIe</td><td>协议对比→拓扑→瓶颈</td></tr>
+    <tr><td>⑦ <span class="t-n">新</span></td><td><strong>训练 Hang 排查</strong></td><td>NCCL timeout/hang</td><td>进程→网络→存储→日志→NCCL</td></tr>
+    <tr><td>⑧ <span class="t-n">新</span></td><td><strong>功耗建模</strong></td><td>PUE/功耗/能效</td><td>组件规格→总功耗→PUE</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S15: GPU健康检查样例 -->
+<div class="slide">
+  <h1>§8.5 GPU 集群健康检查</h1>
+  <div class="code">name: gpu-cluster-health-check
+description: "GPU 集群健康检查 — DCGM/cluster-smi/nvidia-smi
+  Use when: (1) 例行集群巡检, (2) 训练前预检,
+  (3) 排查 GPU 异常(ECC/Power/NVLink),
+  (4) 生成集群健康报告。
+  Do NOT use: 单 GPU 诊断、应用层性能分析。"
+
+检查清单:
+1. 全集群 GPU 状态 (nvidia-smi -L / cluster-smi)
+2. ECC 错误计数 (nvidia-smi -q -d ECC)
+3. NVLink 健康 (nvidia-smi nvlink --status)
+4. GPU 温度/功耗 (nvidia-smi -q -d TEMPERATURE)
+5. DCGM 诊断 (dcgmi diag -r 1-3)
+
+输出:
+{
+  "total_gpus": 256,
+  "healthy": 254,
+  "degraded": 1,  "offline": 1,
+  "details": [{"node":"gpu-12","status":"Degraded","cause":"ECC"}]
+}</div>
+</div>
+
+<!-- S16: 训练Hang排查 -->
+<div class="slide">
+  <h1>§8.7 训练 Hang 排查</h1>
+  <div class="code">name: training-hang-diagnosis
+description: "分布式训练 Hang/超慢 — NCCL timeout/通信 hang
+  Use when: (1) 进程 hang, (2) NCCL timeout,
+  (3) 训练速度突降, (4) 多机卡在某步。"
+
+排查流程:
+  L1: 进程状态
+    ps aux | grep train
+    nvidia-smi (GPU 利用率是否为 0%)
+    echo $NCCL_DEBUG (环境变量)
+
+  L2: 网络状态
+    ibstat / ibstatus (IB 链路)
+    rdma link show (RDMA 链路)
+    netstat -s | grep retransmit (TCP 重传)
+
+  L3: 存储状态
+    iostat -x 1 (IO 是否 hang)
+    nfsstat (NFS 状态)
+
+  L4: 系统日志
+    dmesg -T | tail -50 (内核错误)
+    /var/log/messages (系统日志)
+
+  L5: NCCL Debug 复盘
+    NCCL_DEBUG=INFO 重新运行</div>
+</div>
+
+<!-- S17: 功耗建模 -->
+<div class="slide">
+  <h1>§8.8 功耗建模</h1>
+  <div class="code">name: server-power-modeling
+description: "功耗建模与 PUE 估算 — 基于组件规格
+  Use when: (1) 整机功耗估算, (2) 散热方案对比,
+  (3) Power Capping 策略, (4) 数据中心 PUE。"
+
+计算模型:
+  P_total = Σ(GPU × N) + CPU + Memory + NIC + Disk + Misc
+
+  GPU 功耗: TDP × 利用率 × GPU 数
+  CPU 功耗: TDP × 负载系数
+  Memory 功耗: 8W/DIMM × DIMM 数
+  NIC 功耗: 25W/400G 口 × 端口数
+
+  PUE ≈ P_total_input / P_total_it
+  Power Capping 建议: P_total × 1.2 (余量)</div>
+</div>
+
+<!-- S18: 工业级工作流 -->
+<div class="slide">
+  <h1>§9 工业级工作流 <span class="tag t-n">NEW</span></h1>
+  <h3>自动化挖掘流程</h3>
+  <div class="code">Step 1: 扫描会话找高频
+grep -c "BMC\|IPMI\|RAS\|NCCL\|SPDK" conversation-log/*.md
+  | sort -t: -k2 -rn | head -10
+
+Step 2: 提取固定序列
+grep -A3 -B1 "ipmitool\|nvidia-smi\|fio" memory/*.md
+
+Step 3: 参数化 → 写 SKILL.md
+  - 固定步骤 → 指令
+  - 变化部分 → 参数 ($BMC_IP, $DEVICE)
+
+Step 4: 验证 → 新场景测试</div>
+  <h3>Skill 生命周期</h3>
+  <div class="diag">Draft → Active → Review → Deprecated → Deleted
+  _drafts/  skills/   审计脚本  _archive/   tmp/bak/</div>
+</div>
+
+<!-- S19: 125 Skills 经验 -->
+<div class="slide">
+  <h1>§9.4 125 Skills 实践经验</h1>
+  <div class="tw">
+  <table>
+    <tr><th>#</th><th>经验教训</th><th>数据/说明</th></tr>
+    <tr><td>1</td><td><strong>description 精准度 > 内容深度</strong></td><td>触发偏差是最大 Token 浪费</td></tr>
+    <tr><td>2</td><td><strong>单一职责</strong></td><td>多职责 Skill 维护成本指数增长</td></tr>
+    <tr><td>3</td><td><strong>有脚本的 Skill 更可靠</strong></td><td>Skills+Scripts 可靠性 2-3× 纯推理</td></tr>
+    <tr><td>4</td><td><strong>定期审计防技能膨胀</strong></td><td>不审计的 Skills 半年 30% 过时</td></tr>
+    <tr><td>5</td><td><strong>对话提取的 Skill 最实用</strong></td><td>有真实需求存活率 >80%</td></tr>
+    <tr><td>6</td><td><strong>不将一次性任务写成 Skill</strong></td><td>一写就废弃，零收益</td></tr>
+    <tr><td>7</td><td><strong>需要版本管理</strong></td><td>无版本无法回滚</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- S20: 总结 -->
+<div class="slide">
+  <h1>🎯 核心总结</h1>
+  <div style="max-width:960px;width:100%">
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin-bottom:10px">
+      <p style="color:#60a5fa;font-weight:600">📌 四层架构</p>
+      <p>Prompt → Skills(125) → MCP + Scripts(154)</p>
+    </div>
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin-bottom:10px">
+      <p style="color:#fbbf24;font-weight:600">⭐ 5 种 Skills 编写法</p>
+      <p>模式提取(meth-006) · 两阶段(meth-009) · 双引擎(design-007) · SSOT约束(sr-003) · 会话挖掘</p>
+    </div>
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin-bottom:10px">
+      <p style="color:#34d399;font-weight:600">🛠️ Trae 4 策略</p>
+      <p>Custom Instructions · .trae/rules/ · Pipeline 注入 · 开源封装</p>
+    </div>
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px">
+      <p style="color:#a78bfa;font-weight:600">🎯 8 个 Skill 样例</p>
+      <p>BMC编译 · NVMe基准 · RAS诊断 · 存储方案 · <span class="highlight">GPU健康检查 · 互联架构 · 训练Hang · 功耗建模</span></p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav">
+  <button id="p">◀</button>
+  <div class="prog"><div class="prog-bar" id="pb" style="width:5%"></div></div>
+  <span class="cnt" id="c">1 / 20</span>
+  <button id="n">▶</button>
+</div>
+
+<script>
+const s=document.querySelectorAll('.slide'),t=s.length;let i=0;
+function sh(idx){s.forEach((e,k)=>e.classList.toggle('active',k===idx));document.getElementById('c').textContent=`${idx+1}/${t}`;document.getElementById('pb').style.width=`${(idx+1)/t*100}%`}
+document.getElementById('p').onclick=()=>{if(i>0){i--;sh(i)}};
+document.getElementById('n').onclick=()=>{if(i<t-1){i++;sh(i)}};
+document.onkeydown=e=>{if((e.key==='ArrowLeft'||e.key==='PageUp')&&i>0){if(e.key==='PageUp')i=Math.max(0,i-5);else i--;sh(i)}if((e.key==='ArrowRight'||e.key==='PageDown')&&i<t-1){if(e.key==='PageDown')i=Math.min(t-1,i+5);else i++;sh(i)}if(e.key==='Home'){i=0;sh(i)}if(e.key==='End'){i=t-1;sh(i)}};
+let tx=0;document.ontouchstart=e=>{tx=e.changedTouches[0].screenX};document.ontouchend=e=>{const d=tx-e.changedTouches[0].screenX;if(d>50&&i<t-1){i++;sh(i)}if(d<-50&&i>0){i--;sh(i)}};
+sh(0);
+</script>
+</body>
+</html>

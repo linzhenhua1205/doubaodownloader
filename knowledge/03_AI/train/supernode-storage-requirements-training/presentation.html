@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超节点存储需求专题培训 · KLX 512 GPU 带宽链分析</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; height: 100vh; }
+
+  /* ── Slide Container ── */
+  .slides { width: 100vw; height: 100vh; position: relative; }
+  .slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 48px 64px; opacity: 0; pointer-events: none; transition: opacity .4s ease;
+    overflow-y: auto; gap: 16px; }
+  .slide.active { opacity: 1; pointer-events: auto; z-index: 10; }
+
+  /* ── Content Typography ── */
+  .slide h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; text-align: center; }
+  .slide h2 { font-size: 1.5rem; font-weight: 600; color: #60a5fa; margin-bottom: 8px; width: 100%; max-width: 960px; }
+  .slide h3 { font-size: 1.1rem; font-weight: 600; color: #93c5fd; margin-bottom: 4px; width: 100%; max-width: 960px; }
+  .slide p, .slide ul, .slide .table-wrap { width: 100%; max-width: 960px; }
+  .slide p { line-height: 1.7; color: #cbd5e1; margin-bottom: 4px; }
+  .slide ul { list-style: none; padding: 0; }
+  .slide li { padding: 4px 0 4px 20px; position: relative; line-height: 1.5; color: #cbd5e1; }
+  .slide li::before { content: '▸'; position: absolute; left: 0; color: #60a5fa; }
+  .slide .highlight { color: #fbbf24; font-weight: 600; }
+  .slide .accent { color: #60a5fa; font-weight: 600; }
+  .slide .good { color: #34d399; }
+  .slide .warn { color: #fbbf24; }
+  .slide .bad { color: #f87171; }
+  .slide .code-block { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; font-family: 'SF Mono','Fira Code',monospace; font-size: .82rem; line-height: 1.5; color: #a5b4fc; width: 100%; max-width: 960px; overflow-x: auto; white-space: pre; margin: 4px 0; }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin: 4px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #334155; }
+  th { background: #1e293b; color: #93c5fd; font-weight: 600; white-space: nowrap; }
+  td { color: #cbd5e1; }
+  tr:hover td { background: #1e293b88; }
+
+  /* ── Navigation ── */
+  .nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; align-items: center; z-index: 100; background: #1e293bee; padding: 8px 20px; border-radius: 24px; border: 1px solid #334155; }
+  .nav button { background: #334155; border: none; color: #e2e8f0; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; transition: .2s; display: flex; align-items: center; justify-content: center; }
+  .nav button:hover { background: #475569; }
+  .nav .counter { color: #94a3b8; font-size: .85rem; min-width: 60px; text-align: center; }
+  .nav .progress { height: 4px; background: #334155; border-radius: 2px; width: 200px; overflow: hidden; }
+  .nav .progress-bar { height: 100%; background: linear-gradient(90deg,#60a5fa,#a78bfa); border-radius: 2px; transition: width .3s; }
+
+  /* ── Tag/Badge ── */
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: .75rem; font-weight: 600; }
+  .tag-p0 { background: #ef4444; color: #fff; }
+  .tag-p1 { background: #f59e0b; color: #000; }
+  .tag-p2 { background: #22c55e; color: #000; }
+  .tag-rec { background: #8b5cf6; color: #fff; }
+  .tag-new { background: #06b6d4; color: #000; }
+
+  /* ── Agent Diagram ── */
+  .diagram { font-family: 'SF Mono','Fira Code',monospace; font-size: .75rem; line-height: 1.4; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 8px 12px; width: 100%; max-width: 960px; overflow-x: auto; white-space: pre; color: #a5b4fc; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .slide { padding: 24px 16px; }
+    .slide h1 { font-size: 1.6rem; }
+    .slide h2 { font-size: 1.15rem; }
+    .nav .progress { width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides" id="slides">
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: 封面 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div style="text-align:center; max-width:720px;">
+    <div style="font-size:3.6rem; margin-bottom:8px;">🏗️</div>
+    <h1>超节点存储需求<br>专题培训</h1>
+    <p style="font-size:1.15rem; color:#94a3b8; margin-top:8px;">含 KLX 512 GPU 存储带宽链深度分析 &amp; BF3/BF4 方案评估</p>
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:24px;">
+      <span class="tag tag-p1">v0.2</span>
+      <span class="tag tag-new">2026-07-29</span>
+      <span class="tag tag-p2">14 章节</span>
+    </div>
+    <p style="margin-top:32px; color:#64748b; font-size:.9rem;">⬅️ ➡️ 键盘方向键翻页 · 底部导航栏</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2: 目录 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>📋 目录</h1>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; max-width:960px; width:100%;">
+    <div><p style="color:#60a5fa;">§1</p><p>超节点定义与存储设计点</p></div>
+    <div><p style="color:#60a5fa;">§2</p><p>系统→存储硬件指标映射</p></div>
+    <div><p style="color:#60a5fa;">§3</p><p>存储网架构权衡</p></div>
+    <div><p style="color:#06b6d4;">§4</p><p style="font-weight:600;">KLX 512 GPU 带宽链深度分析 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§5</p><p style="font-weight:600;">四场景评估与方案推荐 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§6</p><p style="font-weight:600;">方案对比 &amp; 演进路径 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§7</p><p style="font-weight:600;">CMX 架构对标 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§8</p><p style="font-weight:600;">延迟深度分析 ⭐</p></div>
+    <div><p style="color:#06b6d4;">§9</p><p style="font-weight:600;">存储网络需求规格 ⭐</p></div>
+    <div><p>§10</p><p>SPDK 栈详解</p></div>
+    <div><p>§11</p><p>需求优先级</p></div>
+    <div><p>§12-14</p><p>测试 · 集成 · 项目计划</p></div>
+  </div>
+  <p style="margin-top:12px; color:#64748b; font-size:.85rem;">⭐ 标记者为此轮基于 KLX 文档 v5.0 新增/重写章节</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3: 超节点四层架构 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§1 超节点四层架构中的存储</h1>
+  <div class="diagram">┌─────────────────────────────────────────────────────────────┐
+│  第四层：扩展模式 — 超节点内 Scale-Up / 间 Scale-Out         │
+│  存储需求：同时支持域内紧耦合 + 域间松耦合流量                │
+├─────────────────────────────────────────────────────────────┤
+│  第三层：系统软件与调度 — 工程落地关键                        │
+│  ① 统一资源抽象  ② 拓扑感知调度  ③ 分层 RAS                 │
+├─────────────────────────────────────────────────────────────┤
+│  第二层：内存架构 <span style="color:#fbbf24;">← 最核心</span>                        │
+│  ① 全局内存池 → KV Cache 全局共享                           │
+│  ② 内存语义访问 → 存储网需支持 RDMA 直通 GPU                │
+├─────────────────────────────────────────────────────────────┤
+│  第一层：硬件互联 — 基础条件                                  │
+│  ① 计算网 (NVLink/HCCS)                                     │
+│  ② ⭐ 存储网 — 独立第四类网络                               │
+└─────────────────────────────────────────────────────────────┘</div>
+  <h3 style="margin-top:8px;">8 个存储设计点</h3>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 16px; max-width:960px; width:100%; font-size:.85rem;">
+    <p>D1: 统一资源抽象</p><p>D2: 存储网独立</p>
+    <p>D3: 全局内存池化</p><p>D4: 拓扑感知放置</p>
+    <p>D5: 分层 RAS</p><p>D6: Scale-Up/Out 双模</p>
+    <p>D7: 流量优先级分离</p><p>D8: 与系统软件协同</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4: 系统指标→存储硬件 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§2 系统指标 → 存储硬件</h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>流量类型</th><th>持续需求</th><th>峰值</th><th>延迟敏感</th></tr>
+    <tr><td>训练数据加载</td><td>~256-640 GB/s</td><td>~500-1,000</td><td>🟡 中</td></tr>
+    <tr><td>Checkpoint 写</td><td>~12-167 GB/s</td><td>~35-500</td><td>🟢 低</td></tr>
+    <tr><td>KV Cache 卸载</td><td>~13-51 GB/s</td><td>~25-100</td><td><span class="bad">🔴 高</span></td></tr>
+    <tr><td>KV Cache 预取</td><td>~25-100 GB/s</td><td>~50-200</td><td><span class="bad">🔴 极高</span></td></tr>
+    <tr style="border-top:2px solid #475569;"><td><strong>存储网总需求</strong></td><td><strong>~300-950 GB/s</strong></td><td><strong>~600-1,800</strong></td><td>—</td></tr>
+  </table>
+  </div>
+  <h3>延迟需求</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>场景</th><th>端到端要求</th><th>存储网贡献</th></tr>
+    <tr><td>KV Cache 预取</td><td>&lt;50μs</td><td>&lt;5μs</td></tr>
+    <tr><td>KV Cache 卸载</td><td>&lt;100μs</td><td>&lt;10μs</td></tr>
+    <tr><td>训练数据加载</td><td>&lt;100ms</td><td>&lt;10μs</td></tr>
+    <tr><td>Checkpoint 写</td><td>&lt;60s</td><td>&lt;100ms</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5: 存储网架构权衡 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§3 存储网架构权衡</h1>
+  <div class="diagram">超节点四网架构
+┌─────────────────────────────────────────────┐
+│ ① 计算网 — GPU-GPU AllReduce               │
+│    NVLink 5/HCCS/UALink, ~200ns, TB/s      │
+├─────────────────────────────────────────────┤
+│ ② 存储网 — GPU↔NVMe SSD  ← ⭐本期重点      │
+│    训练数据/Checkpoint/KV Cache             │
+│    RoCEv2/NVMe-oF/GPUDirect Storage        │
+│    ~μs级, ~100-1,000 GB/s                  │
+├─────────────────────────────────────────────┤
+│ ③ 管理网 — 健康心跳/配置                    │
+│ ④ 同步网 — PTP/Barrier, ~50ns             │
+└─────────────────────────────────────────────┘</div>
+  <h3>核心决策：存储网独立 vs 融合</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>权衡</th><th>推荐</th><th>理由</th></tr>
+    <tr><td>存储网独立</td><td><span class="good">✅ ≥256 GPU 必需</span></td><td>Checkpoint 不干扰 AllReduce</td></tr>
+    <tr><td>拓扑</td><td>Leaf-Spine CLOS</td><td>扩展性最佳，延迟 2-3μs</td></tr>
+    <tr><td>计算侧连接</td><td>DPU 方案</td><td>可做卸载/加速</td></tr>
+    <tr><td>存储侧架构</td><td>分布式 JBOF + DPU</td><td>线性扩展，分片共享</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6: §4 KLX 概览 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4 KLX 512 GPU 带宽链深度分析 <span class="tag tag-new">NEW</span></h1>
+  <h2>场景定义</h2>
+  <div class="diagram">+-----------------------------------------------------------------------+
+| KLX 128 nodes (512 GPU, 4 GPU/node) Supernode                         |
++-----------------------------------------------------------------------+
+| Compute-1 (4xM300)    Compute-2 (4xM300)  ...  Compute-N (4xM300)    |
+| +-----------+          +-----------+          +-----------+           |
+| | 4xM300    |          | 4xM300    |          | 4xM300    |           |
+| | BF3/4 ×1 |          | BF3/4 ×1 |          | BF3/4 ×1 |           |
+| +-----+----+          +-----+----+          +-----+----+           |
+|       +---------------------+-----------------------+                |
+|                           | Storage Network (RoCEv2)                |
+|                           v                                         |
+|      +----------------------------------------------------+         |
+|      |   Leaf ×2 → JBOF ×5~6 (4×400G uplink, 24 NVMe)     |         |
+|      +----------------------------------------------------+         |
++-----------------------------------------------------------------------+</div>
+  <h3>修正后的关键参数 (v4.5)</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>参数</th><th>修正值</th><th>说明</th></tr>
+    <tr><td>节点数</td><td><span class="highlight">128 节点</span></td><td>原误标 512 节点</td></tr>
+    <tr><td>总 GPU</td><td>512 (4/节点)</td><td>不变</td></tr>
+    <tr><td>每节点 KV 写</td><td><span class="highlight">~4 Gbps</span></td><td>原 ~1 Gbps</td></tr>
+    <tr><td>每节点 Checkpoint</td><td><span class="highlight">~400 Gbps</span></td><td>逼近 400G 上限</td></tr>
+    <tr><td>JBOF 推荐数</td><td><span class="highlight">5-6 台</span></td><td>纯 KV 专用 1-2 台即可</td></tr>
+    <tr><td>Leaf 交换机</td><td><span class="highlight">2 台</span></td><td>(128/64)</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7: BF3 vs BF4 组件规格 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4.2 组件规格</h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>规格</th><th>BF3</th><th>BF4 (保守假设)</th></tr>
+    <tr><td>端口</td><td>2 × 400GbE</td><td>1~2 × <span class="highlight">800GbE</span> (CX9)</td></tr>
+    <tr><td>PCIe</td><td>Gen5 ×16 = 512 Gbps</td><td>Gen6 ×16 = <span class="highlight">1024 Gbps</span></td></tr>
+    <tr><td>KV 语义加速</td><td><span class="bad">❌ 不支持</span></td><td><span class="good">✅ 硬件</span></td></tr>
+    <tr><td>NVMe KV Ext</td><td><span class="bad">❌ 不支持</span></td><td><span class="good">✅ 原生</span></td></tr>
+    <tr><td>GDS</td><td><span class="warn">🟡 标准</span></td><td><span class="good">✅ cuFile 原生</span></td></tr>
+    <tr><td>功耗</td><td>~120W</td><td>~150W+</td></tr>
+  </table>
+  </div>
+  <h3>NVMe SSD &amp; JBOF</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>参数</th><th>单盘</th><th>JBOF (24 盘)</th></tr>
+    <tr><td>顺序读</td><td>~12 GB/s (持续)</td><td>288 GB/s</td></tr>
+    <tr><td>顺序写</td><td>~7 GB/s</td><td>168 GB/s = 1,344 Gbps</td></tr>
+    <tr><td>上行带宽</td><td>—</td><td>4×400G = 1,600 Gbps</td></tr>
+    <tr><td>读瓶颈</td><td>—</td><td><span class="warn">上行 (1600 Gbps &lt; 2304 Gbps)</span></td></tr>
+    <tr><td>写瓶颈</td><td>—</td><td><span class="warn">盘写 (1344 Gbps &lt; 1600 Gbps)</span></td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8: 全链路瓶颈链 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4.3 全链路瓶颈链</h1>
+  <div class="diagram">GPU HBM → PCIe → BF DPU → NIC端口 → 交换网络 → 存储NIC → JBOF → NVMe SSD
+ ↑          ↑         ↑       ↑        ↑          ↑       ↑        ↑
+ A          B         C       D        E          F       G        H</div>
+  <div class="table-wrap">
+  <table>
+    <tr><th>段</th><th>位置</th><th>BF3 带宽</th><th>瓶颈?</th></tr>
+    <tr><td>B</td><td>PCIe 链路</td><td>512 Gbps</td><td><span class="bad">🔴 Twin-port 时瓶颈</span></td></tr>
+    <tr><td>D</td><td>NIC 端口</td><td>400 / 800 Gbps</td><td>🟡 端口上限</td></tr>
+    <tr><td>E</td><td>交换网络</td><td>OS 比决定</td><td>🟡 配置不当可成瓶颈</td></tr>
+    <tr><td>H</td><td><strong>NVMe SSD</strong></td><td>14/7 GB/s</td><td><span class="bad">🔴 真第一瓶颈</span></td></tr>
+  </table>
+  </div>
+  <h3>场景化瓶颈</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>场景</th><th>第一瓶颈</th><th>说明</th></tr>
+    <tr><td>KV 写入 (日常)</td><td><span class="good">🟢 无瓶颈</span></td><td>余量 &gt;50×</td></tr>
+    <tr><td>KV Prestaging</td><td><span class="good">🟢 无瓶颈</span></td><td>IOPS 延迟为主</td></tr>
+    <tr><td>Checkpoint 写</td><td><span class="bad">🔴 盘写带宽</span></td><td>此时 twin-port 有价值</td></tr>
+    <tr><td>大规模推理恢复</td><td><span class="bad">🔴 盘读带宽</span></td><td>JBOF 上行拥塞风险</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9: KV Cache 带宽需求 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4.4 KV Cache 带宽需求</h1>
+  <h3>batch_size 敏感性扩展</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>batch_size</th><th>单次逐出</th><th>写入带宽</th><th>400G 占用</th><th>余量</th></tr>
+    <tr><td>4 (基准)</td><td>~4 MB</td><td>~1 Gbps</td><td>0.25%</td><td><span class="good">&gt;50×</span></td></tr>
+    <tr><td>16</td><td>~16 MB</td><td>~4 Gbps</td><td>1%</td><td><span class="good">&gt;12×</span></td></tr>
+    <tr><td>64</td><td>~64 MB</td><td>~16 Gbps</td><td>4%</td><td><span class="good">&gt;3×</span></td></tr>
+    <tr><td>128 (多租户)</td><td>~128 MB</td><td>~32 Gbps</td><td>8%</td><td><span class="good">&gt;1.5×</span></td></tr>
+    <tr><td>512 (极限)</td><td>~512 MB</td><td>~128 Gbps</td><td>32%</td><td><span class="good">&gt;3×</span></td></tr>
+  </table>
+  </div>
+  <p class="highlight" style="max-width:960px; margin-top:8px;">🔑 链路带宽从不作为 KV 写入的瓶颈存在</p>
+  <h3>唯一需要 Twin-port 的场景</h3>
+  <p>Checkpoint / 模型加载 — 日常 KV 读写都不需要</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10: 读写混合 + 热点 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4.6-4.7 读写混合 &amp; 热点分析</h1>
+  <h3>三流量叠加场景</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>场景</th><th>合计</th><th>400G 占用</th><th>结论</th></tr>
+    <tr><td>日常推理</td><td>~12 Gbps</td><td>3%</td><td><span class="good">✅ 充裕</span></td></tr>
+    <tr><td>高负载</td><td>~72 Gbps</td><td>18%</td><td><span class="good">✅ 充裕</span></td></tr>
+    <tr><td>Checkpoint + 推理</td><td>~58 Gbps</td><td>14.5%</td><td><span class="warn">🟡 热点 JBOF 可能瓶颈</span></td></tr>
+    <tr><td>全并发极限</td><td>~142 Gbps</td><td>35.5%</td><td><span class="warn">🟡 需分流策略</span></td></tr>
+  </table>
+  </div>
+  <h3>128 节点热点场景</h3>
+  <div class="code-block">条件: 5 JBOF, 18 节点集中到 1 台 (哈希偏斜)
+JBOF 上行需求: 18 × 50 Gbps = 900 Gbps / 1,600 Gbps = <span class="highlight">56.3%</span>
+虚拟节点 ×256 缓解后: 降至 <span class="highlight">25-31%</span>
+→ ✅ 128 节点下热点可管理</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11: 128 节点瓶颈排序 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§4.8 带宽链核心结论</h1>
+  <h3>128 节点全链路瓶颈排序</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>#</th><th>瓶颈段</th><th>带宽</th><th>判断</th></tr>
+    <tr><td>1</td><td>网络端口</td><td>400 Gbps</td><td><span class="good">🟢 日常 &gt;100× 余量</span></td></tr>
+    <tr><td>2</td><td>交换网络 OS</td><td>2:1 → 200 Gbps/节点</td><td><span class="good">🟢 绰绰有余</span></td></tr>
+    <tr><td>3</td><td>JBOF 上行</td><td>4×400G = 1,600 Gbps</td><td><span class="good">🟢 热点 25-31% 可管理</span></td></tr>
+    <tr><td>4</td><td>NVMe SSD 写池</td><td>72-168 GB/s</td><td><span class="warn">🟡 Checkpoint 需注意</span></td></tr>
+  </table>
+  </div>
+  <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:12px 16px; max-width:960px; width:100%; margin-top:8px;">
+    <p style="color:#fbbf24; font-weight:600;">📌 最终结论</p>
+    <p>128 节点 × 4 GPU 规模下，KV 日常场景全网络链路<strong>没有任何带宽瓶颈</strong>。Leaf 交换机仅需 2 台，2:1 OS 绰绰有余。</p>
+    <p>真正的存储端约束在 <span class="highlight">NVMe SSD 池的聚合写入带宽</span>——选 3-4 台还是 5-6 台 JBOF 取决于 checkpoint 窗口要求。</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 12: 场景定义矩阵 (⭐) -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§5 四场景评估 <span class="tag tag-new">NEW</span></h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>#</th><th>场景</th><th>DPU</th><th>端口</th><th>节点 BW</th><th>PCIe</th></tr>
+    <tr><td>A 🟡</td><td>BF3 单口 400G</td><td>BF3 CX7</td><td>1×400G</td><td>400 Gbps</td><td><span class="good">无</span></td></tr>
+    <tr><td>B ❌</td><td>BF3 双口 800G</td><td>BF3 CX7</td><td>2×400G LAG</td><td>800 (实效 ~512G)</td><td><span class="bad">🔴 瓶颈 64%</span></td></tr>
+    <tr><td>E ⭐</td><td><strong>BF4 单口 800G</strong></td><td>BF4 CX9</td><td>1×800G</td><td><strong>800 Gbps</strong></td><td><span class="good">无 (1024>800)</span></td></tr>
+    <tr><td>F ❌</td><td>BF4 双口 1.6T</td><td>BF4 CX9</td><td>2×800G LAG</td><td>1.6T (实效 ~1014G)</td><td><span class="bad">⚠️ 效率 64%</span></td></tr>
+  </table>
+  </div>
+  <p>⚠️ 原场景 C (BF4 400G) 和 D (BF4 800G) 因 BF4 整合 CX9 已废弃</p>
+  <p style="margin-top:8px;"><span class="highlight">🌟 BF4 单口 800G 是核心推荐场景</span> — 带宽翻倍 + PCIe 满效 + 硬件加速</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 13: 四场景对比矩阵 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§5.6 四场景对比矩阵</h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>维度</th><th>A: BF3×400G</th><th>B: BF3×800G ❌</th><th><span class="highlight">E: BF4×800G ⭐</span></th><th>F: BF4×1.6T ❌</th></tr>
+    <tr><td>带宽效率</td><td>100%</td><td class="bad">64%</td><td class="good">78%</td><td class="bad">64%</td></tr>
+    <tr><td>KV 余量</td><td>&gt;50×</td><td>&gt;50×</td><td><strong>&gt;100×</strong></td><td>&gt;200×</td></tr>
+    <tr><td>Prestaging</td><td class="bad">🔴 +2-3μs</td><td class="bad">🔴 +2-3μs</td><td class="good">✅ 硬件卸载</td><td class="good">✅ 硬件</td></tr>
+    <tr><td>GDS 风险</td><td class="bad">🔴 一票否决</td><td class="bad">🔴 同左</td><td class="good">✅ 已解除</td><td class="good">✅ 已解除</td></tr>
+    <tr><td>CP 时间</td><td>17.5s</td><td>13.7s</td><td><strong>8.75s ⭐</strong></td><td>10.9s</td></tr>
+    <tr><td>代码量</td><td>39-71K</td><td>同左</td><td><strong>16.5-26K</strong></td><td>同左</td></tr>
+    <tr><td>成本/节点</td><td>~$600</td><td>~$700</td><td>~$1,200</td><td>~$1,400</td></tr>
+    <tr style="border-top:2px solid #475569;"><td><strong>推荐度</strong></td><td>🟡 性价比选</td><td>❌ 不推荐</td><td><span class="highlight">🌟 最优推荐</span></td><td>❌ 不推荐</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 14: 决策树 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§5.7 决策树 &amp; 推荐</h1>
+  <div class="diagram">+---------------------------------------------------------------------+
+| KLX 512 Supernode Storage Network Selection                         |
++---------------------------------------------------------------------+
+|                                                                     |
+| Q1: Is BF4 procurement feasible (supply/sanctions)?                 |
+|  +-> YES -> <span style="color:#fbbf24;">🌟 Scene E: BF4 × single-port 800G</span>                       |
+|  |    (Optimal: 2x BW + HW acceleration + GDS resolved)             |
+|  +-> NO -> Go to Q2                                                 |
+|                                                                     |
+| Q2: Accept GDS risk & have RDMA tuning capability?                  |
+|  +-> YES -> BF3 + simplified KVSvc (mid-tier)                       |
+|  +-> NO -> BF3 × single-port 400G (cost-efficiency)                 |
+|                                                                     |
+| NOT RECOMMENDED:                                                    |
+|  Scene B (BF3 dual-port) and Scene F (BF4 dual-port 1.6T)          |
+|  Both PCIe bandwidth bottlenecked                                   |
++-----------------------------------------------------------------------+</div>
+  <p><span class="warn">⚠️ BF3 twin-port (场景 B):</span> PCIe 瓶颈 64% 效率，仅 28% 带宽增益，不推荐</p>
+  <p><span class="bad">⚠️ BF4 双口 1.6T (场景 F):</span> PCIe 瓶颈导致 checkpoint 反不如单口快 (10.9s vs 8.75s)</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 15: 方案对比 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§6 方案对比：BF3 vs BF4 vs 不外接 <span class="tag tag-new">NEW</span></h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>场景</th><th>BF3+JBOF</th><th>BF4+JBOF</th><th>不外接</th></tr>
+    <tr><td>KV 写延迟</td><td>~12-15μs</td><td class="good">~7-10μs</td><td>—</td></tr>
+    <tr><td>CP 70B</td><td>~17.5s</td><td class="good">~8.75s</td><td>—</td></tr>
+    <tr><td>KV 容量</td><td>TB 级</td><td>TB 级</td><td class="bad">仅 HBM</td></tr>
+    <tr><td>模型加载</td><td>快</td><td class="good">最快 (2×BW)</td><td class="bad">最慢</td></tr>
+    <tr><td>代码量</td><td>30-48K</td><td class="good">16.5-26K</td><td class="good">0</td></tr>
+  </table>
+  </div>
+  <h3>演进路径推荐</h3>
+  <div class="code-block">Phase 1: BF3 单口 400G + 基础 JBOF (6-9月, 快速验证)
+  ↓
+Phase 2: BF4 单口 800G 升级 (9-12月, 性能 + 风险解除)
+  ↓
+Phase 3: 全量 BF4 + 原生 DOCA Memos (12-18月, 完整能力)</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 16: 软件工作量 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§6.3 软件工作量对比 (修正后)</h1>
+  <p>⚠️ 原估算被高估 3-5×，以下为修正后的<strong>核心逻辑代码量</strong></p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>软件层</th><th>BF3 核心</th><th>BF4 核心</th><th>差距</th></tr>
+    <tr><td>KV 调度 (Dynamo 等价)</td><td>4-6K 行</td><td>4-6K 行</td><td>=</td></tr>
+    <tr><td>传输层 (NIXL 等价)</td><td>2-3K 行</td><td>200-500 行</td><td>~6×</td></tr>
+    <tr><td>KV 存储 (Memos 等价)</td><td><strong>3-5K 行</strong></td><td><strong>500-1K 行</strong></td><td>~4×</td></tr>
+    <tr><td>拓扑感知</td><td>2-3K 行</td><td>2-3K 行</td><td>=</td></tr>
+    <tr style="border-top:2px solid #475569;"><td><strong>总计 (核心)</strong></td><td><strong>12-19K</strong></td><td><strong>7-12K</strong></td><td><span class="warn">~1.7×</span></td></tr>
+    <tr><td>含测试+生产</td><td>30-48K</td><td>16.5-26K</td><td><span class="warn">~1.8×</span></td></tr>
+  </table>
+  </div>
+  <p>🔑 Dynamo 等价框架是两方案共同的、<span class="highlight">最大且不可简化的单一工程</span> (4-6K 行核心)</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 17: CMX 七层对标 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§7 CMX 架构对标 <span class="tag tag-new">NEW</span></h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>#</th><th>层</th><th>NVIDIA</th><th>KLX BF3</th><th>KLX BF4</th></tr>
+    <tr><td>1</td><td>KV 调度</td><td>Dynamo</td><td>自研 (4-6K)</td><td>自研 (4-6K)</td></tr>
+    <tr><td>2</td><td>传输层</td><td>NIXL+BF4 DMA</td><td class="bad">自研 2-3K</td><td class="good">适配 200-500 行</td></tr>
+    <tr><td>3</td><td>KV 存储</td><td>DOCA Memos</td><td class="bad">自研 3-5K</td><td class="good">集成 500-1K</td></tr>
+    <tr><td>4</td><td>拓扑感知</td><td>Grove</td><td>自研</td><td>自研</td></tr>
+    <tr><td>5</td><td>网络</td><td>Spectrum-X</td><td>标准 RoCE</td><td>可选 Spectrum-X</td></tr>
+    <tr><td>6</td><td>存储节点</td><td>BF4 STX 机架</td><td>JBOF</td><td>BF4 STX/JBOF</td></tr>
+    <tr><td>7</td><td>GDS</td><td>cuFile 原生</td><td class="bad">🟡 依赖 M300</td><td class="good">✅ cuFile 原生</td></tr>
+  </table>
+  </div>
+  <p>BF4 方案将差距收窄到<strong>软件上层</strong> (Dynamo 闭源、推理框架差异)</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 18: 延迟深度分析 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§8 延迟深度分析 <span class="tag tag-new">NEW</span></h1>
+  <h3>KV 写入路径</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>延迟组件</th><th>BF3</th><th>BF4</th></tr>
+    <tr><td>GPU→DPU DMA</td><td>~0.5-1μs</td><td>~0.5-1μs</td></tr>
+    <tr><td>KV→LBA 映射</td><td>~1-3μs</td><td><span class="good">❌ 无 (硬件)</span></td></tr>
+    <tr><td>RDMA 传输</td><td>~2-3μs</td><td>~1-2μs</td></tr>
+    <tr><td>NVMe SSD 写 (tPROG)</td><td>~20-40μs</td><td>~20-40μs</td></tr>
+    <tr style="border-top:2px solid #475569;"><td><strong>端到端 P50</strong></td><td><strong>~25-50μs</strong></td><td><strong>~22-45μs</strong></td></tr>
+    <tr><td>P99</td><td>~50-100μs</td><td>~45-90μs</td></tr>
+  </table>
+  </div>
+  <p><span class="highlight">关键发现: </span>BF3 vs BF4 差异仅 <span class="highlight">2-4μs (5-10%)</span>。NVMe SSD 的 NAND 写入延迟 (~20-40μs) 占全链路 <span class="highlight">60-80%</span></p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 19: Prestaging 延迟 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§8.2 Prestaging 延迟真相</h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>延迟组件</th><th>BF3</th><th>BF4</th></tr>
+    <tr><td>Prestaging 调度</td><td>~0.5-1μs</td><td>~0.5-1μs</td></tr>
+    <tr><td>ARM 守护进程</td><td>~1-2μs</td><td><span class="good">❌ 无 (硬件触发)</span></td></tr>
+    <tr><td>RDMA Read (2MB)</td><td>~5-8μs</td><td>~3-5μs</td></tr>
+    <tr><td><strong>NVMe SSD 顺序读 (2MB)</strong></td><td><strong>~150-200μs</strong></td><td><strong>~150-200μs</strong></td></tr>
+    <tr style="border-top:2px solid #475569;"><td><strong>端到端</strong></td><td><strong>~160-215μs</strong></td><td><strong>~155-210μs</strong></td></tr>
+    <tr><td>差异占比</td><td colspan="2"><span class="highlight">~2-4μs / ~160-215μs = 1-2%</span></td></tr>
+  </table>
+  </div>
+  <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:12px 16px; max-width:960px; width:100%; margin-top:8px;">
+    <p>推理步间隔: <span class="highlight">~30-100ms</span> (10-33 token/sec)</p>
+    <p>Prestaging 延迟占比: <span class="highlight">0.2-0.7%</span></p>
+    <p>→ <span class="good">GPU Pipeline Bubble ≈ 0</span></p>
+    <p style="color:#fbbf24; margin-top:4px;">🔑 BF4 硬件加速的优势更多在于工程可靠性而非性能差异</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 20: 需求规格 + QoS -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§9 存储网络需求规格 <span class="tag tag-new">NEW</span></h1>
+  <h3>端口需求</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>配置</th><th>计算侧</th><th>存储上行</th><th>OS 比</th></tr>
+    <tr><td>KV 专用 (1-2 JBOF)</td><td>128×400G</td><td>8×400G</td><td>16:1</td></tr>
+    <tr><td>标准生产 (5-6 JBOF)</td><td>128×400G</td><td>24×400G</td><td><strong>5.3:1</strong></td></tr>
+    <tr><td>全容量 (8 JBOF)</td><td>128×400G</td><td>32×400G</td><td>4:1</td></tr>
+  </table>
+  </div>
+  <h3>流量优先级</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>优先级</th><th>流量</th><th>队列</th></tr>
+    <tr><td>7 (最高)</td><td>KV Cache Prestaging</td><td>严格优先</td></tr>
+    <tr><td>6</td><td>KV Cache 卸载/加载</td><td>严格优先</td></tr>
+    <tr><td>5</td><td>Checkpoint (前台)</td><td>WRR 权重 4</td></tr>
+    <tr><td>4</td><td>训练数据加载</td><td>WRR 权重 3</td></tr>
+    <tr><td>3</td><td>Checkpoint (后台)</td><td>WRR 权重 2</td></tr>
+    <tr><td>2</td><td>管理/元数据</td><td>WRR 权重 1</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 21: 监控 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§9.3 监控指标</h1>
+  <div class="table-wrap">
+  <table>
+    <tr><th>类别</th><th>指标</th><th>告警阈值</th></tr>
+    <tr><td>带宽</td><td>存储网吞吐</td><td>&lt;50% 预期 → W</td></tr>
+    <tr><td>延迟</td><td>NVMe-oF P99</td><td>&gt;50μs → W, &gt;100μs → C</td></tr>
+    <tr><td>丢包</td><td>RDMA 重传率</td><td>&gt;1% → W</td></tr>
+    <tr><td>PFC</td><td>PFC 暂停帧</td><td>持续增长 → C</td></tr>
+    <tr><td>容量</td><td>存储池使用率</td><td>&gt;85% → W, &gt;95% → C</td></tr>
+    <tr><td>健康</td><td>SSD 剩余寿命</td><td>&lt;10% → C</td></tr>
+    <tr><td>健康</td><td>SSD 温度</td><td>&gt;70°C → W, &gt;80°C → C</td></tr>
+    <tr><td>业务</td><td>CP 完成时间</td><td>&gt;120s → W</td></tr>
+    <tr><td>业务</td><td>KV 预取成功率</td><td>&lt;95% → W</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 22: SPDK -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§10 SPDK 栈详解</h1>
+  <div class="diagram">传统内核 NVMe 路径:
+  App → VFS → Block Layer → NVMe Driver → Interrupt → HW
+  <span class="bad">延迟: ~10-20μs</span>
+
+SPDK 用户态路径:
+  App → SPDK NVMe Driver (用户态轮询) → HW
+  <span class="good">延迟: ~1-3μs</span></div>
+  <h3>SPDK vs DOCA NVMe</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>特性</th><th>SPDK</th><th>DOCA (BF4)</th></tr>
+    <tr><td>NVMe-oF 卸载</td><td>软件 (Arm 核心)</td><td class="good">硬件引擎</td></tr>
+    <tr><td>CPU 占用</td><td>~20-40% 单核</td><td class="good">&lt;5%</td></tr>
+    <tr><td>延迟 (4K)</td><td>~5-8μs</td><td class="good">~2-3μs</td></tr>
+    <tr><td>开源性</td><td class="good">✅ BSD 开源</td><td class="bad">❌ 闭源</td></tr>
+    <tr><td>KV 扩展</td><td>自研</td><td class="good">✅ 原生 NVMe KV</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 23: 四层测试 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§12 测试方案</h1>
+  <div class="diagram">L1: 单元测试 — 单 NVMe SSD 基准 (4K/64K/1M, fio/spdk_perf)
+    目标: 4K 随机读 ≥1.5M IOPS, &lt;80μs
+
+L2: 集成测试 — 单 JBOF 聚合吞吐 + NVMe-oF 延迟
+    目标: NVMe-oF 端到端 P50 &lt;10μs, P99 &lt;20μs
+
+L3: 系统测试 — 多节点并发 + Checkpoint + 故障注入
+    目标: 32 节点并发线性度 &gt;90%, SSD 故障检测 &lt;3s
+
+L4: 场景测试 — 训练 + KV Cache Prestaging + 混合负载
+    目标: 72h 满载无故障, 预取成功率 &gt;99%</div>
+  <h3>验收标准</h3>
+  <div class="table-wrap">
+  <table>
+    <tr><th>场景</th><th>指标</th></tr>
+    <tr><td>基本功能</td><td>部署 + 挂载 + 读写</td></tr>
+    <tr><td>训练</td><td>256 GPU 训练 70B, Checkpoint &lt;60s</td></tr>
+    <tr><td>推理</td><td>KV Cache 卸载/加载 &lt;100μs</td></tr>
+    <tr><td>稳定性</td><td>72h 满载无故障</td></tr>
+    <tr><td>故障恢复</td><td>SSD/DPU/链路自动恢复</td></tr>
+    <tr><td>线性度</td><td>4→8→16 节点 &gt;90%</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 24: 项目计划 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>§14 项目计划</h1>
+  <div class="diagram">P0 (M1-M3): 供应商选型 + 架构设计
+  → 技术评估 + 需求规格 v0.1
+
+P1 (M2-M4): PoC 验证 + 需求收敛
+  → 架构设计 v1.0 + 供应商锁定
+
+P2 (M4-M8): 开发 + 集成
+  → SPDK 集成 + KV 引擎 + GDS + CSI
+
+P3 (M8-M10): 测试 + 验收
+  → L1-L4 测试 + 故障注入 + 性能基线
+
+P4 (M10-M12): 上线 + 运营
+  → 规模化部署 + 监控 + 优化</div>
+  <h3>关键依赖路径</h3>
+  <div class="code-block">M1 ── 供应商选型 ──→ M3 ──→ 硬件定型 ──→ M5 ──→ 硬件交付
+         │                         │
+         ▼                         ▼
+M2 ── 架构设计 ──→ M4 ──→ 需求收敛 ──→ M5 ──→ 软件开发
+                           ↓                    ↓
+M3 ── PoC 验证 ──→ M5 ──→ 供应商锁定     M6 ──→ 集成测试</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 25: 总结 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h1>🎯 核心信息总结</h1>
+  <div style="max-width:960px; width:100%;">
+    <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+      <p style="color:#60a5fa; font-weight:600;">📌 带宽链分析</p>
+      <p>KV 日常场景全链路<strong>无带宽瓶颈</strong> (>50× 余量)。真正的约束在 SSD 写入池。</p>
+    </div>
+    <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+      <p style="color:#fbbf24; font-weight:600;">⭐ 方案推荐</p>
+      <p><strong>BF4 单口 800G</strong> — 带宽 2× + 硬件加速 + GDS 解除 + Checkpoint 8.75s（最优）</p>
+      <p>BF3 单口 400G — 性价比之选（KV 场景够用）</p>
+      <p>❌ 不推荐任何 Twin-port 方案（PCIe 瓶颈）</p>
+    </div>
+    <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+      <p style="color:#34d399; font-weight:600;">🔑 延迟真相</p>
+      <p>BF3 vs BF4 延迟差异仅 <strong>2-4μs (1-2%)</strong>。SSD NAND 延迟占 >90%。</p>
+      <p>BF4 优势在 <strong>工程可靠性</strong>（GDS 解除、硬件卸载）而非 TPS 差异。</p>
+    </div>
+    <div style="background:#1e293b; border:1px solid #334155; border-radius:8px; padding:16px 20px;">
+      <p style="color:#a78bfa; font-weight:600;">🛠️ 建议路径</p>
+      <p>Phase 1 (BF3 快速验证) → Phase 2 (BF4 升级) → Phase 3 (全量 DOCA Memos)</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /slides -->
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- Navigation -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="nav">
+  <button id="prevBtn">◀</button>
+  <div class="progress"><div class="progress-bar" id="progressBar" style="width:4%;"></div></div>
+  <span class="counter" id="counter">1 / 25</span>
+  <button id="nextBtn">▶</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function showSlide(idx) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  document.getElementById('counter').textContent = `${idx+1} / ${total}`;
+  document.getElementById('progressBar').style.width = `${((idx+1)/total)*100}%`;
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (current > 0) { current--; showSlide(current); }
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (current < total-1) { current++; showSlide(current); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' && current > 0) { current--; showSlide(current); }
+  if (e.key === 'ArrowRight' && current < total-1) { current++; showSlide(current); }
+});
+// Also support PageUp/PageDown, Home/End
+document.addEventListener('keydown', e => {
+  if (e.key === 'PageDown' && current < total-1) { current = Math.min(total-1, current+5); showSlide(current); }
+  if (e.key === 'PageUp' && current > 0) { current = Math.max(0, current-5); showSlide(current); }
+  if (e.key === 'Home') { current = 0; showSlide(current); }
+  if (e.key === 'End') { current = total-1; showSlide(current); }
+});
+// Touch/swipe support
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = touchX - e.changedTouches[0].screenX;
+  if (diff > 50 && current < total-1) { current++; showSlide(current); }
+  if (diff < -50 && current > 0) { current--; showSlide(current); }
+});
+
+showSlide(0);
+</script>
+</body>
+</html>

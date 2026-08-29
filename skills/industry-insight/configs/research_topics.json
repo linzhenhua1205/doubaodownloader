@@ -1,0 +1,638 @@
+{
+ "meta": {
+  "version": "1.6",
+  "updated": "2026-08-18",
+  "description": "调研定时任务主题配置：任务ID → 调研配置（搜索源/输出路径/丰度阈值）。由 skills/industry-insight/scripts/research_task_runner.py 加载；改配置无需改脚本。v1.6: 三大组任务新增观点维度 section（服务器行业技术观点/服务器供应链观点/AI最新技术业界观点/服务器商业观点），采集要求见 runner guide 观点辨析规范。",
+  "coverage": {
+   "服务器产销研": "硬件组·服务器形态/电源/BOM/GPU（研） + 市场组·服务器产销动态（产+销） + 服务器硬件追踪",
+   "交换机产销研": "硬件组·交换机与AI网络（研） + 市场组·交换机市场与网络设备商（销） + 独立·交换机与AI网络追踪",
+   "算力平台": "技术组·算力平台与调度（研） + 独立·算力平台追踪 + 市场组·算力与运维平台商业化（销）",
+   "运维平台": "技术组·运维平台与AIOps（研） + 独立·运维平台追踪",
+   "AI全栈": "芯片→互联→服务器→框架→大模型→应用→数据/评测/安全 全链路覆盖",
+   "政策与产业环境": "国家级政策（工信部/发改委/算力政策/信创/东数西算）",
+   "厂商与运营商": "服务器制造商（新华三/浪潮/华为/超聚变/中兴）+ 运营商（移动/联通/广电）生态",
+   "互联网大厂": "阿里/腾讯/百度/字节/美团 自研芯片·数据中心·云基础设施",
+   "标准财经媒体": "技术机构官方（ODCC/OCP/OIF/USB-IF/PCI-SIG/JEDEC）+ 财经科技 + 知名论坛/公众号",
+   "产品研发": "服务器产品定义/规格/新品/产品线（研）",
+   "观点收集": "硬件组·服务器行业技术观点+服务器供应链观点 + 技术组·AI最新技术业界观点 + 市场组·服务器商业观点（行业专家/顶级媒体/顶级会议声音，正反两面辨析）"
+  },
+  "task_count": 39
+ },
+ "tasks": {
+  "5a29a7e1": {
+   "name": "硬件组行业调研",
+   "kind": "group",
+   "group": "hardware",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/industry-research/hardware/YYYY-MM-DD.md",
+   "sections": [
+    "电源架构",
+    "服务器形态",
+    "GPU/AI芯片",
+    "互联与光通信",
+    "液冷散热",
+    "BOM供应链",
+    "交换机与AI网络",
+    "服务器行业技术观点",
+    "服务器供应链观点"
+   ],
+   "min_finds": 3,
+   "per_section": true,
+   "section": null,
+   "depth": "track"
+  },
+  "1bef8ad1": {
+   "name": "技术组行业调研",
+   "kind": "group",
+   "group": "tech",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/industry-research/tech/YYYY-MM-DD.md",
+   "sections": [
+    "MoE→硬件影响",
+    "云原生AI基础设施",
+    "AI研发工具",
+    "超节点标准",
+    "AI基础设施落地",
+    "分布式OS",
+    "AI框架追踪",
+    "集群训练优化",
+    "BMC系统",
+    "存储与内存",
+    "算力平台与调度",
+    "运维平台与AIOps",
+    "AI数据与评测",
+    "AI最新技术业界观点"
+   ],
+   "min_finds": 3,
+   "per_section": true,
+   "section": null,
+   "depth": "deep"
+  },
+  "9b9c6e1e": {
+   "name": "市场组行业调研",
+   "kind": "group",
+   "group": "market",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/industry-research/market/YYYY-MM-DD.md",
+   "sections": [
+    "芯片市场格局",
+    "国产化替代",
+    "智算方案",
+    "数据中心基础设施",
+    "产品与企业管理",
+    "大模型动态追踪",
+    "工具追踪(通用)",
+    "研发管理",
+    "项目管理追踪",
+    "可靠性测试",
+    "交换机市场与网络设备商",
+    "服务器产销动态",
+    "算力与运维平台商业化",
+    "服务器商业观点"
+   ],
+   "min_finds": 2,
+   "per_section": true,
+   "section": null,
+   "depth": "track"
+  },
+  "39bb6a1c": {
+   "name": "MoE→硬件调研",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/moe-hardware/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "arXiv: MoE all-to-all / expert parallelism / speculative decoding (最近1个月)",
+    "arXiv: KV cache / mixture of experts / MoE inference (最近1个月)",
+    "NVIDIA技术博客: MoE相关",
+    "Baidu: MoE 大模型 专家并行 硬件 影响 2026",
+    "Bing: MoE hardware impact expert parallelism inference 2026"
+   ],
+   "depth": "track"
+  },
+  "3796988a": {
+   "name": "服务器形态与散热",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/server-form-factor/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 液冷散热 服务器形态 整机柜 GPU服务器 OAM 2026",
+    "Baidu: 服务器 机箱 形态 EDSFF 托盘 高密度 2026",
+    "ServeTheHome: 搜索最新文章",
+    "Bing: liquid cooling server GPU server OAM form factor 2026",
+    "OCP: 服务器形态 液冷 相关项目动态"
+   ],
+   "depth": "track"
+  },
+  "34205446": {
+   "name": "BOM成本与供应链",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/bom-supply-chain/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 存储价格 DRAM NAND 元器件 涨价 服务器BOM 2026",
+    "Baidu: AI服务器 交换机 BOM 部件 GPU 网卡 光模块 价格 2026",
+    "TrendForce: DXI index、DRAM/NAND contract price、AI服务器供应链",
+    "Bing: semiconductor supply chain GPU lead time server BOM 2026",
+    "集微网/电子工程专辑: 服务器 交换机 供应链 部件 市场"
+   ],
+   "depth": "track"
+  },
+  "a2e32e81": {
+   "name": "超节点标准与生态",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/industry-research/supernode-standards.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 超节点标准 UALink OAM 液冷 开放标准 2026",
+    "ODCC/OCP: 搜索最新动态",
+    "Bing: UALink OCP OAM open standard supernode 2026"
+   ],
+   "depth": "track"
+  },
+  "a7063e66": {
+   "name": "国产化替代调研",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/industry-research/domestic-substitution.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 国产CPU GPU DPU 半导体 设备 材料 2026 进展",
+    "集微网/半导体行业观察: 搜索近期内容",
+    "Bing: China semiconductor domestic substitution CPU GPU 2026"
+   ],
+   "depth": "track"
+  },
+  "6b0e9116": {
+   "name": "电源架构调研",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/power-architecture/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: HVDC BBU GaN SiC 服务器电源 供电 2026",
+    "Baidu: VR芯片 VRM 电压调节器 PMIC 电源管理芯片 2026",
+    "Bing: 800V HVDC server power GaN SiC PSU VRM 2026",
+    "DataCenterDynamics: 搜索电源相关",
+    "TI/Infineon/英飞凌 官网: 服务器电源 VRM 新品"
+   ],
+   "depth": "track"
+  },
+  "655290c2": {
+   "name": "AI应用追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/ai-apps/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI应用 Agent AI编程 智能助手 2026 新产品",
+    "Bing: AI agent AI coding AI assistant product launch 2026",
+    "The Verge/TechCrunch: 搜索AI应用相关"
+   ],
+   "depth": "track"
+  },
+  "16d379c6": {
+   "name": "AI框架追踪",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/ai-frameworks/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "arXiv: vLLM / TensorRT-LLM / SGLang / KV cache (窗口≥1个月, max_results≥30 防漏—08-04教训: 窄查询曾漏9篇)",
+    "GitHub: vLLM / TensorRT-LLM / PyTorch latest releases",
+    "Bing: AI inference framework vLLM PyTorch update 2026"
+   ],
+   "depth": "deep"
+  },
+  "c31ac4cf": {
+   "name": "产品与企业管理",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/enterprise-mgmt/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI时代组织管理 领导力 人才策略 2026",
+    "Bing: AI management organization leadership 2026",
+    "McKinsey/BCG: 搜索AI组织管理相关"
+   ],
+   "depth": "track"
+  },
+  "b1c7ad46": {
+   "name": "集群训练优化",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/cluster-training/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "arXiv: distributed training / parallelism / speculative decoding (最近1个月)",
+    "arXiv: PD分离 / KV cache optimization / checkpoint (最近1个月)",
+    "MLSys/ISCA: 搜索最新论文"
+   ],
+   "depth": "deep"
+  },
+  "60e6c4f9": {
+   "name": "分布式OS追踪",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/distributed-os/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "arXiv: NCCL / RDMA / RoCE / GPU direct / topology (最近1个月)",
+    "Baidu: 集合通信 NCCL RDMA RoCE 优化 2026",
+    "NVIDIA GTC: 搜索相关演讲/论文"
+   ],
+   "depth": "deep"
+  },
+  "d5373880": {
+   "name": "大模型动态追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/llm-trends/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 大模型 GPT Claude Gemini DeepSeek 2026 发布",
+    "arXiv: 新模型发布相关 (最近1周)",
+    "HuggingFace: 热门模型趋势"
+   ],
+   "depth": "deep"
+  },
+  "0ad55ba1": {
+   "name": "服务器硬件追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/server-hardware/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: GPU服务器 服务器架构 2026 新品",
+    "ServeTheHome: 搜索最新文章",
+    "Bing: NVIDIA Vera Rubin Intel Xeon server platform 2026"
+   ],
+   "depth": "deep"
+  },
+  "c62e2703": {
+   "name": "AI研发工具调研",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/ai-dev-tools/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI编程工具 Cursor Claude Code Copilot 2026 更新",
+    "Baidu: AI技术资料 大模型工程 推理优化 开源项目 2026",
+    "Bing: AI coding tools LLM engineering inference optimization 2026",
+    "TechCrunch/Ars Technica: AI tools development",
+    "GitHub: AI工程/推理框架 热门仓库 趋势"
+   ],
+   "depth": "track"
+  },
+  "c62bc62c": {
+   "name": "云原生与运维运营",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/cloud-native/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Kubernetes Blog: kubernetes.io/blog 最新文章（K8s 官方，长期稳定）",
+    "The New Stack: thenewstack.io 云原生/Kubernetes 最新文章",
+    "CNCF: 搜索毕业项目动态",
+    "Baidu: Kubernetes K8s 容器 CNCF OTel MLOps 2026 新版本（2026-08 连续多日验证拦截，作备用源）",
+    "Bing: Kubernetes new release MLOps AIOps observability 2026（2026-08 连续多日重定向/低价值，作备用源）"
+   ],
+   "depth": "track"
+  },
+  "bc4d3d81": {
+   "name": "智算方案追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/ai-solutions/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 智算中心 算力基建 CSP 资本支出 AI算力 2026",
+    "Bing: AI infrastructure cloud capex datacenter 2026",
+    "AWS/Azure/GCP: 搜索最新AI基础设施发布"
+   ],
+   "depth": "track"
+  },
+  "336920ff": {
+   "name": "部件存储追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/components-storage/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: DDR5 HBM4 SSD NVMe 存储芯片 2026",
+    "TrendForce: 存储价格/市场（最近报告）",
+    "Bing: HBM4 DDR5 NAND 3D NAND 2026 news"
+   ],
+   "depth": "track"
+  },
+  "fb8442ba": {
+   "name": "BMC系统追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/bmc-system/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "GitHub: OpenBMC releases (最近1个月)",
+    "Baidu: OpenBMC Redfish BMC 2026 新版本",
+    "Bing: OpenBMC Redfish DMTF update 2026"
+   ],
+   "depth": "track"
+  },
+  "6d7ad73a": {
+   "name": "超节点专题追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/supernode/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "ServeTheHome: 超节点/superpod 最新文章（首页+站内搜索 superpod，唯一有效源）",
+    "Tom's Hardware: AI数据中心/Vera Rubin（站内搜索，补充 STH 空白，含独家实机报道）",
+    "Baidu: 超节点 AI集群 GB200 Vera Rubin 2026",
+    "Bing: NVIDIA GB300 Vera Rubin AI cluster superpod 2026",
+    "ODCC/OCP: 搜索最新相关文章"
+   ],
+   "depth": "deep"
+  },
+  "98c626a2": {
+   "name": "工具追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/tools/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI编程工具 Cursor Copilot Bolt v0 2026 更新",
+    "GitHub Blog: 搜索最新文章",
+    "Bing: Cursor Bolt v0 AI coding tool updates 2026"
+   ],
+   "depth": "track"
+  },
+  "0e925eef": {
+   "name": "芯片与市场格局",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/chip-market/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI芯片 GPU CPU 市场份额 营收 2026",
+    "Baidu: 网络芯片 PCIe交换 Retimer SSD主控 内存 Flash 2026",
+    "TrendForce/IDC/Counterpoint: 最新市场报告（GPU/CPU/存储/网络芯片）",
+    "Bing: AI chip market share NVIDIA AMD Broadcom Marvell 2026",
+    "Semiconductor Engineering/AnandTech: chip design market news"
+   ],
+   "depth": "track"
+  },
+  "1d08d29f": {
+   "name": "互联与光通信",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/interconnect-optics/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 光互联 CPO 硅光子 共封装 光模块 2026",
+    "Baidu: LPO 线性驱动 光模块 800G 1.6T 2026",
+    "arXiv: silicon photonics / co-packaged optics / optical interconnect (最近1个月)",
+    "Bing: CPO silicon photonics optical interconnect LPO 2026",
+    "LightCounting/OIF: 光互联 市场与技术 报告"
+   ],
+   "depth": "deep"
+  },
+  "7c5541b6": {
+   "name": "数据中心追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/data-center/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 数据中心 供电 液冷 PUE 2026",
+    "Bing: datacenter power cooling PUE 2026",
+    "DataCenterDynamics: 搜索最新文章"
+   ],
+   "depth": "track"
+  },
+  "739be1ab": {
+   "name": "数据分析追踪",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/data-analysis/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 数据分析 Spark Flink Iceberg 2026",
+    "Bing: data lakehouse Spark Flink 2026 news",
+    "arXiv: data lakehouse / query optimization"
+   ],
+   "depth": "deep"
+  },
+  "c1967ce5": {
+   "name": "可靠性测试追踪",
+   "kind": "topic",
+   "skill": "light-literature-search",
+   "out": "knowledge/01_survey/reliability-testing/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "arXiv: fault tolerance / checkpoint / reliability / AI training (最近1个月)",
+    "arXiv 搜索页: fault tolerance / checkpoint / AI training（2026-08-07 起替换：Bing 连续5日返回词典页实质失效，搜索页已验证有效）",
+    "arXiv: GPU fault prediction / VCCL / FT-HSDP"
+   ],
+   "depth": "deep"
+  },
+  "33e1825c": {
+   "name": "Linux OS追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/linux-os/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: Linux内核 K8s 容器 新版本 2026",
+    "LWN.net: 搜索近期文章",
+    "Bing: Kubernetes new release CXL Linux support 2026"
+   ],
+   "depth": "track"
+  },
+  "67351024": {
+   "name": "研发管理追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/rd-management/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI辅助编程 Cursor Copilot 研发效能 2026",
+    "Bing: Cursor Claude Code GitHub Copilot AI coding 2026",
+    "GitHub Blog: 搜索最新文章"
+   ],
+   "depth": "track"
+  },
+  "b5a2a7c4": {
+   "name": "项目管理追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/project-mgmt/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AI项目管理 研发效率 工具 2026",
+    "Bing: AI project management Linear Jira 2026",
+    "Linear Blog/Atlassian: 搜索最新文章"
+   ],
+   "depth": "track"
+  },
+  "24ae1993": {
+   "name": "交换机与AI网络追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/switch/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 数据中心交换机 RoCE 交换芯片 AI Fabric 2026",
+    "Baidu: 路由器 网络设备 协议 芯片 新华三 华为 中兴 2026",
+    "IETF/RFC Editor: 最新RFC/草案（网络协议标准）",
+    "IEEE: 网络标准 最新动态（802.x 等）",
+    "Bing: AI fabric switch RoCE Spectrum-X Tomahawk router chip 2026",
+    "ServeTheHome/Arista/华为企业业务: 搜索最新文章"
+   ],
+   "depth": "deep"
+  },
+  "7fb5d3f4": {
+   "name": "算力平台追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/compute-platform/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 算力调度 智算平台 资源池化 训练平台 2026",
+    "Baidu: 算力平台 国产算力 昇腾 昆仑芯 寒武纪 平台 2026",
+    "Bing: AI compute platform scheduling Kubeflow Ray 2026",
+    "arXiv: cluster scheduler / GPU sharing / resource management (最近1个月)",
+    "CNCF/KubeCon: 算力调度 相关项目动态"
+   ],
+   "depth": "track"
+  },
+  "f3e5a04f": {
+   "name": "运维平台追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/ops-platform/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: AIOps 可观测性 数据中心运维 容量管理 2026",
+    "Baidu: 服务器 智能运维 故障诊断 大模型运维 2026",
+    "Bing: AIOps observability datacenter operations LLM ops 2026",
+    "arXiv: AIOps / anomaly detection / root cause analysis (最近1个月)",
+    "OpenTelemetry/CNCF: 可观测性 项目动态"
+   ],
+   "depth": "track"
+  },
+  "36f77b71": {
+   "name": "政策与产业环境追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/policy-industry/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 算力 数据中心 人工智能 政策 工信部 发改委 2026",
+    "Bing: China AI compute policy data center regulation 2026",
+    "ODCC/OCP: 中国算力大会 东数西算 算力网络 政策",
+    "集微网/半导体行业观察: 国产化 信创 政策 补贴",
+    "TrendForce/IDC: 数据中心 投资 政策 预测"
+   ],
+   "depth": "track"
+  },
+  "3296f897": {
+   "name": "厂商与运营商生态追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/vendor-ecosystem/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 新华三 浪潮 华为 超聚变 中兴 服务器 新品 中标",
+    "Bing: H3C Inspur Huawei Supermicro server AI rack 2026",
+    "Baidu: 中国移动 中国联通 中国广电 算力 服务器 采购",
+    "ServeTheHome: server vendor news",
+    "集微网: 服务器厂商 订单 营收 动态"
+   ],
+   "depth": "track"
+  },
+  "9a3de68b": {
+   "name": "互联网大厂基础设施追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/internet-infra/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 阿里 腾讯 百度 字节 美团 数据中心 自研芯片 AI基础设施 2026",
+    "Bing: Alibaba Tencent Baidu ByteDance Meituan data center AI chip 2026",
+    "The Verge/TechCrunch: hyperscaler AI infrastructure",
+    "Baidu: 火山引擎 阿里云 腾讯云 百度智能云 算力 发布",
+    "GitHub: alibaba tencent baidu bytedance 开源 AI 基础设施"
+   ],
+   "depth": "track"
+  },
+  "e1e5df9f": {
+   "name": "标准机构·财经·媒体追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/standards-finance-media/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "ODCC/OCP: OCP ODCC OIF USB-IF PCI-SIG JEDEC 标准 更新 发布",
+    "Bing: OCP OIF USB4 PCIe 8.0 JEDEC standard release 2026",
+    "Baidu: 财新 第一财经 证券时报 科技 半导体 服务器 板块",
+    "TechCrunch/Ars Technica: standards bodies consortium news",
+    "Baidu: 知名公众号 半导体行业观察 电子工程专辑 服务器 深度"
+   ],
+   "depth": "track"
+  },
+  "ea180a24": {
+   "name": "产品研发追踪",
+   "kind": "topic",
+   "skill": "industry-insight",
+   "out": "knowledge/01_survey/product-dev/YYYY-MM-DD.md",
+   "section": null,
+   "min_finds": 2,
+   "sources": [
+    "Baidu: 服务器 新品发布 产品定义 规格 研发 整机柜 2026",
+    "Baidu: AI服务器 产品线 超节点 液冷整机柜 新品 2026",
+    "Bing: server product launch ODM JDM rack design 2026",
+    "ServeTheHome/Tom's Hardware: server product news",
+    "集微网/电子工程专辑: 服务器厂商 产品研发 动态"
+   ],
+   "depth": "track"
+  }
+ }
+}

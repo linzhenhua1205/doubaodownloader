@@ -1,0 +1,39 @@
+{
+  "name": "si-analyzer",
+  "description": "信号完整性分析技能，用于服务器/硬件系统中高速互连的信号质量评估",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "硬件分析",
+  "keywords": [
+    "信号完整性",
+    "SI",
+    "眼图",
+    "抖动",
+    "串扰",
+    "PCIe",
+    "SerDes",
+    "NVLink",
+    "DDR",
+    "HBM",
+    "时序分析"
+  ],
+  "dependencies": {
+    "scripts": [
+      "si_simulation.py",
+      "eye_diagram_analyzer.py",
+      "jitter_analysis.py",
+      "impedance_calculator.py"
+    ]
+  },
+  "related_skills": [
+    "deep-tech-writer",
+    "doc-reviewer",
+    "knowledge-wiki",
+    "interconnect-analyzer"
+  ],
+  "trigger_conditions": [
+    "用户提及信号完整性、眼图、抖动、串扰、时序分析",
+    "用户提及PCIe、SerDes、NVLink、DDR、HBM等高速接口",
+    "关键词：SI、信号分析、高速互连、眼图分析、抖动分析"
+  ]
+}

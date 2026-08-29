@@ -1,0 +1,40 @@
+{
+  "name": "session-keeper",
+  "description": "会话持久化技能，用于管理跨会话工作进度，支持任务的保存、恢复和状态跟踪",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "工作流",
+  "keywords": [
+    "会话持久化",
+    "任务保存",
+    "进度恢复",
+    "跨会话跟踪",
+    "状态管理",
+    "任务管理",
+    "持久化",
+    "保存"
+  ],
+  "dependencies": {
+    "scripts": [
+      "init_session.py",
+      "save_session.py",
+      "resume_session.py",
+      "status_session.py",
+      "list_sessions.py",
+      "cancel_session.py"
+    ]
+  },
+  "related_skills": [
+    "deep-tech-writer",
+    "doc-reviewer",
+    "method-analysis",
+    "tech-planner",
+    "tech-evolve",
+    "tech-learn"
+  ],
+  "trigger_conditions": [
+    "用户提及保存进度、恢复任务、继续工作",
+    "用户提及跨会话、持久化、状态跟踪",
+    "关键词：save、resume、continue、persist、session"
+  ]
+}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>默认 Web PPT 模板 — 深蓝科技风（五看三定版）</title>
+<!--
+  ══════════════════════════════════════════════════════════════════
+  默认 Web PPT 模板 v2.0（web-ppt-builder skill 资产 · 2026-08-12）
+  ══════════════════════════════════════════════════════════════════
+  【用法】 复制本文件到目标目录 → 按 SKILL.md 规范替换所有 section.slide
+  【铁律】 ①结论先行/自上而下/MECE ②每页标题=本页要点（行动式标题）
+          ③红色=需行动/风险，绿色=强调/验证通过（.red/.green）
+          ④汇报类用五看三定框架（五看→三定）
+          ⑤结论页四维影响：总结+技术+产品+业务经营（各3~5点）
+          ⑥数据标注来源链接（.src 内放 URL）
+          ⑦配图用官方 web 直链（onerror 兜底）
+  【组件】 .cover封面 .part过渡 .card+.num大数字卡 .grid.g2/g3/g4网格
+          table数据表 .flow流程 .points强调列表 .vs对比双栏
+          .imgcard配图卡 .tag彩色标签 .src来源脚注 .red/.green关键色
+  ══════════════════════════════════════════════════════════════════
+-->
+<style>
+  :root{
+    --bg:#060d1a; --bg2:#0a1628; --card:#101f38; --card2:#16294a;
+    --line:#1e3a5f; --primary:#4da3ff; --accent:#00e5ff; --warn:#ffb020;
+    --good:#3ddc84; --text:#e8f0fb; --muted:#8fa8c8; --danger:#ff5d73;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--text);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    overflow:hidden}
+  /* ── 幻灯片容器 ── */
+  .deck{height:100vh;position:relative}
+  section.slide{position:absolute;inset:0;display:none;padding:52px 60px 70px;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(0,229,255,.06), transparent 60%),
+      radial-gradient(900px 400px at -10% 110%, rgba(77,163,255,.07), transparent 60%),
+      var(--bg);
+    flex-direction:column;overflow-y:auto}
+  section.slide.active{display:flex}
+  /* ── 导航 ── */
+  nav{position:fixed;top:0;left:0;right:0;height:4px;background:var(--line);z-index:50}
+  nav .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s}
+  .pager{position:fixed;bottom:18px;right:24px;font-size:13px;color:var(--muted);z-index:50}
+  .hint{position:fixed;bottom:18px;left:24px;font-size:12px;color:var(--muted);z-index:50;opacity:.7}
+  /* ── 排版 ── */
+  .kicker{display:inline-block;font-size:13px;letter-spacing:2px;color:var(--accent);
+    text-transform:uppercase;margin-bottom:12px;font-weight:600}
+  h1{font-size:44px;line-height:1.25;font-weight:800;letter-spacing:.5px}
+  h1 .hl{color:var(--accent)}
+  h1 .hl2{color:var(--primary)}
+  h2{font-size:28px;font-weight:800;margin-bottom:4px;line-height:1.35}
+  h2 .no{color:var(--accent);font-size:17px;vertical-align:middle;margin-right:10px}
+  h3{font-size:18px;font-weight:700;margin:16px 0 8px;color:var(--primary)}
+  p{font-size:16px;line-height:1.75;color:var(--text)}
+  .lead{font-size:18px;color:var(--text);line-height:1.8;max-width:1100px}
+  .muted{color:var(--muted)}
+  .small{font-size:12.5px}
+  /* ── 关键信息颜色语义（铁律③）── */
+  .red{color:var(--danger);font-weight:700}
+  .green{color:var(--good);font-weight:700}
+  .red-bg{background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);border-radius:10px;padding:2px 8px}
+  .green-bg{background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.45);border-radius:10px;padding:2px 8px}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;
+    background:var(--card2);color:var(--accent);border:1px solid var(--line);margin-left:6px;vertical-align:middle}
+  .tag.w{background:rgba(255,176,32,.12);color:var(--warn);border-color:rgba(255,176,32,.4)}
+  .tag.g{background:rgba(61,220,132,.12);color:var(--good);border-color:rgba(61,220,132,.4)}
+  .tag.o{background:rgba(77,163,255,.12);color:var(--primary);border-color:rgba(77,163,255,.4)}
+  .tag.r{background:rgba(255,93,115,.12);color:var(--danger);border-color:rgba(255,93,115,.4)}
+  /* ── 卡片/网格 ── */
+  .grid{display:grid;gap:14px;margin-top:14px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+    border-radius:14px;padding:18px 20px}
+  .card h4{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .card .num{font-size:32px;font-weight:800;color:var(--accent);line-height:1.2}
+  .card .num small{font-size:14px;color:var(--muted);font-weight:400}
+  .card ul{list-style:none;margin-top:6px}
+  .card li{font-size:13.5px;line-height:1.65;color:var(--muted);padding-left:14px;position:relative;margin-top:3px}
+  .card li::before{content:"▸";position:absolute;left:0;color:var(--primary)}
+  .card li b{color:var(--text)}
+  /* ── 表格 ── */
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+  th{background:var(--card2);color:var(--accent);font-weight:700;text-align:left;
+    padding:9px 11px;border-bottom:2px solid var(--primary);white-space:nowrap}
+  td{padding:8px 11px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top}
+  tr:hover td{background:rgba(77,163,255,.05)}
+  td b{color:var(--accent)}
+  .tbl-scroll{overflow-x:auto}
+  /* ── 条形图 ── */
+  .bars{margin-top:12px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .bar-label{width:110px;font-size:13px;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:24px;background:var(--card);border-radius:6px;position:relative;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;font-size:12px;font-weight:700;color:#06121f;min-width:44px}
+  .legend{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  /* ── 流程 ── */
+  .flow{display:flex;align-items:stretch;gap:0;margin-top:16px;flex-wrap:wrap}
+  .flow .step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:12px;position:relative;text-align:center}
+  .flow .step .st{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:1px}
+  .flow .step .nm{font-size:14.5px;font-weight:700;margin-top:4px}
+  .flow .step .ds{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .flow .arrow{align-self:center;color:var(--primary);font-size:20px;padding:0 5px;flex-shrink:0}
+  .flow .step.cpu{border-color:var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.08),var(--card))}
+  .flow .step.gpu{border-color:var(--primary);background:linear-gradient(180deg,rgba(77,163,255,.10),var(--card))}
+  /* ── 列表强调 ── */
+  .points{list-style:none;margin-top:12px}
+  .points li{font-size:15px;line-height:1.65;padding:8px 0 8px 28px;position:relative;
+    border-bottom:1px dashed var(--line);color:var(--text)}
+  .points li:last-child{border-bottom:none}
+  .points li::before{content:"✔";position:absolute;left:4px;color:var(--good);font-weight:700}
+  .points li b{color:var(--accent)}
+  .points.warn li::before{content:"!";color:var(--warn)}
+  /* ── 对比双栏 ── */
+  .vs{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;margin-top:14px;align-items:stretch}
+  .vs .side{padding:16px 18px;border-radius:12px}
+  .vs .a{background:linear-gradient(180deg,rgba(77,163,255,.12),var(--card));border:1px solid rgba(77,163,255,.35)}
+  .vs .b{background:linear-gradient(180deg,rgba(0,229,255,.10),var(--card));border:1px solid rgba(0,229,255,.35)}
+  .vs .mid{display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--warn)}
+  .vs h4{font-size:15.5px;margin-bottom:8px}
+  .vs ul{list-style:none}
+  .vs li{font-size:13px;color:var(--muted);line-height:1.6;padding-left:13px;position:relative;margin-top:4px}
+  .vs li::before{content:"•";position:absolute;left:0;color:var(--primary)}
+  .vs li b{color:var(--text)}
+  /* ── 配图卡片 ── */
+  .imgcard{display:flex;align-items:center;gap:20px;background:linear-gradient(180deg,var(--card),var(--bg2));
+    border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:14px}
+  .imgcard img{max-height:150px;max-width:40%;border-radius:8px;border:1px solid var(--line);
+    background:var(--bg2);object-fit:contain;flex-shrink:0}
+  .imgcard .cap{flex:1;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .imgcard .cap b{color:var(--accent)}
+  .imgcard .cap a{color:var(--primary);text-decoration:none}
+  .imgcard .cap a:hover{text-decoration:underline}
+  /* ── 过渡页 ── */
+  .part{justify-content:center;align-items:flex-start}
+  .part .big{font-size:58px;font-weight:800;line-height:1.2;margin-top:20px}
+  .part .big .hl{color:var(--accent)}
+  .part .sub{font-size:19px;color:var(--muted);margin-top:16px;max-width:900px;line-height:1.8}
+  /* ── 封面 ── */
+  .cover{justify-content:center}
+  .cover .title{font-size:50px;font-weight:800;line-height:1.3;max-width:1100px}
+  .cover .meta{margin-top:32px;font-size:15px;color:var(--muted);line-height:2}
+  .cover .meta b{color:var(--text)}
+  .cover .line{width:90px;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));
+    border-radius:2px;margin:24px 0}
+  /* ── 机会卡 ── */
+  .opp{border-left:4px solid var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.07),var(--card));
+    border-radius:0 12px 12px 0}
+  .opp h4{color:var(--accent)}
+  .opp.hot{border-left-color:var(--warn)}
+  .opp.hot h4{color:var(--warn)}
+  /* ── 四维影响（结论页，铁律⑤）── */
+  .impact{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+  .impact .dim{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px}
+  .impact .dim h4{font-size:15px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .impact .dim .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;background:var(--card2);border:1px solid var(--line);flex-shrink:0}
+  .impact .dim ol{list-style:none;counter-reset:imp}
+  .impact .dim li{font-size:13px;color:var(--muted);line-height:1.6;padding-left:24px;position:relative;margin-top:5px;counter-increment:imp}
+  .impact .dim li::before{content:counter(imp);position:absolute;left:0;top:2px;width:17px;height:17px;
+    background:rgba(77,163,255,.15);border:1px solid rgba(77,163,255,.4);color:var(--primary);
+    border-radius:5px;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .impact .dim li b{color:var(--text)}
+  .impact .dim.sum{grid-column:1/-1;border-left:4px solid var(--accent)}
+  .impact .dim.sum h4{color:var(--accent);font-size:17px}
+  /* ── 脚注/来源 ── */
+  .src{margin-top:auto;padding-top:12px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);opacity:.85}
+  .src b{color:var(--muted)}
+  .src a{color:var(--primary);text-decoration:none}
+  .src a:hover{text-decoration:underline}
+  /* ── 打印 ── */
+  @media print{
+    html,body{overflow:visible;background:#fff}
+    section.slide{position:relative;display:flex!important;page-break-after:always;height:100vh}
+    nav,.pager,.hint{display:none}
+  }
+  @media (max-width:900px){
+    section.slide{padding:32px 24px 56px}
+    h1{font-size:30px}h2{font-size:23px}.cover .title{font-size:32px}
+    .part .big{font-size:36px}.g2,.g3,.g4{grid-template-columns:1fr}
+    .vs{grid-template-columns:1fr}.imgcard{flex-direction:column}.imgcard img{max-width:100%}
+    .impact{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+<nav><div class="bar" id="bar"></div></nav>
+<div class="pager" id="pager"></div>
+<div class="hint">← → 翻页 · ESC 目录 · F 全屏 · P 打印导出 · 点击左右半区翻页</div>
+
+<!-- ═══════════ 示例 1：封面（结论先行：标题即结论） ═══════════ -->
+<section class="slide cover" data-title="封面">
+  <span class="kicker">REPORT TITLE · YYYY-MM · 五看三定</span>
+  <div class="title">主标题：<span class="hl">一句话结论</span><br><span class="hl2" style="font-size:28px;color:var(--muted)">副标题：核心命题一句话</span></div>
+  <div class="line"></div>
+  <div class="meta">
+    <b>汇报对象</b>：领导层　|　<b>方法论</b>：五看三定（看宏观/市场/竞争/自身/机会 → 定战略/目标/策略）<br>
+    <b>数据分级</b>：✅官方一手 · ⚠️行业共识转引 · 🔶第一性推导 · 🏷厂商声称（未独立验证）
+  </div>
+  <div class="src">材料来源：<a href="#">知识库文档路径</a> · 交叉验证说明</div>
+</section>
+
+<!-- ═══════════ 示例 2：目录（MECE 拆解，含五看三定框架） ═══════════ -->
+<section class="slide" data-title="目录">
+  <span class="kicker">AGENDA · 五看三定</span>
+  <h2 style="margin-top:10px"><span class="no">01</span>看宏观 / 行业：……（本部分要回答的问题）</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">小节要点预告</p>
+  <h2 style="margin-top:18px"><span class="no">02</span>看市场 / 客户：……</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">小节要点预告</p>
+  <h2 style="margin-top:18px"><span class="no">03</span>看竞争：……</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">小节要点预告</p>
+  <h2 style="margin-top:18px"><span class="no">04</span>看自身：……</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">小节要点预告</p>
+  <h2 style="margin-top:18px"><span class="no">05</span>看机会：……</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">小节要点预告</p>
+  <h2 style="margin-top:18px"><span class="no">06</span>三定：定战略 · 定目标 · 定策略</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">落地路径与量化指标</p>
+  <div class="src">总时长约 XX 分钟 · 领导看摘要+三定；架构决策者看五看；执行看策略</div>
+</section>
+
+<!-- ═══════════ 示例 3：过渡页 ═══════════ -->
+<section class="slide part" data-title="Part1">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <div class="big">过渡页大标题：<span class="hl">本部分核心结论</span><br>第二行补充</div>
+  <div class="sub">过渡页副说明——本部分将回答什么问题、为什么重要。</div>
+</section>
+
+<!-- ═══════════ 示例 4：内容页（每页标题=本页要点，红绿语义，来源链接，官方配图） ═══════════ -->
+<section class="slide" data-title="1.1 内容页示例">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <h2><span class="no">1.1</span>行动式标题：本页核心结论 <span class="tag r">需行动</span> <span class="tag g">已验证</span></h2>
+  <p class="lead" style="margin-top:4px">本页一句话导语——先给结论，再给证据链（<span class="green">关键强调用绿色</span>，<span class="red">风险/行动点用红色</span>）。</p>
+  <div class="grid g3" style="margin-top:10px">
+    <div class="card"><div class="num">123<span small>单位</span></div><h4>大数字卡</h4><ul><li>要点 <b>加粗</b></li><li><span class="green">✓ 已验证信号</span></li></ul></div>
+    <div class="card"><h4>普通卡</h4><ul><li>要点</li><li><span class="red">⚠ 需要行动</span></li></ul></div>
+    <div class="card opp hot"><h4>机会卡</h4><ul><li>要点</li></ul></div>
+  </div>
+  <div class="imgcard">
+    <img src="https://computeexpresslink.org/wp-content/uploads/2023/09/CXL_Logo_R_RGB-300x62.png"
+         alt="官方配图示例" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：图片说明——<a href="https://www.computeexpresslink.org/" target="_blank">官方源 URL</a> · 2026-XX-XX<br>配图论证的技术点：……</div>
+  </div>
+  <div class="src">✅来源：<a href="#">官方源 URL</a>（curl 验证 200）· ⚠️转引：<a href="#">二手源</a> · 🔶推导：第一性原理</div>
+</section>
+
+<!-- ═══════════ 示例 5：结论页（四维影响：总结+技术+产品+业务经营，各3~5点） ═══════════ -->
+<section class="slide" data-title="结论与影响">
+  <span class="kicker">SUMMARY · 四维影响</span>
+  <h2>结论与影响（总结 / 技术 / 产品 / 业务经营）</h2>
+  <div class="impact">
+    <div class="dim sum">
+      <h4><span class="ic">📌</span>总结</h4>
+      <ol>
+        <li>核心结论一：<b>一句话陈述（数据支撑）</b></li>
+        <li>核心结论二：<b>一句话陈述（数据支撑）</b></li>
+        <li>核心结论三：<b>一句话陈述（数据支撑）</b></li>
+      </ol>
+    </div>
+    <div class="dim">
+      <h4><span class="ic">🔧</span>相关技术领域影响</h4>
+      <ol>
+        <li>技术影响一：<b>具体影响</b>（3~5 点）</li>
+        <li>技术影响二：<b>具体影响</b></li>
+        <li>技术影响三：<b>具体影响</b></li>
+      </ol>
+    </div>
+    <div class="dim">
+      <h4><span class="ic">📦</span>相关产品领域影响</h4>
+      <ol>
+        <li>产品影响一：<b>具体影响</b>（3~5 点）</li>
+        <li>产品影响二：<b>具体影响</b></li>
+        <li>产品影响三：<b>具体影响</b></li>
+      </ol>
+    </div>
+    <div class="dim">
+      <h4><span class="ic">💼</span>相关业务/经营领域影响</h4>
+      <ol>
+        <li>业务影响一：<b>具体影响</b>（3~5 点）</li>
+        <li>业务影响二：<b>具体影响</b></li>
+        <li>业务影响三：<b>具体影响</b></li>
+      </ol>
+    </div>
+  </div>
+  <div class="src">✅全部结论基于五看三定框架 + 多源交叉验证 · 官方源清单见附录</div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('section.slide'));
+  var cur=0, timer=null, overview=false;
+  var bar=document.getElementById('bar'), pager=document.getElementById('pager');
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===cur)});
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    pager.textContent=(cur+1)+' / '+slides.length;
+    if(overview) exitOverview();
+  }
+  function enterOverview(){
+    overview=true;
+    slides.forEach(function(s,k){
+      s.style.cssText='position:fixed;display:block;transform:scale(.14);transform-origin:top left;'+
+        'left:'+(8+(k%5)*18.8)+'%;top:'+(5+Math.floor(k/5)*46)+'%;z-index:60;opacity:.85;'+
+        'cursor:pointer;box-shadow:0 0 0 1px #1e3a5f;pointer-events:auto;background:#0a1628;height:42vh;overflow:hidden';
+      s.onclick=function(){slides.forEach(function(x){x.style.cssText='';x.onclick=null});show(k);};
+    });
+  }
+  function exitOverview(){
+    overview=false;
+    slides.forEach(function(s){s.style.cssText='';s.onclick=null});
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='Escape'){overview?exitOverview():enterOverview();}
+    else if(e.key==='f'||e.key==='F'){
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+      else document.exitFullscreen&&document.exitFullscreen();
+    }
+  });
+  document.addEventListener('click',function(e){
+    if(overview)return;
+    if(e.clientX>window.innerWidth*0.75)show(cur+1);
+    else if(e.clientX<window.innerWidth*0.25)show(cur-1);
+  });
+  var tx=0,ty=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1));
+  },{passive:true});
+  show(0);
+})();
+</script>
+</body>
+</html>

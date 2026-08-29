@@ -1,0 +1,9 @@
+{
+  "name": "session-intent-analysis",
+  "version": "1.0.0",
+  "description": "定期分析会话日志，提取用户真实意图，识别话题边界和任务切换，生成意图分析报告",
+  "requires": {
+    "bins": ["python3"]
+  },
+  "keywords": ["意图分析", "会话分析", "用户需求", "topic analysis", "intent analysis"]
+}

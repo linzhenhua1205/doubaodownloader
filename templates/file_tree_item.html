@@ -1,0 +1,50 @@
+{% macro render_tree(items, depth=0) %}
+{% if depth < 4 %}
+{% for item in items %}
+<li>
+{% if item.is_dir %}
+    <div class="file-tree-toggle closed" onclick="toggleDir(this)">▶</div>
+    <a href="/browse/{{ item.path }}" class="dir-icon">
+        <i class="fas fa-folder"></i> {{ item.name }}
+    </a>
+    {% if item.children %}
+    <ul class="file-tree" style="display: none;">
+        {{ render_tree(item.children, depth + 1) }}
+    </ul>
+    {% endif %}
+{% else %}
+    <div class="file-tree-toggle" style="visibility: hidden;">•</div>
+    <a href="/view/{{ item.path }}" 
+       {% set classes = [] %}
+       {% if current_file_path == item.path %}{% set _ = classes.append('active') %}{% endif %}
+       {% if item.ext == '.md' %}{% set _ = classes.append('md-icon') %}{% endif %}
+       {% if item.ext == '.py' %}{% set _ = classes.append('py-icon') %}{% endif %}
+       {% if item.ext == '.js' %}{% set _ = classes.append('js-icon') %}{% endif %}
+       {% if item.ext == '.html' %}{% set _ = classes.append('html-icon') %}{% endif %}
+       {% if item.ext == '.css' %}{% set _ = classes.append('css-icon') %}{% endif %}
+       {% if item.ext == '.json' %}{% set _ = classes.append('json-icon') %}{% endif %}
+       {% if classes %}{{ 'class="' ~ classes|join(' ') ~ '"' }}{% endif %}>
+        {% if item.ext == '.md' %}
+        <i class="fab fa-markdown"></i>
+        {% elif item.ext == '.py' %}
+        <i class="fab fa-python"></i>
+        {% elif item.ext == '.js' %}
+        <i class="fab fa-js-square"></i>
+        {% elif item.ext == '.html' %}
+        <i class="fab fa-html5"></i>
+        {% elif item.ext == '.css' %}
+        <i class="fab fa-css3-alt"></i>
+        {% elif item.ext == '.json' %}
+        <i class="fas fa-file-code"></i>
+        {% else %}
+        <i class="fas fa-file-alt"></i>
+        {% endif %}
+        {{ item.name }}
+    </a>
+{% endif %}
+</li>
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+{{ render_tree(items) }}

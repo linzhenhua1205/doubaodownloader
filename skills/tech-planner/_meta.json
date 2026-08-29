@@ -1,0 +1,35 @@
+{
+  "name": "tech-planner",
+  "description": "技术规划技能，用于创建技术功能和重构的综合实现计划",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "工作流",
+  "keywords": [
+    "技术规划",
+    "实现计划",
+    "架构设计",
+    "功能开发",
+    "重构",
+    "PRD",
+    "需求分析",
+    "代码库探索"
+  ],
+  "dependencies": {
+    "scripts": [
+      "init_plan_session.py",
+      "save_plan_session.py",
+      "resume_plan_session.py"
+    ]
+  },
+  "related_skills": [
+    "deep-tech-writer",
+    "method-analysis",
+    "tech-evolve",
+    "session-keeper"
+  ],
+  "trigger_conditions": [
+    "用户提及技术规划、实现计划、架构设计",
+    "用户提及功能开发、重构、PRD",
+    "关键词：plan、规划、设计、方案、架构"
+  ]
+}

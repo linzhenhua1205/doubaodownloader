@@ -1,0 +1,36 @@
+{
+  "name": "cache-coherence-analyzer",
+  "description": "缓存一致性分析技能，用于多核/多插槽服务器架构的缓存协议和性能评估",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "硬件分析",
+  "keywords": [
+    "缓存一致性",
+    "MESI",
+    "MOESI",
+    "MESIF",
+    "NUMA",
+    "内存层次结构",
+    "缓存性能",
+    "伪共享",
+    "Cache Line",
+    "命中率"
+  ],
+  "dependencies": {
+    "scripts": [
+      "cache_analysis.py",
+      "numa_analyzer.py"
+    ]
+  },
+  "related_skills": [
+    "deep-tech-writer",
+    "doc-reviewer",
+    "knowledge-wiki",
+    "interconnect-analyzer"
+  ],
+  "trigger_conditions": [
+    "用户提及缓存一致性、MESI、MOESI、MESIF",
+    "用户提及NUMA、内存层次结构、缓存性能",
+    "关键词：命中率、伪共享、Cache Line、AMAT"
+  ]
+}

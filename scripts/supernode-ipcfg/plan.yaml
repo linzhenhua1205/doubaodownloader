@@ -1,0 +1,79 @@
+# ============================================================
+# Supernode IP Plan (v1.2 - edge-fixed)
+# 4-plane addressing model: 10.<M>.<R>.<S>
+#   M=1 mgmt(OOB) | M=2 storage | M=3 scale-out | M=4 scale-up(RoCE)
+#   R=rack id (1-based, physical rack 1..8)
+#   S=slot id (1-based, physical slot 1..16)
+#
+# v1.2 fixes (vs 08-25 v1.1 formula):
+#   * 1-based R/S -> no 10.M.0.0 network-address collision
+#   * scale-up node ports offset +16 -> no overlap with FSW 208+n
+#     node_port = 10.4.<R>.<16 + (S-1)*12 + P>   (16..207)
+#     FSW       = 10.4.<R>.<208+n>               (208..219)
+#     interrack = 10.4.<R>.<220+n>               (220..231)
+#     reserved  = 10.4.<R>.0..15, 232..255
+# ============================================================
+
+cluster:
+  name: supernode-512g
+  racks: 8                 # SU1..SU8 compute racks (1-based)
+  slots_per_rack: 16       # physical slots 1..16
+  gpu_per_node: 4
+
+planes:
+  mgmt:                    # 10.1.x.x  OOB / BMC
+    base: "10.1.0.0/16"
+    mask: "255.255.0.0"
+    vlan: 101
+    gw: "10.1.250.1"       # OOB-CORE SVI
+    node_ip: "10.1.<R>.<S>"            # BMC MAC-reserved pool
+    fsw_ip: "10.1.<R>.<160+n>"         # FSW mgmt port (160..171)
+    oob_acc: "10.1.<R>.200"            # OOB-ACC (per compute rack)
+    oob_agg: "10.1.250.2-3"
+    oob_core: "10.1.250.1"
+    mgmt_srv: "10.1.250.10-20"         # dhcp/dns/ntp/pxe mgmt
+    dhcp_scope: "10.1.0.0/16"
+    dhcp_reserve: "mac"                # BMC MAC -> 10.1.R.S
+
+  storage:                  # 10.2.x.x  BF3 (PXE + runtime)
+    base: "10.2.0.0/16"
+    mask: "255.255.0.0"
+    vlan: 102
+    gw: "10.2.250.1"       # Storage TOR SVI (mgmt access only)
+    node_ip: "10.2.<R>.<S>"            # BF3 bond0, option82 circuit-id
+    tor: "10.2.250.2-3"                # Storage TOR-01/02
+    storage_srv: "10.2.240.1-9"        # NFS servers
+    mirror_srv: "10.2.241.1"           # PXE mirror
+    dhcp_scope: "10.2.0.0/16"
+    dhcp_reserve: "circuit-id"         # TOR port -> 10.2.R.S
+    pxe: {next_server: "10.2.241.1", bootfile: "ipxe.efi", mtu: 9000}
+
+  scaleout:                 # 10.3.x.x  CX7 x4 (RoCE/NCCL, 2026-08-26 frozen)
+    base: "10.3.0.0/16"
+    mask: "255.255.0.0"
+    vlan: 103
+    gw: ""                  # no default gw on RoCE plane
+    node_ip_p1: "10.3.<R>.<S>"         # CX7 P1 rail A   (1..16)
+    node_ip_p2: "10.3.<R>.<S+128>"     # CX7 P2 rail B   (129..144)
+    node_ip_p3: "10.3.<R>.<S+64>"      # CX7 P3 rail A2  (65..80)
+    node_ip_p4: "10.3.<R>.<S+192>"     # CX7 P4 rail B2  (193..208)
+    leaf: "10.3.248.1-8"
+    spine: "10.3.249.1-4"
+    interlink: "10.3.250.<x>"          # leaf-spine /31 p2p
+    dhcp: "none"            # static plan preferred (RoCE stability)
+
+  scaleup:                  # 10.4.x.x  RoCE form (B) only
+    base: "10.4.0.0/16"
+    mask: "255.255.0.0"
+    vlan: 104
+    gw: ""                  # L2 domain; no gw needed
+    node_port: "10.4.<R>.<16+(S-1)*12+P>"  # P=0..11 -> 16..207
+    fsw: "10.4.<R>.<208+n>"            # FSW 0-11 -> 208..219
+    interrack: "10.4.<R>.<220+n>"      # FSW inter-rack DAC -> 220..231
+    semantics: "roce"       # POC gate: 'roce' or 'memory' (no IP)
+
+identity:
+  source: "smbios"          # smbios | file | env
+  file: "/etc/node-identity"
+  smbios_oem: "11"          # dmidecode -t 11 OEM strings
+  keys: ["rack_id", "slot_id", "node_role"]

@@ -1,0 +1,74 @@
+{
+  "id": "wf-04-weekly-report",
+  "name": "日报周报月报体系",
+  "type": "static",
+  "version": "1.0",
+  "created": "2026-08-06",
+  "methodology": "meth-013 §5 WF-04",
+  "trigger": {
+    "type": "scheduler",
+    "tasks": [
+      {"name": "知识库日报（每日8:10）", "cron": "10 8 * * *"},
+      {"name": "知识库周报（周日7:00）", "cron": "0 7 * * 0"},
+      {"name": "知识库周报-调研汇总（周日21:45）", "cron": "45 21 * * 0"},
+      {"name": "知识库月度报告（月末23:20）", "cron": "20 23 28-31 * *"},
+      {"name": "GitHub开源活动日报（06:50）", "cron": "50 6 * * *"}
+    ]
+  },
+  "planner": {
+    "split_by": "报告类型（daily/weekly/monthly/special）",
+    "parallel": false
+  },
+  "state": {
+    "report_dir": {
+      "daily": "knowledge/weekly-reports/00_daily/",
+      "weekly": "knowledge/weekly-reports/01_weekly/",
+      "monthly": "knowledge/weekly-reports/02_monthly/",
+      "special": "knowledge/weekly-reports/07_kb_stat/"
+    },
+    "temp_dir": "workflow/.state/wf-04/"
+  },
+  "phases": [
+    {
+      "phase": "collect",
+      "desc": "收集周期内知识库增量（git log / 文件时间戳）",
+      "workers": "脚本",
+      "scripts": ["scripts/tools/kb-global-log.py", "scripts/kb-stat/knowledge-stats-collector.py"]
+    },
+    {
+      "phase": "organize",
+      "desc": "按报告模板组织内容（总览/模块分组/统计）",
+      "workers": "agent（weekly-report-generator / monthly-report-generator）",
+      "evaluator": "模板完整性（标题层级/表格/统计）"
+    },
+    {
+      "phase": "write",
+      "desc": "生成报告并落盘",
+      "workers": "agent + 脚本",
+      "skills": ["weekly-report-generator", "monthly-report-generator", "knowledge-special-reports"],
+      "evaluator": "md-format 0 问题 + link-validator 0 缺失"
+    },
+    {
+      "phase": "sync",
+      "desc": "三同步 + 提交 + 飞书推送",
+      "workers": "脚本",
+      "scripts": ["scripts/tools/kb-global-index.py", "scripts/git/git-auto-commit.py"],
+      "channel": "feishu（RULE.md 铁律：channel_type=feishu）"
+    }
+  ],
+  "evaluator": {
+    "type": "report",
+    "pass": "报告落盘 + 索引更新 + 飞书送达"
+  },
+  "loop": {"max_retry": 1, "on_fail": "重试一次，仍失败则记录并告警"},
+  "stop_resume": {"state_file": "workflow/.state/wf-04/progress.json", "by_phase": true},
+  "repeatability": {
+    "file_pattern": "按报告类型约定（周报 YYYY-Www.md / 月报 YYYY-MM.md）",
+    "track": "本期 vs 上期增量"
+  },
+  "deps": {
+    "scripts": ["scripts/tools/kb-global-log.py", "scripts/kb-stat/knowledge-stats-collector.py", "scripts/tools/kb-global-index.py", "scripts/git/git-auto-commit.py"],
+    "skills": ["weekly-report-generator", "monthly-report-generator", "knowledge-special-reports", "github-activity-report"],
+    "spec": ["std-002-knowledge-content-format.md", "meth-012-kb-observability-methodology.md"]
+  }
+}

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 办公确定性 × Agentic CPU 需求 — 服务器产品机会研判</title>
+<style>
+  :root{
+    --bg:#060d1a; --bg2:#0a1628; --card:#101f38; --card2:#16294a;
+    --line:#1e3a5f; --primary:#4da3ff; --accent:#00e5ff; --warn:#ffb020;
+    --good:#3ddc84; --text:#e8f0fb; --muted:#8fa8c8; --danger:#ff5d73;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--text);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    overflow:hidden}
+  /* ── 幻灯片容器 ── */
+  .deck{height:100vh;position:relative}
+  section.slide{position:absolute;inset:0;display:none;padding:56px 64px 72px;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(0,229,255,.06), transparent 60%),
+      radial-gradient(900px 400px at -10% 110%, rgba(77,163,255,.07), transparent 60%),
+      var(--bg);
+    flex-direction:column;overflow-y:auto}
+  section.slide.active{display:flex}
+  /* ── 导航 ── */
+  nav{position:fixed;top:0;left:0;right:0;height:4px;background:var(--line);z-index:50}
+  nav .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s}
+  .pager{position:fixed;bottom:18px;right:24px;font-size:13px;color:var(--muted);z-index:50}
+  .hint{position:fixed;bottom:18px;left:24px;font-size:12px;color:var(--muted);z-index:50;opacity:.7}
+  /* ── 排版 ── */
+  .kicker{display:inline-block;font-size:13px;letter-spacing:2px;color:var(--accent);
+    text-transform:uppercase;margin-bottom:14px;font-weight:600}
+  h1{font-size:46px;line-height:1.25;font-weight:800;letter-spacing:.5px}
+  h1 .hl{color:var(--accent)}
+  h1 .hl2{color:var(--primary)}
+  h2{font-size:34px;font-weight:800;margin-bottom:6px}
+  h2 .no{color:var(--accent);font-size:20px;vertical-align:middle;margin-right:10px}
+  h3{font-size:20px;font-weight:700;margin:18px 0 8px;color:var(--primary)}
+  p{font-size:16.5px;line-height:1.75;color:var(--text)}
+  .lead{font-size:19px;color:var(--text);line-height:1.8;max-width:1100px}
+  .muted{color:var(--muted)}
+  .small{font-size:12.5px}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;
+    background:var(--card2);color:var(--accent);border:1px solid var(--line);margin-left:6px;vertical-align:middle}
+  .tag.w{background:rgba(255,176,32,.12);color:var(--warn);border-color:rgba(255,176,32,.4)}
+  .tag.g{background:rgba(61,220,132,.12);color:var(--good);border-color:rgba(61,220,132,.4)}
+  .tag.o{background:rgba(77,163,255,.12);color:var(--primary);border-color:rgba(77,163,255,.4)}
+  /* ── 卡片/网格 ── */
+  .grid{display:grid;gap:16px;margin-top:16px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+    border-radius:14px;padding:20px 22px}
+  .card h4{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .card .num{font-size:34px;font-weight:800;color:var(--accent);line-height:1.2}
+  .card .num small{font-size:15px;color:var(--muted);font-weight:400}
+  .card ul{list-style:none;margin-top:8px}
+  .card li{font-size:14.5px;line-height:1.7;color:var(--muted);padding-left:16px;position:relative;margin-top:4px}
+  .card li::before{content:"▸";position:absolute;left:0;color:var(--primary)}
+  .card li b{color:var(--text)}
+  /* ── 表格 ── */
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14.5px}
+  th{background:var(--card2);color:var(--accent);font-weight:700;text-align:left;
+    padding:10px 12px;border-bottom:2px solid var(--primary);white-space:nowrap}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top}
+  tr:hover td{background:rgba(77,163,255,.05)}
+  td b{color:var(--accent)}
+  .tbl-scroll{overflow-x:auto}
+  /* ── 条形图 ── */
+  .bars{margin-top:14px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-top:9px}
+  .bar-label{width:110px;font-size:13.5px;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:26px;background:var(--card);border-radius:6px;position:relative;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;font-size:12.5px;font-weight:700;color:#06121f;min-width:44px}
+  .legend{display:flex;gap:18px;margin-top:10px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  /* ── 流程 ── */
+  .flow{display:flex;align-items:stretch;gap:0;margin-top:18px;flex-wrap:wrap}
+  .flow .step{flex:1;min-width:130px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:14px;position:relative;text-align:center}
+  .flow .step .st{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:1px}
+  .flow .step .nm{font-size:15px;font-weight:700;margin-top:5px}
+  .flow .step .ds{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+  .flow .arrow{align-self:center;color:var(--primary);font-size:22px;padding:0 6px;flex-shrink:0}
+  .flow .step.cpu{border-color:var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.08),var(--card))}
+  .flow .step.gpu{border-color:var(--primary);background:linear-gradient(180deg,rgba(77,163,255,.10),var(--card))}
+  /* ── 列表强调 ── */
+  .points{list-style:none;margin-top:14px}
+  .points li{font-size:16px;line-height:1.7;padding:9px 0 9px 30px;position:relative;
+    border-bottom:1px dashed var(--line);color:var(--text)}
+  .points li:last-child{border-bottom:none}
+  .points li::before{content:"✔";position:absolute;left:4px;color:var(--good);font-weight:700}
+  .points li b{color:var(--accent)}
+  .points.warn li::before{content:"!";color:var(--warn)}
+  /* ── 对比双栏 ── */
+  .vs{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;margin-top:16px;align-items:stretch}
+  .vs .side{padding:18px 20px;border-radius:12px}
+  .vs .a{background:linear-gradient(180deg,rgba(77,163,255,.12),var(--card));border:1px solid rgba(77,163,255,.35)}
+  .vs .b{background:linear-gradient(180deg,rgba(0,229,255,.10),var(--card));border:1px solid rgba(0,229,255,.35)}
+  .vs .mid{display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--warn)}
+  .vs h4{font-size:16px;margin-bottom:8px}
+  .vs ul{list-style:none}
+  .vs li{font-size:13.5px;color:var(--muted);line-height:1.65;padding-left:14px;position:relative;margin-top:4px}
+  .vs li::before{content:"•";position:absolute;left:0;color:var(--primary)}
+  .vs li b{color:var(--text)}
+  /* ── 过渡页 ── */
+  .part{justify-content:center;align-items:flex-start}
+  .part .big{font-size:64px;font-weight:800;line-height:1.2;margin-top:20px}
+  .part .big .hl{color:var(--accent)}
+  .part .sub{font-size:20px;color:var(--muted);margin-top:16px;max-width:900px;line-height:1.8}
+  /* ── 封面 ── */
+  .cover{justify-content:center}
+  .cover .title{font-size:56px;font-weight:800;line-height:1.3;max-width:1100px}
+  .cover .meta{margin-top:36px;font-size:16px;color:var(--muted);line-height:2}
+  .cover .meta b{color:var(--text)}
+  .cover .line{width:90px;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));
+    border-radius:2px;margin:28px 0}
+  /* ── 机会卡 ── */
+  .opp{border-left:4px solid var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.07),var(--card));
+    border-radius:0 12px 12px 0}
+  .opp h4{color:var(--accent)}
+  .opp.hot{border-left-color:var(--warn)}
+  .opp.hot h4{color:var(--warn)}
+  /* ── 脚注/来源 ── */
+  .src{margin-top:auto;padding-top:14px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);opacity:.8}
+  .src b{color:var(--muted)}
+  /* ── 打印 ── */
+  @media print{
+    html,body{overflow:visible;background:#fff}
+    section.slide{position:relative;display:flex!important;page-break-after:always;height:100vh}
+    nav,.pager,.hint{display:none}
+  }
+  @media (max-width:900px){
+    section.slide{padding:36px 28px 60px}
+    h1{font-size:32px}h2{font-size:26px}.cover .title{font-size:34px}
+    .part .big{font-size:40px}.g2,.g3,.g4{grid-template-columns:1fr}
+    .vs{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+<nav><div class="bar" id="bar"></div></nav>
+<div class="pager" id="pager"></div>
+<div class="hint">← → 翻页 · ESC 目录 · F 全屏 · P 打印导出</div>
+
+<!-- ═══════════ 1 封面 ═══════════ -->
+<section class="slide cover" data-title="封面">
+  <span class="kicker">SERVER PRODUCT STRATEGY BRIEFING · 2026-08</span>
+  <div class="title">AI 办公确定性增强<span class="hl">×</span><br>Agentic 时代的 <span class="hl">CPU 需求重构</span><br><span class="hl2" style="font-size:34px;color:var(--muted)">从节点到超节点的推理拆解 · 软件配套 · 机会点</span></div>
+  <div class="line"></div>
+  <div class="meta">
+    <b>汇报主题</b>：① AI 编程之后的确定性场景——办公 AI（字节/阿里/腾讯论证）　② Agentic 负载下的 CPU 需求与服务器设计（NV/AMD/Intel 规划、KV Cache 推理拆解、算力平台/运维/固件）<br>
+    <b>汇报日期</b>：2026-08-05　|　<b>数据分级</b>：✅库内一手锚点 · ⚠️行业共识 · 🔶第一性原理推导 · 🏷厂商声称（未独立验证）
+  </div>
+  <div class="src">材料基于本工作空间知识库 2700+ 篇文档与一手厂商信息交叉验证整理</div>
+</section>
+
+<!-- ═══════════ 2 目录 ═══════════ -->
+<section class="slide" data-title="目录">
+  <span class="kicker">AGENDA</span>
+  <h2><span class="no">01</span>AI 办公：编程之后的确定性场景</h2>
+  <p class="muted" style="margin-left:58px;margin-top:4px">确定性迁移逻辑 · 三厂组织级整合 · 人机双写进文档 · 为什么是办公</p>
+  <h2 style="margin-top:26px"><span class="no">02</span>Agentic 负载下的 CPU 需求重构</h2>
+  <p class="muted" style="margin-left:58px;margin-top:4px">推理过程概述 · CPU 角色量化 · NV/AMD/Intel CPU 规划 · AMD 路线图</p>
+  <h2 style="margin-top:26px"><span class="no">03</span>服务器机型：从节点到超节点</h2>
+  <p class="muted" style="margin-left:58px;margin-top:4px">机型谱系 · KV Cache 推理拆解 · 设计热点问题</p>
+  <h2 style="margin-top:26px"><span class="no">04</span>配套软件与机会点</h2>
+  <p class="muted" style="margin-left:58px;margin-top:4px">算力平台 · 运维 · 固件 · 机会地图</p>
+  <div class="src">总时长约 20 分钟 · 每部分约 5 分钟 · 可跳过 Part 1 直接进入 Part 2-4（重点）</div>
+</section>
+
+<!-- ═══════════ 3 Part1 过渡 ═══════════ -->
+<section class="slide part" data-title="Part1">
+  <span class="kicker">PART 01</span>
+  <div class="big">AI 编程之后，<span class="hl">AI 办公</span>是下一个<br>确定性增强的场景</div>
+  <div class="sub">编程已验证"AI 能替代高价值脑力劳动的确定性路径"；办公软件正复制同一路径——不是概念验证，是<span style="color:var(--accent)">产品已规模化落地</span>。</div>
+</section>
+
+<!-- ═══════════ 4 确定性迁移逻辑 ═══════════ -->
+<section class="slide" data-title="确定性迁移逻辑">
+  <span class="kicker">PART 01 · 逻辑</span>
+  <h2><span class="no">1.1</span>从编程到办公：确定性迁移的四步路径</h2>
+  <p class="lead" style="margin-top:6px">AI 落地的确定性，不来自"模型多强"，而来自<span style="color:var(--accent)">"任务边界是否清晰、反馈回路是否闭合、价值是否可度量"</span>——编程与办公恰好同构。</p>
+  <div class="flow">
+    <div class="step"><div class="st">STEP 1</div><div class="nm">任务边界清晰</div><div class="ds">编程=函数/模块；办公=文档/表格/会议/流程，均是可枚举的结构化任务</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">STEP 2</div><div class="nm">反馈回路闭合</div><div class="ds">代码可运行验证；办公产出可被同事/客户即时验收——错误可被发现</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">STEP 3</div><div class="nm">价值可度量</div><div class="ds">编程=交付速度/缺陷率；办公=工时节省/决策速度，指标现成</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">STEP 4</div><div class="nm">规模经济显著</div><div class="ds">办公人群基数 ≫ 程序员基数——同一模型能力的边际复制成本趋零</div></div>
+  </div>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="card"><div class="num">~1.2<span small>亿</span></div><h4>中国数字化办公用户（⚠️行业估算）</h4><ul><li>办公软件日活是编程工具的<b>两个数量级</b>以上</li></ul></div>
+    <div class="card"><div class="num">+65%<small> 使用率</small></div><h4>vs 速度仅 +10-15%（✅编排鸿沟）</h4><ul><li>工具普及≠价值兑现——<b>谁能弥合鸿沟谁赢</b></li></ul></div>
+    <div class="card"><div class="num">96%<small> IT 工作者</small></div><h4>已在用 AI，仅 9% 高管确信 ROI（✅Atlassian）</h4><ul><li>办公 AI 的竞争=把使用率<b>转化为可证明的 ROI</b></li></ul></div>
+  </div>
+  <div class="src">数据来源：✅知识库 `2026-08-05-knowledge-management-value-chain`（编排鸿沟/Atlassian《Leading with Context》）；⚠️办公人群为行业估算量级</div>
+</section>
+
+<!-- ═══════════ 5 三厂组织级整合 ═══════════ -->
+<section class="slide" data-title="三厂组织级整合">
+  <span class="kicker">PART 01 · 论证</span>
+  <h2><span class="no">1.2</span>字节 / 阿里 / 腾讯：7/18-8/3 同周<b style="color:var(--accent)">组织级整合</b>——确定性已获真金白银投票</h2>
+  <div class="tbl-scroll">
+  <table>
+    <tr><th style="width:90px">厂商</th><th>组织动作（2026-07/08）</th><th>量化信号（口径）</th></tr>
+    <tr><td><b>字节</b><br>7/30</td>
+        <td>拆飞书喂豆包：产品团队并入豆包（赵祺统管）、GTM 并入火山引擎（谭待统管）——原飞书完整产品/商业化体系<b>被拆散</b></td>
+        <td>豆包 <b>ARR &gt;$40 亿</b>（超国内其他模型公司总和·字节披露）· 月活 <b>3.82 亿</b> · 飞书新签客户 <b>AI 模块购买率 &gt;90%</b></td></tr>
+    <tr><td><b>阿里</b><br>8/3</td>
+        <td>千问办公公测：QoderWork/悟空/MuleRun <b>三合一</b>；悟空事业部升级为<b>千问办公事业部</b>，吴泳铭亲自参与关键会议</td>
+        <td>定位=<b>企业组织 AI 生产力平台</b>（非 C 端工具）；钉钉 DWS CLI：18 模块 / 160+ 命令 / 32 自动化脚本</td></tr>
+    <tr><td><b>腾讯</b><br>7/18+30</td>
+        <td>WorkBuddy <b>独立 App</b> 上线三端（鸿蒙首个桌面办公智能体）；<b>人机双写</b>协同编辑上线</td>
+        <td>月访问量 <b>885 万→2097 万</b>（3月→6月，增长超一倍·易观 Q2 报告）</td></tr>
+  </table>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h4>共性 ① 组织是最后的投票</h4><ul><li>从"产品功能表态"升级为<b>组织架构级整合</b>——确定性从判断变事实，不可轻易回撤</li></ul></div>
+    <div class="card"><h4>共性 ② 统一入口 + 全流程覆盖</h4><ul><li>单点工具价值在稀释，<b>AI 从独立功能变成办公 App 的基础能力</b>（智东西判断）</li></ul></div>
+    <div class="card"><h4>共性 ③ 窗口期高度集中</h4><ul><li>海外 ChatGPT Work（整合 Codex）/ Copilot 超级应用年内面世——<b>先完成整合者拿船票</b></li></ul></div>
+  </div>
+  <div class="src">✅智东西《阿里字节腾讯，为AI办公拼了》2026-08-03（一手记者采写+官方披露+易观报告）；🏷量化信号为厂商/第三方披露口径，未独立验证</div>
+</section>
+
+<!-- ═══════════ 6 人机双写（新增） ═══════════ -->
+<section class="slide" data-title="人机双写进文档">
+  <span class="kicker">PART 01 · 论证</span>
+  <h2><span class="no">1.3</span>人机双写：AI 从「对话框」进入「文档里」——工作流闭环的最后一步</h2>
+  <div class="vs">
+    <div class="side a"><h4>过去的 AI 工具（结果放对话框）</h4>
+      <ul><li>AI 能写文案/分析表格/生成 PPT，但用户要自己<b>复制 → 粘贴 → 定位 → 排版 → 检查</b></li>
+      <li>AI 与原文之间存在"<b>最后一步距离</b>"——高频但低价值的人工搬运</li>
+      <li>本质：AI 是"提建议的人"，改不改、怎么改仍由人完成</li></ul></div>
+    <div class="mid">⇒</div>
+    <div class="side b"><h4>人机双写（结果进原文件，WorkBuddy 7/30 实测）</h4>
+      <ul><li>左侧 AI 对话 + 右侧<b>可编辑文档</b>（Word/Excel/PPT/Markdown），选中哪段 AI 改哪段</li>
+      <li>错别字检查先出<b>报告</b>、确认后一次性同步原文；框选文字直接生成表格/配图/总结插入</li>
+      <li>本质：AI 成为"<b>坐在文档另一端的协作者</b>"——直接动手改原文件</li></ul></div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h4>① 选中即改</h4><ul><li>框选文字→"生成表格/配图/总结"→<b>直接插入原文件对应位置</b>，无需下载再排版</li></ul></div>
+    <div class="card"><h4>② 批注即指令</h4><ul><li>读取文档批注并执行修改——"锁定意见 + 修改"<b>两步合并</b>，参与多人协作流（作者/编辑/同事）</li></ul></div>
+    <div class="card"><h4>③ 沿风格修改</h4><ul><li>PDF→PPT <b>复刻原字体/配色/版式</b>，新插图沿用原插画风——贴合企业固定模板真实需求</li></ul></div>
+  </div>
+  <div class="points" style="margin-top:18px">
+    <li><b>意义</b>：AI 从"给建议"到"动手改"——<b>AI 真正长进企业生产流程</b>（智东西：入口之战已过"比功能"阶段）；也定义了办公推理形态=<b>多轮短请求 + 长上下文 + 工具调用密集</b>（衔接 Part 2-3 硬件需求逻辑）</li>
+    <li class="warn"><b>局限（诚实标注）</b>：模型知识准确性仍直接影响修改结果——实测 AI 误判"SpaceXAI"公司名称为错（实际 AI 判断出错）；<b>编辑入口更方便 ≠ 人工审核可省略</b></li>
+  </div>
+  <div class="src">✅AI应用风向标《腾讯WorkBuddy上线人机双写》2026-07-30（智东西矩阵，一手实测）；局限项来自实测原文</div>
+</section>
+
+<!-- ═══════════ 7 为什么是办公 ═══════════ -->
+<section class="slide" data-title="为什么是办公">
+  <span class="kicker">PART 01 · 判断</span>
+  <h2><span class="no">1.4</span>判断：办公 AI 将复刻编程 AI 的确定性曲线——三个共识解释"为什么是现在"</h2>
+  <div class="vs">
+    <div class="side a"><h4>编程 AI（已验证，2023-2026）</h4>
+      <ul><li>Copilot/Claude Code 从辅助→自主，<b>代码生成已进生产流水线</b></li>
+      <li>驱动力：任务可验证 + 反馈快 + 开发者付费意愿强</li>
+      <li>结果：<b>AI 编程成为编程的默认方式</b>（工具覆盖率达主流）</li></ul></div>
+    <div class="mid">⇒</div>
+    <div class="side b"><h4>办公 AI（正在复制，2025-2027）</h4>
+      <ul><li>三厂已把 AI 做进<b>组织与产品双入口</b>（组织整合+人机双写），AI 直接进文档动手改</li>
+      <li>驱动力：任务同样可验证（文档/表格/会议即产物）+ 人群基数大 100×</li>
+      <li>预判：<b>2-3 年内办公 AI 从"尝鲜"变"默认"</b>；IDC 预计 <b>2030 年 95% 工作角色被重新定义</b>→员工成为"任务架构师"</li></ul></div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h4>共识 ① token 刚需场景</h4><ul><li>办公=高频/高粘性/高付费意愿，是<b>大模型 token 变现效率最高的出口</b>（智东西/三厂共识）</li></ul></div>
+    <div class="card"><h4>共识 ② Agent 跨越可用性门槛</h4><ul><li>印奇（阶跃）：2026 模型能力跨越临界点——从连续执行<b>数秒</b>任务到独立工作<b>数十小时</b>；办公是"长程任务"最密集场景</li></ul></div>
+    <div class="card"><h4>共识 ③ 入口争夺窗口收窄</h4><ul><li>OpenAI ChatGPT Work（整合 Codex）/ 微软 Copilot 超级应用年内面世——<b>先完成内部整合者拿下一代办公入口船票</b></li></ul></div>
+  </div>
+  <div class="points" style="margin-top:18px">
+    <li><b>对推理基础设施的含义（🔶推导）</b>：办公 Agent 单任务 token 消耗 <b>3-10×</b> 单次问答、上班时间集中触发 <b>10× 并发峰谷</b> → <b>推理算力从训练附属品变为独立主战场</b>（低延迟/高并发/成本敏感），这是 Part 2-4 全部硬件与软件判断的需求侧起点</li>
+  </div>
+  <div class="src">✅三共识与 IDC 95% 预测：智东西 2026-08-03 报道（IDC×腾讯云报告）；🔶单任务 token 3-10× 与并发特征为本工作空间基于 Agent 工作流的第一性推导</div>
+</section>
+
+<!-- ═══════════ 7 Part2 过渡 ═══════════ -->
+<section class="slide part" data-title="Part2">
+  <span class="kicker">PART 02</span>
+  <div class="big">Agentic 负载下，<span class="hl">CPU 需求</span>正在<br>被重新定义</div>
+  <div class="sub">推理不再是"GPU 一家的事"：prefill/decode 分工、KV Cache 管理、路由编排、Agent 执行——<span style="color:var(--accent)">CPU 从"配角 Host"走向"推理价值链的关键环节"</span>。</div>
+</section>
+
+<!-- ═══════════ 8 推理过程概述 ═══════════ -->
+<section class="slide" data-title="推理过程概述">
+  <span class="kicker">PART 02 · 背景</span>
+  <h2><span class="no">2.1</span>LLM 推理过程概述：两阶段 · 两种瓶颈</h2>
+  <div class="flow">
+    <div class="step gpu"><div class="st">PHASE 1 · COMPUTE-BOUND</div><div class="nm">Prefill 预填充</div><div class="ds">一次性处理输入上下文，计算密集<br>🔶70B·seq4K·batch16≈11.5s @ 2×GPU<br>吃<b>算力</b>（GPU 密集）</div></div>
+    <div class="arrow">→</div>
+    <div class="step gpu"><div class="st">PHASE 2 · MEMORY-BOUND</div><div class="nm">Decode 逐 token 生成</div><div class="ds">自回归逐 token 输出，每次读全部 KV<br>🔶70B KV/token≈320KB<br>吃<b>内存带宽</b>（KV 读取为主）</div></div>
+    <div class="arrow">→</div>
+    <div class="step cpu"><div class="st">AGENTIC LOOP · CPU-INTENSIVE</div><div class="nm">多轮 Agent 循环</div><div class="ds">路由→工具调用→检索→再推理…<br>每轮含<b>调度/解析/状态管理</b><br>吃<b>CPU 与 IO</b>（GPU 空闲等待）</div></div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h4>KV Cache = 推理的"状态"</h4><ul><li>🔶 70B：<b>320KB/token</b>（80层×8kv×128d×2B×2）</li><li>4K 上下文≈1.3GB / 128K≈41GB / 1M≈320GB</li></ul></div>
+    <div class="card"><h4>关键结论（✅推理冗余专题）</h4><ul><li>decode 瓶颈=KV 读取带宽，<b>不是 FLOPs</b></li><li>prefill 与 decode 对硬件需求<b>完全不同</b> → PD 分离</li></ul></div>
+    <div class="card"><h4>Agentic 新变量（🔶推导）</h4><ul><li>多轮循环中 GPU 大量时间<b>空闲等待</b>工具/检索结果</li><li><b>CPU 与 IO 成为实际瓶颈</b>——这是 CPU 需求重构的根源</li></ul></div>
+  </div>
+  <div class="src">✅KV 数字与 PD 分离依据：知识库 `2026-07-07-kv-cache-ttft-tpot-budget`、`2026-08-05-llm-inference-single-to-multi-node`；🔶推导公式内联</div>
+</section>
+
+<!-- ═══════════ 9 CPU 角色量化 ═══════════ -->
+<section class="slide" data-title="CPU角色量化">
+  <span class="kicker">PART 02 · 核心</span>
+  <h2><span class="no">2.2</span>CPU 在 Agentic 推理中的六重角色（量化）</h2>
+  <div class="grid g3">
+    <div class="card"><h4>① 请求调度与编排</h4><ul><li>连续批处理/PD 分离调度器在 CPU 上运行（✅Orca/vLLM）</li><li>Agent 任务拆解、规划、状态机——<b>纯 CPU 逻辑</b></li></ul></div>
+    <div class="card"><h4>② KV Cache 管理</h4><ul><li>显存调度/分页/前缀缓存命中（✅Intel Xeon Host CPU 文档）</li><li>长上下文下 KV 分层迁移（HBM→CXL→SSD）由 CPU 驱动</li></ul></div>
+    <div class="card"><h4>③ 路由与工具调用</h4><ul><li>MoE 路由决策、工具选择、函数调用解析</li><li>RAG 查询路由/重排（embedding/rerank 小模型可在 CPU）</li></ul></div>
+    <div class="card"><h4>④ Agent 执行引擎</h4><ul><li>✅AMD Venice：Helios 中 CPU 承担<b>轻量级 Agent 推理</b>（RAG 路由/工具选择/输出格式化）</li><li>✅NVIDIA Vera：88 核 CPU 同为 AI Agent 执行核心</li></ul></div>
+    <div class="card"><h4>⑤ 数据通路</h4><ul><li>tokenization、批组装、checkpoint、压缩（✅Intel QAT/IAA 加速器）</li><li>GPU 越多，数据搬移越 CPU 密集（✅64→1024 GPU 负载跃迁）</li></ul></div>
+    <div class="card"><h4>⑥ 小模型推理</h4><ul><li>✅Intel AMX：128 核≈204 TOPS(INT8)——embedding/分类/意图识别</li><li>投机解码的小草稿模型、安全过滤、内容审核可在 CPU</li></ul></div>
+  </div>
+  <div class="src">✅角色①-⑥分别对应知识库 Intel Xeon Host CPU / Helios / Vera Rubin / vLLM 专题；🔶Agent 负载占比为本工作空间推导</div>
+</section>
+
+<!-- ═══════════ 10 三厂 CPU 规划 ═══════════ -->
+<section class="slide" data-title="三厂CPU规划">
+  <span class="kicker">PART 02 · 格局</span>
+  <h2><span class="no">2.3</span>NV / AMD / Intel：CPU 规划集体转向"AI 推理原生"</h2>
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>维度</th><th>NVIDIA Vera <span class="tag o">私有 Arm</span></th><th>AMD EPYC Venice <span class="tag o">x86 · 2026H2</span></th><th>Intel Xeon 6 <span class="tag o">x86 · 在售</span></th></tr>
+    <tr><td>核心</td><td><b>88</b> Olympus 核（Arm v9.2）</td><td><b>256</b> 核 Dense / <b>128</b> 核 HF</td><td><b>128</b> P-cores</td></tr>
+    <tr><td>内存带宽</td><td><b>1.2 TB/s</b>（12ch LPDDR5X-9600）</td><td><b>1.6 TB/s</b>（16ch DDR5-12800，2.67× Turin）</td><td>~0.6 TB/s（DDR5-6400）</td></tr>
+    <tr><td>AI 加速</td><td>10-wide 前端（AI 工厂控制核心）</td><td>Zen 6 单线程强 + x86 生态</td><td><b>AMX ~204 TOPS</b>(INT8, 128核)</td></tr>
+    <tr><td>定位</td><td>NVL72 机架的"大脑"（CPU Agent 执行）</td><td>Helios 机架 GPU 引导 CPU + <b>AI Agent 执行引擎</b></td><td>AI 集群 Host CPU of Choice（KV 管理/调度）</td></tr>
+    <tr><td>CPU↔GPU 互联</td><td><b>NVLink-C2C 1.8 TB/s</b></td><td>PCIe Gen6 x16 ~256GB/s（7× 差距⚠️）</td><td>PCIe 5.0 136 通道</td></tr>
+    <tr><td>路线图</td><td>Vera Rubin 2027H1 量产</td><td>Venice 2026H2 → Verano 2027 → <b>Florence(Zen7) 2028 → Rivenna(Zen8) 2030</b>（两年一代✅）</td><td>Diamond Rapids 2027（CXL 3.0）/ Clearwater Forest 18A</td></tr>
+  </table>
+  </div>
+  <h3 style="margin-top:18px">内存带宽军备竞赛——Agentic 推理的"胜负手"</h3>
+  <div class="bars">
+    <div class="bar-row"><div class="bar-label">AMD Venice</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#00e5ff,#4da3ff)">1.6 TB/s</div></div></div>
+    <div class="bar-row"><div class="bar-label">NVIDIA Vera</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:linear-gradient(90deg,#4da3ff,#7f6bff)">1.2 TB/s</div></div></div>
+    <div class="bar-row"><div class="bar-label">Intel Xeon 6</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:linear-gradient(90deg,#8fa8c8,#5d7aa8)">~0.6 TB/s</div></div></div>
+  </div>
+  <div class="legend"><span><i style="background:#00e5ff"></i>带宽越高 → decode 阶段可驻留/读取更多 KV，Agent 小模型推理越快</span></div>
+  <div class="src">✅数据：知识库 Helios/Venice/Vera Rubin/Intel Xeon 四篇一手专题（STH/厂商官方）；⚠️Xeon 带宽为规格推导量级；🏷AMX TOPS 为 Intel 官方规格</div>
+</section>
+
+<!-- ═══════════ 11 AMD 路线图（新增 2026-08-05） ═══════════ -->
+<section class="slide" data-title="AMD路线图">
+  <span class="kicker">PART 02 · 格局</span>
+  <h2><span class="no">2.4</span>AMD 路线图（Advancing AI 2026 · 7/24 苏姿丰）：<b style="color:var(--accent)">CPU 两年一代 × 机架每年一代</b></h2>
+  <div class="flow">
+    <div class="step"><div class="st">ZEN 5 · 在售</div><div class="nm">Turin</div><div class="ds">当前服务器 CPU 之王</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">ZEN 6 · 2026H2</div><div class="nm">Venice</div><div class="ds">TSMC 2nm · 最高 <b>256 核</b>·EPYC 史上最大代际提升之一</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">2027</div><div class="nm">Verano</div><div class="ds">下一代 rackscale（Helios 500）配套 CPU</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">ZEN 7 · 2028</div><div class="nm">Florence</div><div class="ds">+ Ferrara/Fidenza 变体，支持最新内存技术</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">ZEN 8 · 2030</div><div class="nm">Rivenna</div><div class="ds">开发中——两年一代规律清晰</div></div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h4>Helios（2026Q3 出货）✅</h4>
+      <ul><li>72×MI455X + Venice HF（1:4）· <b>全生产状态</b></li><li>大单：Anthropic <b>2GW</b> / OpenAI 6GW（年底部署）</li></ul></div>
+    <div class="card"><h4>Helios 500（2027）</h4>
+      <ul><li>MI500（史上最大代际跃升）+ <b>Verano</b> CPU + Como/Monza 网络</li><li>机架级每年一代——与 NVIDIA 路线图对打</li></ul></div>
+    <div class="card"><h4>Helios 600（2028）</h4>
+      <ul><li>MI600（CDNA Next）+ <b>Ferrara</b>（Zen 7）+ Palma/Levanzo ⚠️</li><li>Venice 家族四型：HF/256核Dense/通用/<b>X-3D缓存</b></li></ul></div>
+  </div>
+  <div class="points" style="margin-top:18px">
+    <li><b>市场拐点（AMD 官方确认）</b>：<b>inference 已超过 training</b>——推理是主战场；AMD CPU 营收份额 <b>46%</b> 并将随 Agent 编排需求继续攀升</li>
+    <li><b>规模锚点</b>：CPU 市场 <b>$220B（2030）</b> · AI 加速器 TAM <b>$1.4T（2030）</b>=今天整个芯片市场 · 总 silicon TAM $2T（40% CAGR）；Meta："CPU 与 GPU 一样重要甚至更重要"</li>
+    <li><b>软件栈提速</b>：ROCm 每 <b>6 周</b>一个 release · <b>ROCm.AI</b>（Codex/Claude 写 GPU kernel）· Hyperloom 提升 token rate <b>38%</b> · 推理性能 +3.3×</li>
+  </div>
+  <div class="src">✅STH《AMD Advancing AI 2026 Keynote Live Coverage》2026-07-23 现场实况（一手）· ⚠️Helios 600 配套细节/性能锚点为 AMD 声称或二手编译未独立验证 · Rivenna 拼写以 STH 实况为准</div>
+</section>
+
+<!-- ═══════════ 12 Part3 过渡 ═══════════ -->
+<section class="slide part" data-title="Part3">
+  <span class="kicker">PART 03</span>
+  <div class="big">服务器机型：从<span class="hl">节点</span>到<span class="hl">超节点</span><br>推理负载定义硬件形态</div>
+  <div class="sub">CPU 需求的变化，最终落在机型设计上：PD 分离双机型、KV 分层、CPU:GPU 比例、scale-up 域——<span style="color:var(--accent)">推理的"负载形态"正在重新定义服务器架构</span>。</div>
+</section>
+
+<!-- ═══════════ 12 机型谱系 ═══════════ -->
+<section class="slide" data-title="机型谱系">
+  <span class="kicker">PART 03 · 谱系</span>
+  <h2><span class="no">3.1</span>机型谱系：从 2U 通用机到 72-GPU 超节点</h2>
+  <div class="flow">
+    <div class="step"><div class="st">L0 通用节点</div><div class="nm">2U 8×GPU</div><div class="ds">x86 Host + 8 GPU<br>CPU:GPU≈1:4<br>适用：小模型/DP 复制</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">L1 推理专用</div><div class="nm">PD 分离双机型</div><div class="ds"><b>Prefill 型</b>：算力密度优先<br><b>Decode 型</b>：KV 带宽优先<br>CPU 侧强化调度/KV 管理</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">L2 机架级</div><div class="nm">NVL72 / Helios</div><div class="ds">72 GPU + 专用 CPU<br>NVIDIA 2Vera:4GPU<br>AMD 1Venice:4GPU（✅）<br>scale-up 域内 TP/MoE</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="st">L3 超节点/集群</div><div class="nm">多机架互连</div><div class="ds">UALink/以太网域间互连<br>DP/PD 分离跨域<br>KV 分层延伸至 CXL 池</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><h4>NVIDIA NVL72（Vera Rubin，2027H1）✅</h4>
+      <ul><li>Rubin GPU 288GB HBM4 · <b>NVLink 6：3.6TB/s/GPU</b>、HBM-to-HBM ~565ns</li><li>2 Vera CPU : 4 GPU 编排（CPU Agent 执行 + 推理管理）</li><li>scale-up 域 = 把"跨节点"变"节点内"（延迟最优）</li></ul></div>
+    <div class="card"><h4>AMD Helios（2026Q3 出货·全生产）✅</h4>
+      <ul><li>72×MI455X · 432GB HBM4/GPU · 31TB 整机 HBM4</li><li>scale-up 260TB/s 全铜 1-hop 全对等 · scale-out 43TB/s</li><li><b>1 Venice CPU : 4 GPU</b>——CPU 承担 GPU 引导 + Agent 推理</li><li>容错：网络单点全补偿，免 checkpoint 重载</li><li>大单验证：Anthropic <b>2GW</b> / OpenAI 6GW（✅AAI 2026）</li></ul></div>
+  </div>
+  <div class="src">✅Helios/NVL72 数据：知识库 `2026-07-29-amd-helios`、`2026-07-27-nvlink6`、`2026-07-27-vera-rubin` 专题（STH/官方博文一手）</div>
+</section>
+
+<!-- ═══════════ 13 KV cache 推理拆解 ═══════════ -->
+<section class="slide" data-title="KV cache推理拆解">
+  <span class="kicker">PART 03 · 拆解</span>
+  <h2><span class="no">3.2</span>三类 KV Cache 推理场景：负载形态决定机型</h2>
+  <div class="grid g3">
+    <div class="card"><h4>场景 A：单请求长上下文 <span class="tag">容量驱动</span></h4>
+      <ul><li>🔶 128K 上下文 KV≈<b>41GB</b>（70B）、1M≈320GB</li><li>KV 放不下 HBM → <b>KV 分层 HBM→CXL→SSD</b></li><li>CPU 驱动 KV 冷热迁移；CXL 池化是容量扩展关键（✅）</li><li>机型要点：<b>大内存带宽 + CXL 槽位 + 分层存储</b></li></ul></div>
+    <div class="card"><h4>场景 B：高并发短请求 <span class="tag">吞吐驱动</span></h4>
+      <ul><li>办公/Agent 典型：请求短、并发高、多轮</li><li><b>PD 分离</b>：prefill 池（算力）+ decode 池（KV 带宽）</li><li>🔶 KV 4K 上下文≈1.28GB/请求，池化共享压力大</li><li>机型要点：<b>两池独立扩缩 + 调度器（CPU）强 + KV 通道</b></li></ul></div>
+    <div class="card"><h4>场景 C：MoE 动态路由 <span class="tag">结构驱动</span></h4>
+      <ul><li>专家跨节点 → 每 token 动态 AllToAll（✅Scorpio）</li><li>✅DeepSeek V3 曾被互联限 4 节点路由上限</li><li>CPU 做路由决策；交换结构做在网通信（GPU IO↓49%🏷）</li><li>机型要点：<b>确定性互联 + 硬件集合通信 + 路由 CPU</b></li></ul></div>
+  </div>
+  <h3 style="margin-top:20px">KV Cache 成本全景（🔶 推导，70B）</h3>
+  <table>
+    <tr><th>上下文</th><th>KV 总量</th><th>驻留层（建议）</th><th>decode 带宽需求</th><th>对 CPU/机型的影响</th></tr>
+    <tr><td>4K</td><td>1.28 GB</td><td>HBM</td><td>~32 MB/s/请求</td><td>常规调度即可</td></tr>
+    <tr><td>32K</td><td>10.2 GB</td><td>HBM（大显存）/CXL</td><td>~256 MB/s/请求</td><td>KV 管理压力↑</td></tr>
+    <tr><td>128K</td><td>41 GB</td><td><b>CXL/SSD 分层</b></td><td>~1 GB/s/请求</td><td>CPU 驱动迁移、CXL 必配</td></tr>
+    <tr><td>1M</td><td>320 GB</td><td><b>SSD + 池化</b></td><td>~8 GB/s/请求</td><td>KV 分层成架构级需求</td></tr>
+  </table>
+  <div class="src">✅KV/token 公式与分层依据：知识库 `2026-07-07-kv-cache`、`2026-07-29-cxl-kvcache`、`2026-08-05-inference-single-multi-node` 专题</div>
+</section>
+
+<!-- ═══════════ 14 设计热点 ═══════════ -->
+<section class="slide" data-title="设计热点问题">
+  <span class="kicker">PART 03 · 热点</span>
+  <h2><span class="no">3.3</span>五个设计热点问题（谁回答得好，谁拿单）</h2>
+  <div class="grid g2">
+    <div class="card"><h4>① CPU:GPU 比例——不再是一刀切 1:8</h4>
+      <ul><li>训练 1:8 够用；<b>Agentic 推理向 1:4 甚至更高 CPU 占比演进</b>（✅Helios 1:4、NVL72 1:2）</li><li>PD 分离后 decode 池对 CPU 调度/KV 管理需求更高</li></ul></div>
+    <div class="card"><h4>② 内存带宽 vs 核心数——谁更稀缺？</h4>
+      <ul><li>Venice 1.6TB/s 打的是<b>带宽牌</b>（KV 读取/Agent 小模型推理）</li><li>Vera 88 核打的是<b>单核延迟牌</b>（GPU 调度实时性）</li></ul></div>
+    <div class="card"><h4>③ CPU↔GPU 互联带宽——7× 差距的博弈</h4>
+      <ul><li>⚠️AMD PCIe Gen6 x16 ≈256GB/s vs NVIDIA C2C 1.8TB/s</li><li>开放生态（PCIe/CXL/UALink）vs 私有（NVLink-C2C）之争</li></ul></div>
+    <div class="card"><h4>④ KV 分层存储——内存层级决定推理上限</h4>
+      <ul><li>HBM→CXL→SSD 三级成为长上下文标配（✅）</li><li>CXL 池化 + 共享 KV = 集群级缓存命中（✅存储专题）</li></ul></div>
+    <div class="card"><h4>⑤ 故障域与恢复——推理的容错 ≠ 训练的 checkpoint</h4>
+      <ul><li>🔶 72 GPU 域月故障≈4.3%（×10 节点≈×10 概率）</li><li>推理要求<b>无状态请求 + 前缀缓存重建</b>（秒级，非分钟级）</li></ul></div>
+    <div class="card"><h4>⑥ scale-up 域规模——超节点的边界</h4>
+      <ul><li>NVLink 域 72→1,152 GPU 扩展（✅）</li><li>UALink 开放域 2027 目标 ≥512 GPU（✅预判）</li></ul></div>
+  </div>
+  <div class="src">✅知识库 Helios/NVLink6/跨节点推理专题；🔶故障概率为第一性推导（单 GPU 年故障 1% 假设⚠️）；🏷厂商规格</div>
+</section>
+
+<!-- ═══════════ 15 Part4 过渡 ═══════════ -->
+<section class="slide part" data-title="Part4">
+  <span class="kicker">PART 04</span>
+  <div class="big">配套软件：<span class="hl">算力平台 · 运维 · 固件</span><br>从"能跑"到"好用"的护城河</div>
+  <div class="sub">硬件机会的兑现依赖软件栈：调度平台决定利用率，运维决定可用性，固件决定可管理性——<span style="color:var(--accent)">三者的设计都要围绕"推理负载的确定性"展开</span>。</div>
+</section>
+
+<!-- ═══════════ 16 配套软件三件套 ═══════════ -->
+<section class="slide" data-title="配套软件设计">
+  <span class="kicker">PART 04 · 设计</span>
+  <h2><span class="no">4.1</span>算力平台 / 运维 / 固件：三件套设计要点</h2>
+  <div class="grid g3">
+    <div class="card"><h4>算力平台（调度层）</h4>
+      <ul><li><b>拓扑感知调度</b>：请求→就近节点、PD 配对同域（✅跨节点专题）</li><li><b>PD 分离池化</b>：prefill/decode 弹性扩缩，KV 走专用通道</li><li><b>缓存感知</b>：前缀缓存命中优先调度（✅vLLM 方向）</li><li><b>GPU 细粒度共享</b>：Agent 小请求多 → MIG/分时</li><li><b>厂商软件栈提速</b>：ROCm 6 周节奏 + ROCm.AI（AI 写 kernel）+ Hyperloom +38%（✅AAI 2026）</li></ul></div>
+    <div class="card"><h4>运维（可靠性层）</h4>
+      <ul><li><b>KV 命中率/PD 配比</b>纳入可观测性指标（✅有效算力概念）</li><li><b>无状态请求 + 前缀缓存重建</b>的秒级故障恢复（🔶）</li><li><b>KV 热迁移</b>：节点下线/负载均衡时状态搬家</li><li><b>容量规划</b>：按"KV 增长+并发峰谷"建模，非按峰值 FLOPs</li></ul></div>
+    <div class="card"><h4>固件（可管理性层）</h4>
+      <ul><li><b>GPU 引导 CPU</b>：枚举/初始化/错误处理（✅Venice/Vera 角色）</li><li><b>RAS 下沉</b>：带外故障诊断、复位、恢复自动化（✅固件三线）</li><li><b>固件三线节奏</b>：BMC/GPU/互联固件版本联动管理（✅POC 管理）</li><li><b>可观测固件</b>：KV 分层存储健康、CXL 内存纠错上报</li></ul></div>
+  </div>
+  <div class="src">✅算力平台/运维要点：知识库 `2026-08-05-inference-single-multi-node`、`2026-08-05-redundancy`、超节点 POC 管理专题；✅固件三线为既有方法论</div>
+</section>
+
+<!-- ═══════════ 17 机会点 ═══════════ -->
+<section class="slide" data-title="机会点">
+  <span class="kicker">PART 04 · 机会</span>
+  <h2><span class="no">4.2</span>机会地图：三类玩家 × 四个抓手</h2>
+  <div class="grid g2">
+    <div class="card opp hot"><h4>🔥 机会 1：Agentic 推理专用服务器（P0）</h4>
+      <ul><li><b>PD 分离双机型</b>（prefill 算力型 + decode 带宽型）成新品类</li><li>CPU:GPU 比例 1:4 的推理机型（非训练 1:8）——<b>差异化空白</b></li></ul></div>
+    <div class="card opp"><h4>💎 机会 2：KV 分层存储与 CXL 池化（P0）</h4>
+      <ul><li>长上下文是刚需（办公文档/代码库/Agent 记忆）</li><li>KV 卸载硬件（CXL 内存/SSD 分级）成为<b>推理服务器标配部件</b></li></ul></div>
+    <div class="card opp"><h4>💎 机会 3：开放 scale-up 生态卡位（P1）</h4>
+      <ul><li>UALink/PCIe fabric：MoE 推理确定性互联需求（✅Scorpio 逻辑）</li><li>2026H2 标准窗口——<b>错过成本×3</b>（✅行业结论）</li></ul></div>
+    <div class="card opp hot"><h4>🔥 机会 4：推理运维软件栈（P0）</h4>
+      <ul><li>KV 可观测性/PD 配比/故障秒级恢复——<b>软件差异化护城河</b></li><li>办公 AI 规模化后，推理运维是客户最大痛点（编排鸿沟）</li></ul></div>
+  </div>
+  <h3 style="margin-top:22px">给 CPU 的三条结论</h3>
+  <div class="points">
+    <li><b>带宽 > 核心数</b>：Agentic 推理的 CPU 胜负手是内存带宽（KV 读取+小模型推理），Venice 1.6TB/s 已示范</li>
+    <li><b>生态 > 峰值</b>：x86 生态（LangChain 等 Agent 框架免适配）是 Venice 对 Vera 的关键优势（✅）</li>
+    <li><b>协同 > 单点</b>：CPU↔GPU 互联（C2C 1.8TB/s vs PCIe 256GB/s）决定 CPU 能否成为"推理价值链关键环节"</li>
+  </div>
+  <div class="src">✅机会判断基于知识库 Helios/Scorpio/存储专题/行业窗口结论；🏷厂商规格；机会优先级为本工作空间综合研判</div>
+</section>
+
+<!-- ═══════════ 18 结论 ═══════════ -->
+<section class="slide" data-title="结论">
+  <span class="kicker">SUMMARY</span>
+  <h2>结论与下一步</h2>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><div class="num">01</div><h4>办公 AI = 推理算力的第二增长曲线</h4><ul><li>三厂已做<b>组织级整合</b>（拆并/合一/独立，7/18-8/3）+ AI 直接进文档（人机双写）；推理调用量将数量级增长</li></ul></div>
+    <div class="card"><div class="num">02</div><h4>CPU 需求重构 = 服务器产品的新战场</h4><ul><li>调度/KV 管理/Agent 执行/小模型推理——CPU 从配角到关键环节；<b>inference 已超 training</b>（AMD 官方确认）· CPU 市场 $220B 2030</li></ul></div>
+    <div class="card"><div class="num">03</div><h4>机会 = 机型 × KV 分层 × 软件栈</h4><ul><li>PD 分离机型、KV 分层存储、推理运维软件三抓手</li></ul></div>
+  </div>
+  <h3 style="margin-top:24px">建议行动（A1-A4）</h3>
+  <div class="points">
+    <li><b>A1</b>：立项调研"Agentic 推理专用机型"（PD 分离 + 1:4 CPU:GPU），2 周内出需求文档</li>
+    <li><b>A2</b>：KV 分层（HBM→CXL→SSD）与 CXL 池化写入推理服务器架构评审 checklist</li>
+    <li><b>A3</b>：跟踪 UALink 2.0 域规模 / Scorpio 量产 / vLLM 跨节点 KV 通道三项（MEMORY 观察点续）</li>
+    <li><b>A4</b>：办公 AI 客户调研（钉钉/飞书/ima 生态的服务商），验证推理运维软件需求</li>
+  </div>
+  <div class="src">下一步：A1-A2 可立即启动；A3 持续跟踪；A4 建议与行业调研并行</div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('section.slide'));
+  var cur=0, timer=null, overview=false;
+  var bar=document.getElementById('bar'), pager=document.getElementById('pager');
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===cur)});
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    pager.textContent=(cur+1)+' / '+slides.length;
+    if(overview) exitOverview();
+  }
+  // 目录总览（ESC）：缩略网格
+  function enterOverview(){
+    overview=true;
+    slides.forEach(function(s,k){
+      s.style.cssText='position:fixed;display:block;transform:scale(.16);transform-origin:top left;'+
+        'left:'+(10+(k%5)*20)+'%;top:'+(6+Math.floor(k/5)*46)+'%;z-index:60;opacity:.85;'+
+        'cursor:pointer;box-shadow:0 0 0 1px #1e3a5f;pointer-events:auto;background:#0a1628;height:42vh;overflow:hidden';
+      s.onclick=function(){slides.forEach(function(x){x.style.cssText='';x.onclick=null});show(k);};
+    });
+  }
+  function exitOverview(){
+    overview=false;
+    slides.forEach(function(s){s.style.cssText='';s.onclick=null});
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='Escape'){overview?exitOverview():enterOverview();}
+    else if(e.key==='f'||e.key==='F'){
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+      else document.exitFullscreen&&document.exitFullscreen();
+    }
+  });
+  // 点击右半区翻页
+  document.addEventListener('click',function(e){
+    if(overview)return;
+    if(e.clientX>window.innerWidth*0.75)show(cur+1);
+    else if(e.clientX<window.innerWidth*0.25)show(cur-1);
+  });
+  // 触摸滑动
+  var tx=0,ty=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1));
+  },{passive:true});
+  show(0);
+})();
+</script>
+</body>
+</html>

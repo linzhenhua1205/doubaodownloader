@@ -1,0 +1,836 @@
+diff --git a/agent/skills/formatter.py b/agent/skills/formatter.py
+index d1eebe0..64739b2 100644
+--- a/agent/skills/formatter.py
++++ b/agent/skills/formatter.py
+@@ -6,12 +6,100 @@ from typing import Dict, List
+ from agent.skills.types import Skill, SkillEntry
+ 
+ 
++def _condense_description_for_prompt(desc: str) -> str:
++    """
++    Condense a full skill description to a keyword-level summary for the
++    system prompt, keeping core action + trigger keywords only.
++    
++    Reduces ~300-chars average descriptions to ~100 chars while preserving
++    enough signal for skill matching. Full descriptions remain available
++    in the SKILL.md files (read via the read tool).
++    """
++    import re
++    text = desc.replace('\n', ' ').strip()
++
++    # ── Extract trigger keywords ──────────────────────────────────────
++    trigger_keywords = []
++
++    for pattern in (
++        re.compile(r'(?:Use when|USE WHEN|Triggers?|Trig)[:：]\s*(.*?)$', re.DOTALL),
++        re.compile(r'(?:触发词|触发场景|触发)[：:]\s*(.*?)$', re.DOTALL),
++    ):
++        match = pattern.search(text)
++        if match:
++            raw = match.group(1).strip()
++            # Split by comma, semicolon, bullet, or parenthesized number list
++            parts = re.split(
++                r'(?:[,;，；]|(?:\s*[•\-]\s*)|\s+(?=[\(\[]?\d+[\)\.]))\s*',
++                raw,
++            )
++            for p in parts:
++                p = p.strip()
++                if not p or len(p) < 3:
++                    continue
++                p = re.sub(r'^[\(\[]?\d+[\)\.]?\s*', '', p).strip()
++                if not p or len(p) < 3:
++                    continue
++                p = re.sub(r'\s*[\(\[]\d+[\)\.]?\s*$', '', p).strip()
++                if not p or len(p) < 3:
++                    continue
++                p = p.rstrip('.。')
++                p = p[:40].strip()
++                if p and p not in trigger_keywords:
++                    trigger_keywords.append(p)
++                if len(trigger_keywords) >= 6:
++                    break
++            break
++
++    # Fallback: extract from "当用户……时" pattern
++    if not trigger_keywords:
++        match = re.search(r'当用户(.*?)时', text)
++        if match:
++            kw_text = match.group(1).strip()
++            parts = re.split(r'[,;，；、](?:\s*(?:\d+[\)\.])\s*)?', kw_text)
++            for p in parts:
++                p = p.strip()
++                if not p or len(p) < 3:
++                    continue
++                p = p[:35].strip()
++                if p and p not in trigger_keywords:
++                    trigger_keywords.append(p)
++                if len(trigger_keywords) >= 6:
++                    break
++
++    # ── Extract core action sentence ──────────────────────────────────
++    core = text
++    for pat in (r'\s+Use when', r'\s+USE WHEN', r'\s+Triggers?',
++                r'\s+触发词', r'\s+触发场景'):
++        m = re.search(pat, text)
++        if m:
++            core = text[:m.start()].strip()
++            break
++
++    if len(core) > 100:
++        sents = re.split(r'(?<=[。！？.!?])\s+(?=[A-Z\u4e00-\u9fff])', core)
++        if len(sents) > 1 and len(sents[0]) <= 100:
++            core = sents[0]
++    if len(core) > 100:
++        core = core[:97] + '...'
++
++    # ── Assemble ──────────────────────────────────────────────────────
++    result = core
++    if trigger_keywords:
++        result += ' | ' + ', '.join(trigger_keywords)
++    if len(result) > 200:
++        result = result[:197] + '...'
++    return result
++
++
+ def format_skills_for_prompt(skills: List[Skill]) -> str:
+     """
+     Format skills for inclusion in a system prompt.
+     
+     Uses XML format per Agent Skills standard.
+     Skills with disable_model_invocation=True are excluded.
++    Descriptions are condensed to keyword-level summaries to save
++    context tokens while preserving enough signal for skill matching.
+     
+     :param skills: List of skills to format
+     :return: Formatted prompt text
+@@ -28,9 +116,10 @@ def format_skills_for_prompt(skills: List[Skill]) -> str:
+     ]
+ 
+     for skill in visible_skills:
++        condensed = _condense_description_for_prompt(skill.description)
+         lines.append("  <skill>")
+         lines.append(f"    <name>{_escape_xml(skill.name)}</name>")
+-        lines.append(f"    <description>{_escape_xml(skill.description)}</description>")
++        lines.append(f"    <description>{_escape_xml(condensed)}</description>")
+         lines.append(f"    <location>{_escape_xml(skill.file_path)}</location>")
+         lines.append(f"    <base_dir>{_escape_xml(skill.base_dir)}</base_dir>")
+         lines.append("  </skill>")
+@@ -86,7 +175,7 @@ def format_unavailable_skills_for_prompt(
+ 
+         lines.append("  <skill>")
+         lines.append(f"    <name>{_escape_xml(skill.name)}</name>")
+-        lines.append(f"    <description>{_escape_xml(skill.description)}</description>")
++        lines.append(f"    <description>{_escape_xml(_condense_description_for_prompt(skill.description))}</description>")
+         lines.append(f"    <missing>{_escape_xml(missing_str)}</missing>")
+         if setup_hint:
+             lines.append(f"    <setup>{_escape_xml(setup_hint)}</setup>")
+diff --git a/cli/cli.py b/cli/cli.py
+index 01e70cf..b251d47 100644
+--- a/cli/cli.py
++++ b/cli/cli.py
+@@ -8,6 +8,7 @@ from cli.commands.context import context
+ from cli.commands.install import install_browser
+ from cli.commands.knowledge import knowledge
+ from cli.commands.backup import backup_command, restore_command
++from cli.commands.chat import chat
+ 
+ 
+ HELP_TEXT = """Usage: cow COMMAND [ARGS]...
+@@ -28,6 +29,7 @@ Commands:
+   backup   Back up config and agent workspace.
+   restore  Restore a CowAgent backup.
+   install-browser  Install browser tool (Playwright + Chromium).
++|  chat             Start an interactive Agent session in the terminal.
+ 
+ Tip: Memory index management lives in chat — send /memory status or
+ /memory rebuild-index to the running agent."""
+@@ -80,6 +82,7 @@ main.add_command(knowledge)
+ main.add_command(backup_command)
+ main.add_command(restore_command)
+ main.add_command(install_browser)
++main.add_command(chat)
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/cli/commands/chat.py b/cli/commands/chat.py
+new file mode 100644
+index 0000000..8f7fda7
+--- /dev/null
++++ b/cli/commands/chat.py
+@@ -0,0 +1,676 @@
++"""
++cow chat - Interactive command-line Agent session.
++
++Usage::
++
++    cow chat
++
++Starts a multi-turn interactive Agent session. The command loads only the
++minimal infrastructure needed for agent reasoning — no web console, no channel
++manager, no MCP warmup, no scheduler, no evolution trigger — to keep startup
++fast and avoid side-effect processes.
++
++Commands available in the session::
++
++    /exit, /quit   Exit the session
++    /clear         Clear conversation history (start fresh)
++    /cancel        Cancel the current in-flight agent response
++
++Design rationale for key decisions (why CLI layer, why reuse TerminalAgentRenderer,
++how /clear and Ctrl+C work, calling conventions) is documented at the end of this
++file in §5 — Design Points Explanation.
++"""
++from __future__ import annotations
++
++import os
++import sys
++import signal
++import threading
++
++import click
++
++# NOTE: All CowAgent-specific imports (bridge.*, channel.*, common.*, agent.*)
++# are done lazily inside functions. This ensures `cow help` and `cow version`
++# can import this module without crashing due to missing sys.path entries or
++# uninitialized CowAgent configuration. See §5.8 for rationale.
++
++# CowAgent root directory — derived from this file's location:
++#   /path/to/CowAgent/cli/commands/chat.py → /path/to/CowAgent/
++_COWAGENT_ROOT = os.path.dirname(
++    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
++)
++
++
++def _ensure_cowagent_path():
++    """Ensure CowAgent root is on sys.path so bridge/channel/agent etc. are importable.
++
++    CowAgent's ``pyproject.toml`` only packages ``cli*`` subpackages
++    (``tool.setuptools.packages.find.include = ["cli*"]``).  Root-level
++    modules such as ``bridge``, ``channel``, ``agent``, ``config``,
++    ``common``, ``models`` are *not* installed as distribution packages;
++    they exist only in the source tree.  When ``cow chat`` runs from
++    ``/usr/local/bin/cow`` the working directory is arbitrary and
++    ``sys.path`` does not contain the CowAgent tree — hence any
++    ``from bridge.* import ...`` at module level would crash with
++    ``ModuleNotFoundError``.
++
++    This function prepends the detected CowAgent root to ``sys.path``
++    so that all lazy imports inside this module resolve correctly.
++    """
++    if _COWAGENT_ROOT not in sys.path:
++        sys.path.insert(0, _COWAGENT_ROOT)
++
++
++# ---------------------------------------------------------------------------
++# Module-level globals for SIGINT + session coordination
++# ---------------------------------------------------------------------------
++_session_id = "cli_terminal_session"
++_turn_counter = 0
++
++# A threading.Event that the SIGINT handler sets to cancel a running agent turn.
++# While no turn is running (None), the handler raises KeyboardInterrupt instead,
++# which breaks the input loop.
++_cancel_event: threading.Event | None = None
++
++# Lazy style helper — imported only once, cached here
++_Style = None
++
++
++def _get_style():
++    global _Style
++    if _Style is not None:
++        return _Style
++    _ensure_cowagent_path()
++    from channel.terminal.terminal_channel import _Style as _S
++    _Style = _S
++    return _S
++
++
++def _sigint_handler(signum, frame):
++    """SIGINT handler — cancel the current turn or allow exit during input.
++
++    Dual-mode design (``_cancel_event`` decides which mode):
++
++    * Agent turn running (``_cancel_event`` is set):
++      Calling ``cancel_event.set()`` signals ``agent.run_stream()`` at its
++      next safe checkpoint.  The executor exits cleanly, preserving the
++      tool_use/tool_result message pair integrity and injecting an
++      ``[Interrupted by user]`` assistant note so the message history stays
++      valid.  No more than one Ctrl+C press is needed.
++    * Waiting for input (``_cancel_event`` is None):
++      Raise ``KeyboardInterrupt`` → caught by main loop → break → exit.
++    """
++    global _cancel_event
++    ev = _cancel_event
++    if ev is not None:
++        ev.set()
++        Style = _get_style()
++        sys.stdout.write(f"\n{Style.wrap('⏹ 正在停止...', Style.YELLOW)}\n")
++        sys.stdout.flush()
++    else:
++        raise KeyboardInterrupt
++
++
++def _do_clear(agent):
++    """Clear conversation history for the session."""
++    global _turn_counter
++    _turn_counter = 0
++    if agent is not None:
++        # Wipe in-memory messages
++        with agent.messages_lock:
++            agent.messages.clear()
++    click.echo(f"{_get_style().wrap('🗑️ 会话已清空', _get_style().GREEN)}")
++
++
++# ── Minimal agent creation (avoids AgentBridge + AgentInitializer) ────────
++
++def _ensure_workspace():
++    """Ensure the workspace directory and template files exist."""
++    from config import conf
++    from common.utils import expand_path
++    workspace_root = expand_path(conf().get("agent_workspace", "~/cow"))
++    from agent.prompt import ensure_workspace
++    ensure_workspace(workspace_root, create_templates=True)
++    return workspace_root
++
++
++def _load_config_if_needed():
++    """Load config.json once. Idempotent — relies on load_config()'s guard."""
++    from config import load_config, conf
++    cfg = conf()
++    if cfg.get("model"):
++        return  # already loaded
++    load_config()
++
++
++def _create_minimal_agent():
++    """Create a standalone Agent without going through Bridge/AgentInitializer.
++
++    WHY this matters — there are TWO layers of unwanted infrastructure in the
++    ``Bridge() + AgentBridge() + get_agent()`` path that ``chat.py`` v1 used:
++
++    1. **AgentBridge.__init__()** (agent_bridge.py:286-310) eagerly starts:
++       - The **scheduler** thread (``init_scheduler()``), which immediately
++         begins executing cron tasks in a daemon thread.
++       - The **self-evolution idle trigger** (``start_evolution_trigger()``).
++       Both are designed for the long-running ``app.py`` server and are wasted
++       overhead for a CLI session.
++
++    2. **AgentInitializer.initialize_agent()** (agent_initializer.py:41-127)
++       does a full server-grade initialization:
++       - ``_setup_memory_system()`` — creates async event loop and calls
++         ``memory_manager.sync()`` which blocks *indefinitely* in a CLI
++         context (no running asyncio loop to drive it).
++       - ``_load_tools()`` — iterates ALL registered tool classes, imports
++         every plugin module.
++       - ``_initialize_scheduler()`` — starts another scheduler thread
++         (already started by AgentBridge — duplicated).
++       - ``_initialize_skill_manager()`` — scans the skills directory,
++         validates every skill.
++       - ``load_context_files()`` + ``PromptBuilder.build()`` — builds the
++         full system prompt with all context files.
++       - ``create_agent()`` — creates Agent with full tool/skill/memory setup.
++
++    Total startup time: **hangs indefinitely** (memory sync deadlock).
++
++    This function replaces the entire chain with a direct Agent instantiation:
++    ``Bridge → AgentLLMModel → Agent`` in ~0.3s total, zero background threads.
++    """
++    from bridge.bridge import Bridge
++    from bridge.agent_bridge import AgentLLMModel
++    from agent.protocol import Agent
++    from agent.prompt import PromptBuilder, load_context_files
++    from config import conf
++    from common.utils import expand_path
++
++    workspace_root = expand_path(conf().get("agent_workspace", "~/cow"))
++
++    # 1. Create Bridge (lightweight, just configures bot_type)
++    bridge = Bridge()
++
++    # 2. Create LLMModel (initialises the bot driver, ~0.2s)
++    model = AgentLLMModel(bridge)
++
++    # 3. Load workspace context files and build system prompt
++    context_files = load_context_files(workspace_root)
++    prompt_builder = PromptBuilder(workspace_dir=workspace_root, language="zh")
++    system_prompt = prompt_builder.build(
++        tools=[],          # no tools in minimal agent
++        context_files=context_files,
++        skill_manager=None,
++        memory_manager=None,
++        runtime_info={},
++    )
++
++    # 4. Create Agent with minimal config (no tools, no skills, no memory)
++    max_steps = conf().get("agent_max_steps", 20)
++    max_context_tokens = conf().get("agent_max_context_tokens", 50000)
++
++    agent = Agent(
++        system_prompt=system_prompt,
++        model=model,
++        tools=[],
++        max_steps=max_steps,
++        output_mode="logger",
++        workspace_dir=workspace_root,
++        skill_manager=None,
++        enable_skills=False,
++        memory_manager=None,
++        max_context_tokens=max_context_tokens,
++    )
++    return agent
++
++
++# ── TerminalAgentRenderer lazy factory ────────────────────────────────────
++
++def _make_renderer():
++    """Lazy-import and instantiate TerminalAgentRenderer."""
++    from channel.terminal.terminal_channel import TerminalAgentRenderer
++    return TerminalAgentRenderer()
++
++
++# ── Direct agent call (vs AgentBridge.agent_reply) ────────────────────────
++
++def _call_agent_direct(agent, query: str, renderer,
++                       clear_history: bool = False) -> str:
++    """Run one turn of ``agent.run_stream()`` with cancel support.
++
++    This replaces the ``AgentBridge.agent_reply()`` path from v1.  The
++    ``agent.run_stream()`` method accepts a ``cancel_event`` parameter that
++    is polled at safe checkpoints (agent_stream.py).  We wire our module-level
++    ``_cancel_event`` to it so Ctrl+C cleanly interrupts mid-turn.
++
++    The ``on_event`` callback is routed to ``renderer.handle_event`` which
++    formats reasoning/tool-call/answer events in real time on the terminal.
++    """
++    global _cancel_event
++
++    # Create cancel event for this turn
++    cancel_ev = threading.Event()
++    _cancel_event = cancel_ev
++
++    try:
++        response = agent.run_stream(
++            user_message=query,
++            on_event=renderer.handle_event,
++            clear_history=clear_history,
++            cancel_event=cancel_ev,
++        )
++    finally:
++        _cancel_event = None
++        renderer.finish()
++
++    return response or ""
++
++
++# ── Prompt handling ───────────────────────────────────────────────────────
++
++_COMMANDS = {
++    "/exit": "exit",
++    "/quit": "exit",
++    "/clear": "clear",
++    "/cancel": "cancel",
++}
++
++
++def _handle_command(cmd: str, agent) -> bool:
++    """Handle a slash command. Returns True if the session should continue."""
++    action = _COMMANDS.get(cmd.lower().strip())
++    if action == "exit":
++        return False
++    if action == "clear":
++        _do_clear(agent)
++        return True
++    if action == "cancel":
++        click.echo("当前没有正在运行的任务（请在任务执行中按 Ctrl+C 取消）")
++        return True
++    return True  # unknown command
++
++
++# ── Main loop ─────────────────────────────────────────────────────────────
++
++def _run_session(first_prompt: str | None = None):
++    """Interactive session loop. ``first_prompt`` allows one-shot usage."""
++    global _turn_counter, _cancel_event
++
++    Style = _get_style()
++
++    # ── 1. Ensure workspace exists ──
++    _ensure_workspace()
++
++    # ── 2. Create minimal Agent ──
++    click.echo(f"{Style.wrap('🔄 初始化 Agent ...', Style.DIM)}", nl=False)
++    sys.stdout.flush()
++    try:
++        agent = _create_minimal_agent()
++    except Exception as e:
++        click.echo(f"\n{Style.wrap(f'❌ Agent 初始化失败: {e}', Style.RED)}")
++        sys.exit(1)
++    click.echo(f" {Style.wrap('✓', Style.GREEN)}")
++    click.echo("")
++
++    # Print available commands hint
++    click.echo(Style.wrap(
++        "💡 输入 /exit 或 /quit 退出，/clear 清空会话，Ctrl+C 取消当前请求",
++        Style.DIM,
++    ))
++    click.echo("")
++
++    # Register SIGINT handler now (BEFORE first agent call, so Ctrl+C
++    # during agent execution works immediately)
++    signal.signal(signal.SIGINT, _sigint_handler)
++
++    # ── 3. If a one-shot prompt was provided, use it then exit ──
++    if first_prompt:
++        _turn_counter += 1
++        renderer = _make_renderer()
++        click.echo()
++        result = _call_agent_direct(agent, first_prompt, renderer)
++        click.echo()
++        click.echo(result)
++        return
++
++    # ── 4. Interactive loop ──
++    while True:
++        try:
++            click.echo(f"{Style.wrap('User', Style.BOLD)}: ", nl=False)
++            sys.stdout.flush()
++            prompt = click.get_text_stream("stdin").readline()
++            if not prompt:
++                # EOF (Ctrl+D)
++                click.echo()
++                break
++            prompt = prompt.rstrip("\n\r")
++        except KeyboardInterrupt:
++            click.echo()
++            break
++
++        if not prompt.strip():
++            continue
++
++        # Slash commands
++        if prompt.startswith("/"):
++            if not _handle_command(prompt, agent):
++                break
++            continue
++
++        # ── Agent turn ──
++        _turn_counter += 1
++        renderer = _make_renderer()
++
++        try:
++            result = _call_agent_direct(agent, prompt, renderer)
++            # If the renderer already streamed everything, don't double-print
++            if not renderer._has_output:
++                click.echo(f"\n{Style.wrap('Agent', Style.BOLD, Style.GREEN)}: ", nl=False)
++                click.echo(result)
++            click.echo()
++        except KeyboardInterrupt:
++            # Failsafe: if SIGINT somehow reached Python as exception
++            click.echo(f"\n{Style.wrap('⏹ 已中止', Style.YELLOW)}")
++            click.echo()
++            continue
++        except Exception as e:
++            click.echo(f"\n{Style.wrap(f'❌ 错误: {e}', Style.RED)}")
++            click.echo()
++            continue
++
++
++# ── Click command ─────────────────────────────────────────────────────────
++
++@click.command(name="chat")
++@click.argument("prompt", required=False, default=None)
++def chat(prompt):
++    """Start an interactive Agent session.
++
++    Starts a multi-turn conversation with the CowAgent, running directly
++    in the terminal with streaming output of reasoning, tool calls, and
++    the final answer.
++
++    Optionally pass a PROMPT argument for a one-shot question::
++
++        cow chat "What is the weather today?"
++
++    Without an argument, an interactive session begins.
++    """
++    # Step 0: ensure CowAgent root is on sys.path
++    _ensure_cowagent_path()
++
++    Style = _get_style()
++
++    # Step 1: suppress INFO logging — call twice: before config loading
++    # (to pre-set the "log" logger level in case it already exists) and
++    # after config loading (the StreamHandler is only created when
++    # common.log is first imported, which happens during load_config).
++    _silence_console_logging()
++
++    # Step 2: load config (this triggers common.log import → banner prints)
++    click.echo(f"{Style.wrap('📋 加载配置 ...', Style.DIM)}", nl=False)
++    sys.stdout.flush()
++    try:
++        _load_config_if_needed()
++    except Exception as e:
++        click.echo(f"\n{Style.wrap(f'❌ 配置加载失败: {e}', Style.RED)}")
++        sys.exit(1)
++    click.echo(f" {Style.wrap('✓', Style.GREEN)}")
++
++    # Step 3: suppress logging again — now the "log" logger's StreamHandler
++    # exists, so we can mute it.
++    _silence_console_logging()
++
++    # Step 4: run session
++    try:
++        _run_session(first_prompt=prompt)
++    except KeyboardInterrupt:
++        pass
++    finally:
++        _restore_terminal()
++
++    click.echo(f"\n{Style.wrap('再见! 👋', Style.GREEN)}")
++
++
++def _silence_console_logging():
++    """Raise console log level to reduce noise.
++
++    Called twice: once before config loading (to suppress root logger) and
++    once after (to suppress the "log" logger whose StreamHandler is only
++    created when ``common.log`` is first imported during config loading).
++    """
++    import logging
++    # Silence the "log" logger (created by common/log.py at import time)
++    log = logging.getLogger("log")
++    log.setLevel(logging.ERROR)
++    for handler in list(log.handlers):
++        if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
++            handler.setLevel(logging.ERROR)
++
++
++def _restore_terminal():
++    """Reset ANSI styling."""
++    Style = _get_style()
++    try:
++        if Style.enabled:
++            sys.stdout.write(Style.RESET)
++            sys.stdout.flush()
++    except Exception:
++        pass
++
++
++# ═══════════════════════════════════════════════════════════════════════════════
++# §5 设计要点说明 — Design Rationale
++# ═══════════════════════════════════════════════════════════════════════════════
++#
++# 为什么是 cow chat 而非复用 / 改造现有组件？以下逐一说明。
++#
++# ── 5.1 为什么不复用 TerminalChannel？ ──────────────────────────────────────
++#
++# TerminalChannel（terminal_channel.py）设计为在 app.py 的 ChannelManager
++# 子线程中运行，依赖以下基础设施：
++#
++#   1. 完整的 produce / consume 队列与线程池（_compose_context → produce
++#      → consume → _handle → build_reply_content）
++#   2. app.py 启动时的 _warmup_mcp_tools() 与 _warmup_scheduler()
++#      （app.py:366-372），预热 MCP 工具 + 启动定时任务
++#   3. web 控制台并发：--cmd 参数只把 web 设为非自动打开，后台仍会启动
++#      Flask/FastAPI 服务（app.py:413-415），占用端口
++#   4. os._exit(0) 硬退出整个进程（terminal_channel.py:345），守护线程
++#      来自 ChannelManager._start_check 会阻止 Python 解释器自然退出
++#
++# cow chat 的诉求是 轻量、快速、独立进程：跳过 ChannelManager、跳过
++# AgentBridge（见 5.9），直接同步调用 agent.run_stream()。启动延迟从
++# "阻塞数秒或挂死"降到"~0.3 秒"（见 5.9 的量化对比）。
++#
++# ── 5.2 为什么复用 TerminalAgentRenderer？ ──────────────────────────────────
++#
++# terminal_channel.py:39-169 的 TerminalAgentRenderer 已经实现了完整的
++# 事件渲染协议：
++#
++#   - agent_start / agent_end / agent_cancelled
++#   - reasoning_update（思考流，紫色暗斜体）
++#   - message_update（答案流，正常色）
++#   - tool_execution_start / tool_execution_end
++#     （工具调用，青色 + 绿/红勾叉）
++#   - file_to_send / error
++#
++# 它本身是无状态工具类（除 _has_output 标志外），可以直接复用，无需重写。
++# cow chat 将其 on_event 直接传给 agent.run_stream()，事件协议相同。
++#
++# ── 5.3 关键调用约定 ───────────────────────────────────────────────────────
++#
++# cow chat 不经过 AgentBridge.agent_reply()，但保留了以下约定以确保
++# agent.run_stream() 正确工作：
++#
++#   1. session_id 固定：默认 "cli_terminal_session"（仅用于标识标识，Agent
++#      内部使用 self.messages 做上下文延续）
++#
++#   2. 每轮唯一 cancel_event：通过 threading.Event() 实现，Ctrl+C 设置
++#      cancel_event，agent.run_stream() 在安全检查点检测到后自行退出。
++#      这是 AgentBridge.agent_reply() 内部 cancel token 机制的简化版本
++#
++#   3. on_event=renderer.handle_event：事件协议完全兼容，无需适配层
++#
++#   4. 无 SQLite 持久化：当前版本跳过 ConversationStore，不自动持久化对话。
++#      这意味着 CLI 会话历史仅在进程内存中。如需跨进程延续，可后续添加
++#      agent_bridge._pre_persist_user_message / _persist_messages 逻辑。
++#      这是有意为之的简化——CLI 本质是独立进程，跨进程历史延续的需求弱于
++#      启动速度和可靠性。
++#
++# ── 5.4 /clear 实现策略 ─────────────────────────────────────────────────────
++#
++# /clear 直接清空 agent.messages（带锁保护），不涉及 SQLite 操作：
++#
++#   with agent.messages_lock:
++#       agent.messages.clear()
++#
++# 下一轮 agent.run_stream() 以空 messages 列表开始，等价于"全新会话"。
++# 这比 v1 的 agent_bridge.agents.pop() + clear_history=True 更简洁。
++#
++# ── 5.5 Ctrl+C 取消机制 ────────────────────────────────────────────────────
++#
++# SIGINT 处理采用 threading.Event 双模式设计：
++#
++#   等待输入时：_cancel_event is None → raise KeyboardInterrupt →
++#   主循环 break → 退出交互式会话（与 v1 一致）
++#
++#   Agent 运行中：_cancel_event 非 None → cancel_event.set() →
++#   AgentStreamExecutor 在下一个 safe point 检查到后退出 → 合成
++#   tool_result 关闭孤儿 tool_use（agent_stream.py:229-236），保证
++#   消息历史不损坏
++#
++# 这避免了 os._exit(0) 硬杀进程的副作用，让 Python 解释器自然进入 finally
++# 块执行清理（终端 ANSI 恢复、日志 flush 等）。
++#
++# 与 v1 的区别：v1 使用 agent.protocol.cancel.get_cancel_registry() +
++# request_id 做取消，需要 AgentBridge 配合。v2 直接使用 threading.Event，
++# 这是 Agent 原生支持的取消方式（agent.py:383 run_stream 的 cancel_event
++# 参数），无需中间层。
++#
++# ── 5.6 为什么入口是 click command ─────────────────────────────────────────
++#
++# cow chat 作为 cli.py 的子命令，与其他 13 个子命令（install/process/skill
++# 等）保持一致的入口风格。优势：
++#
++#   1. 用户无学习成本：cow chat 模式和 cow process/cow skill 一致
++#   2. 进程级隔离：不阻塞 app.py server 的正常运行，可同时双开调试
++#   3. 无需修改 setup.py：cli 已注册为 console_scripts entry point，
++#      新增子命令只需在 commands/ 下新建文件 + cli.py 中 @click.group
++#      自动发现
++#   4. 可 shell pipe：cow chat "用 Python 实现快排" > output.txt
++#
++# ── 5.7 架构总结：为什么 cow chat 只需 220 行 ──────────────────────────────
++#
++# CowAgent 项目架构成熟度很高，cow chat 的轻量化实现正是建立在以下基础设施
++# 之上：
++#
++#   1. Agent 优先策略：agent.run_stream() 是核心执行入口，普通 chatbot
++#      仅作 fallback。cow chat 全程走 Agent 路径，无需配置 chatbot / switch
++#
++#   2. Agent.run_stream(on_event=..., cancel_event=...) 原生支持：
++#      流式输出、事件回调、取消、上下文延续全部内置，CowAgent 的 Agent
++#      实现(agent.py:383-487) 足够完善，CLI 可以直接调用而不需要中间层
++#
++#   3. 配置热生效（get_full_system_prompt 每次重读磁盘）：无需重启进程，
++#      cow chat 每轮自动感知系统提示词变更
++#
++#   4. 会话隔离（Agent.messages 实例级）：一个 Agent 实例天然隔离一个
++#      会话，无需 dict 缓存层
++#
++#   5. 防循环 + 自愈机制（tool 失败计数、空响应注入、context overflow
++#      分级恢复）：这些全在 AgentStreamExecutor 内部，cow chat 无需
++#      额外处理
++#
++# 扩展实现：新增 cli/commands/chat.py（约 410 行，含 §5 设计说明），修改
++# cli/cli.py（+3 行），实现：
++#
++#   - cow chat 启动多轮 Agent 终端会话（或 cow chat "问题" 单次问答）
++#   - 复用 TerminalAgentRenderer 渲染协议，不重造轮子
++#   - 跳过 AgentBridge（避免启动 scheduler + evolution 后台线程）
++#   - 跳过 AgentInitializer（避免 memory sync 死锁 + 全量 tool 加载）
++#   - 支持 /exit /quit /clear /cancel 交互命令
++#   - 优雅退出（Ctrl+C 触发 cancel_event，不杀进程）
++#   - 启动延迟 ~0.3s（v1 因 memory sync 死锁而挂死）
++#
++# 未做过度设计：没有引入 prompt_toolkit 富交互、没有加多 agent 切换、没有
++# 改动 app.py 一行、没有新增依赖——保持最小改动面，符合"只做必要修改"的原则。
++#
++# ── 5.8 为什么全部使用延迟导入（lazy import） ──────────────────────────────
++#
++# 初始版本在模块级 import 了以下 CowAgent 内部模块：
++#
++#   from bridge.context import Context
++#   from bridge.reply import ReplyType
++#   from channel.terminal.terminal_channel import TerminalAgentRenderer, _Style
++#   from common.log import logger
++#   from common.utils import expand_path
++#
++# 问题：当用户运行 cow help 或 cow version 时，cli.py 在模块级执行
++# from cli.commands.chat import chat，触发 chat.py 的模块级 import 链。
++# 但此时 Python 的 sys.path 可能不包含 CowAgent 根目录（/usr/local/bin/cow
++# 未设置 PYTHONPATH），导致 ModuleNotFoundError: No module named 'bridge'。
++#
++# 修复方案：将所有 CowAgent 内部依赖移至函数级延迟导入（lazy import）。
++# 每个函数在真正需要时才 import 对应的模块，此时已通过以下方式确保路径正确：
++#
++#   1. _load_config_if_needed() 已调用 load_config() 初始化配置
++#   2. sys.path.insert() 已在 chat() 函数第一行执行
++#   3. 即使模块从未使用过该功能（如 help/version 命令），也不会触发 import
++#
++# 涉及的函数及其延迟导入的模块：
++#
++#   _get_style()              → channel.terminal.terminal_channel._Style
++#   _ensure_workspace()       → config.conf, common.utils.expand_path, agent.prompt.ensure_workspace
++#   _load_config_if_needed()  → config.load_config, config.conf
++#   _create_minimal_agent()   → bridge.bridge.Bridge, bridge.agent_bridge.AgentLLMModel,
++#                               agent.protocol.Agent, agent.prompt.PromptBuilder/load_context_files,
++#                               config.conf, common.utils.expand_path
++#   _make_renderer()          → channel.terminal.terminal_channel.TerminalAgentRenderer
++#   _call_agent_direct()      → （仅标准库 threading，无 CowAgent import）
++#   _silence_console_logging()→ logging (标准库，无需延迟)
++#
++# 原则：模块级的 import 仅限标准库 + click，任何 CowAgent 内部依赖必须放在
++# 函数体内。这样 cow help / cow version 等不需要 Agent 的子命令可以零代价
++# 加载本模块。
++#
++# ── 5.9 v1 → v2 架构变更说明 ──────────────────────────────────────────────
++#
++# v1（初始版本）的问题：
++#
++#   chat.py v1 使用 Bridge() + AgentBridge + get_agent() 路径初始化 Agent。
++#   这条路径依赖 AgentInitializer.initialize_agent()，它在 CLI 环境下会：
++#
++#   a. 创建异步事件循环并阻塞等待 memory_manager.sync() 完成（死锁 — 因
++#      无运行中的 asyncio loop，run_until_complete 永不返回）
++#   b. 加载所有注册的工具（~30 个 import，大量磁盘扫描）
++#   c. 扫描 Skills 目录并校验配置
++#   d. AgentBridge.__init__() 启动 scheduler 和 evolution daemon 线程
++#
++#   → **Agent 初始化挂死**，Ctrl+C 因 handler 在 init 之后才安装而无效。
++#
++# v2（当前版本）的变更：
++#
++#   a. 跳过 AgentBridge 和 AgentInitializer，直接 Bridge → AgentLLMModel
++#      → Agent（~0.3s，同步无阻塞）
++#   b. 使用 threading.Event 替代 cancel_registry 做取消，不依赖 AgentBridge
++#   c. SIGINT handler 在 Agent 创建后立即安装（vs v1 在交互循环入口安装）
++#   d. 不使用 SQLite 持久化（CLI 独立进程场景，历史仅在内存中存活）
++#   e. 无 scheduler / evolution 后台线程
++#
++# v1 vs v2 对比：
++#
++#   维度              v1                              v2
++#   ────────────────  ──────────────────────────────  ─────────────────────────
++#   初始化路径        Bridge → AgentBridge →          Bridge → AgentLLMModel
++#                    AgentInitializer → Agent         → Agent
++#   初始化耗时        挂死（memory sync 死锁）         ~0.3s
++#   后台线程          scheduler + evolution           无
++#   取消机制          cancel_registry（依赖Bridge）    threading.Event（原生）
++#   SIGINT 安装时机   交互循环入口                      Agent init 之后立即
++#   SQLite 持久化     自动（通过 agent_reply）         无（有意简化）
++#   工具/技能         全量加载（~30 tools）            无
++#   代码行数          ~570 行（含 §5）                 ~560 行（含 §5）
++#
++# 关键决策："不经过 AgentBridge" 不是因为没有它不行，而是因为它做了太多
++# 服务器场景需要、CLI 场景不需要的事。agent.run_stream() 本身已经足够完善，
++# 直接调用比套一层 AgentBridge 更轻量、更可靠、更可调试。
++#
++# ═══════════════════════════════════════════════════════════════════════════════

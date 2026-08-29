@@ -1,0 +1,74 @@
+{
+  "id": "wf-03-quality-check",
+  "name": "质量检查（三层门）",
+  "type": "static",
+  "version": "1.0",
+  "created": "2026-08-06",
+  "methodology": "meth-013 §5 WF-03",
+  "trigger": {
+    "type": "scheduler|manual",
+    "scheduler_task": "Skills-Scripts 周质量检测（每周日07:50）",
+    "manual": "用户要求全库/定向质量检查"
+  },
+  "planner": {
+    "split_by": "质量层（L1 快检 / L2 补齐 / L3 深修）",
+    "parallel": false
+  },
+  "state": {
+    "report_dir": "knowledge/weekly-reports/07_kb_stat/08_dir_review/",
+    "temp_dir": "workflow/.state/wf-03/"
+  },
+  "phases": [
+    {
+      "phase": "scan",
+      "desc": "全库/定向扫描，收集问题清单",
+      "workers": "脚本（确定性）",
+      "scripts": [
+        "scripts/check/format-validator.py",
+        "scripts/check/link-validator.py",
+        "scripts/check/kb-health.py",
+        "scripts/check/kb-index-check.py",
+        "scripts/check/doc-quality.py"
+      ]
+    },
+    {
+      "phase": "classify",
+      "desc": "问题分级：机械可修 vs 需判断",
+      "workers": "agent（light-self-review）",
+      "evaluator": "分类清单与 meth-011 L1-L3 对应"
+    },
+    {
+      "phase": "fix",
+      "desc": "机械修复（脚本）+ 深度修复（agent）",
+      "workers": "脚本 + agent",
+      "scripts": [
+        "scripts/tools/add_toc.py",
+        "scripts/tools/add_summary_keywords.py",
+        "scripts/check/link-fixer.py",
+        "scripts/tools/kb-global-index.py"
+      ],
+      "skills": ["doc-reviewer", "depth-completer", "knowledge-health-check"]
+    },
+    {
+      "phase": "verify",
+      "desc": "复验 + 生成报告",
+      "workers": "脚本",
+      "evaluator": "format-validator 0 问题 + link-validator 0 死链 + 残留清单入报告"
+    }
+  ],
+  "evaluator": {
+    "type": "exit-code|report",
+    "pass": "L1 全过；L2 幂等；L3 残留问题有修复路线图"
+  },
+  "loop": {"max_retry": 2, "on_fail": "残留问题写入报告，不静默"},
+  "stop_resume": {"state_file": "workflow/.state/wf-03/progress.json", "by_phase": true},
+  "repeatability": {
+    "file_pattern": "YYYY-MM-DD-quality-check-report.md",
+    "track": "修复前/后问题数增量"
+  },
+  "deps": {
+    "scripts": ["scripts/check/format-validator.py", "scripts/check/link-validator.py", "scripts/check/kb-health.py", "scripts/check/kb-index-check.py", "scripts/check/link-fixer.py", "scripts/tools/add_toc.py", "scripts/tools/add_summary_keywords.py", "scripts/tools/kb-global-index.py"],
+    "skills": ["light-self-review", "doc-reviewer", "depth-completer", "knowledge-health-check"],
+    "spec": ["std-002-knowledge-content-format.md", "sr-007-content-quality-standards.md", "meth-011-file-quality-three-layer.md"]
+  }
+}

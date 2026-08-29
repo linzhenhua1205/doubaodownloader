@@ -1,0 +1,30 @@
+[
+  {
+    "capsule_id": "capsule_error_recovery",
+    "name": "Error Recovery Capsule",
+    "genes": ["gene_timeout_retry", "gene_connection_retry", "gene_degradation_switch", "gene_error_handling"],
+    "description": "Collection of genes for handling runtime errors, timeouts, and connection failures",
+    "priority": "high"
+  },
+  {
+    "capsule_id": "capsule_optimization",
+    "name": "Optimization Capsule",
+    "genes": ["gene_code_simplify", "gene_performance_optimize"],
+    "description": "Collection of genes for code optimization and performance improvement",
+    "priority": "medium"
+  },
+  {
+    "capsule_id": "capsule_memory_update",
+    "name": "Memory Update Capsule",
+    "genes": ["gene_memory_update"],
+    "description": "Collection of genes for updating knowledge and guidelines",
+    "priority": "medium"
+  },
+  {
+    "capsule_id": "capsule_innovation",
+    "name": "Innovation Capsule",
+    "genes": ["gene_skill_enhance"],
+    "description": "Collection of genes for skill enhancement and new feature development",
+    "priority": "low"
+  }
+]

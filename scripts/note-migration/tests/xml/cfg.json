@@ -1,0 +1,7 @@
+{
+  "item_xpath": "//article",
+  "title": "./title",
+  "body": ["./content"],
+  "list": ["./item"],
+  "attrs_as_meta": ["date", "author"]
+}

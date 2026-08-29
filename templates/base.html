@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ root_name }} - 文件浏览器{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #24292e;
+            --border-color: #e1e4e8;
+            --link-color: #0366d6;
+            --hover-color: #f6f8fa;
+            --dir-color: #6a737d;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0d1117;
+                --text-color: #c9d1d9;
+                --border-color: #30363d;
+                --link-color: #58a6ff;
+                --hover-color: #161b22;
+                --dir-color: #8b949e;
+            }
+            .markdown-body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+            .file-list tr:hover {
+                background-color: var(--hover-color);
+            }
+            .breadcrumb {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+            .breadcrumb a {
+                color: var(--link-color);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-left: 300px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            padding-left: 300px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header h1 a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .header h1 a:hover {
+            color: var(--link-color);
+        }
+
+        .breadcrumb {
+            padding: 10px 20px;
+            padding-left: 300px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: var(--text-color);
+        }
+
+        .breadcrumb .separator {
+            color: var(--dir-color);
+        }
+
+        .breadcrumb .current {
+            color: var(--dir-color);
+        }
+
+        .file-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .file-list th {
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--dir-color);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 65px;
+            background: var(--bg-color);
+        }
+
+        .file-list td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .file-list tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .file-list .name {
+            font-weight: 500;
+        }
+
+        .file-list .name a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .file-list .name a:hover {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        .file-list .dir-icon {
+            color: var(--dir-color);
+            margin-right: 8px;
+        }
+
+        .file-list .file-icon {
+            color: var(--link-color);
+            margin-right: 8px;
+        }
+
+        .file-list .meta {
+            font-size: 0.85rem;
+            color: var(--dir-color);
+        }
+
+        .file-list .size {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--dir-color);
+            min-width: 80px;
+        }
+
+        .file-list .ext {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.8rem;
+            color: var(--dir-color);
+            background: var(--hover-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .view-content {
+            padding: 20px;
+            padding-right: 340px;
+            padding-top: 80px;
+        }
+
+        .view-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            margin-bottom: 15px;
+        }
+
+        .view-header .filename {
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        .view-header .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-header .actions a {
+            font-size: 0.85rem;
+            color: var(--link-color);
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .view-header .actions a:hover {
+            background: var(--hover-color);
+            border-color: var(--link-color);
+        }
+
+        .markdown-body {
+            padding: 30px;
+            background: var(--bg-color);
+        }
+
+        .code-block {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .code-block .highlight {
+            margin: 0;
+            padding: 15px;
+            overflow-x: auto;
+            background: var(--hover-color);
+        }
+
+        .plain-text {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dir-color);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .file-list .meta,
+            .file-list .size {
+                display: none;
+            }
+        }
+
+        /* 左侧文件导航栏 */
+        .file-sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 999;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .file-sidebar {
+                background: var(--bg-color);
+            }
+        }
+
+        .file-sidebar h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .file-sidebar h2 i {
+            font-size: 14px;
+        }
+
+        /* 文件树样式 */
+        .file-tree {
+            list-style: none;
+            padding-left: 0;
+            font-size: 14px;
+        }
+
+        .file-tree li {
+            margin-bottom: 2px;
+        }
+
+        .file-tree li ul {
+            list-style: none;
+            padding-left: 18px;
+            margin-top: 2px;
+        }
+
+        .file-tree a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .file-tree a:hover {
+            background: var(--hover-color);
+        }
+
+        .file-tree a.active {
+            background: #e8f0fe;
+            color: #0366d6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .file-tree a.active {
+                background: rgba(56, 139, 253, 0.15);
+                color: #58a6ff;
+            }
+        }
+
+        .file-tree .dir-icon {
+            color: #d29922;
+            font-size: 12px;
+        }
+
+        .file-tree .file-icon {
+            color: #6a737d;
+            font-size: 12px;
+        }
+
+        .file-tree .md-icon {
+            color: #0366d6;
+        }
+
+        .file-tree .py-icon {
+            color: #3572a5;
+        }
+
+        .file-tree .js-icon {
+            color: #f7df1e;
+            background: #000;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .file-tree .html-icon {
+            color: #e34f26;
+        }
+
+        .file-tree .css-icon {
+            color: #264de4;
+        }
+
+        .file-tree .json-icon {
+            color: #8b8b8b;
+        }
+
+        .file-tree-toggle {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            color: var(--dir-color);
+            transition: transform 0.2s;
+        }
+
+        .file-tree-toggle.closed {
+            transform: rotate(0deg);
+        }
+
+        .file-tree-toggle.open {
+            transform: rotate(90deg);
+        }
+
+        /* 右侧菜单 */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar h2 i {
+            font-size: 16px;
+        }
+
+        /* 目录导航 */
+        .toc {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .toc li {
+            margin-bottom: 8px;
+        }
+
+        .toc a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .toc a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .toc .level-1 { padding-left: 0; font-weight: 600; color: #fff; }
+        .toc .level-2 { padding-left: 15px; }
+        .toc .level-3 { padding-left: 30px; }
+        .toc .level-4 { padding-left: 45px; }
+
+        /* 下载按钮 */
+        .download-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #3498db;
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Mermaid 图表样式 */
+        .mermaid {
+            margin: 20px 0;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .mermaid {
+                background: var(--hover-color);
+                border-color: var(--border-color);
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+            .view-content {
+                padding-right: 270px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+                width: 280px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                right: 20px;
+                top: 20px;
+                background: #3498db;
+                color: #fff;
+                padding: 10px;
+                border-radius: 50%;
+                z-index: 1001;
+                cursor: pointer;
+            }
+            .view-content {
+                padding-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% block file_sidebar %}
+    {% endblock %}
+
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="header">
+        <h1><a href="/">{{ root_name }}</a></h1>
+    </div>
+
+    {% if breadcrumbs %}
+    <div class="breadcrumb">
+        <a href="/">{{ root_name }}</a>
+        {% for crumb in breadcrumbs %}
+            <span class="separator">/</span>
+            {% if crumb.active %}
+                <span class="current">{{ crumb.name }}</span>
+            {% else %}
+                <a href="/browse/{{ crumb.path }}">{{ crumb.name }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block sidebar %}
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/go.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/rust.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/cpp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('pre code').forEach(function(block) {
+                hljs.highlightElement(block);
+            });
+        });
+
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'neutral',
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#3498db',
+                lineColor: '#7f8c8d',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f5f7fa'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            timeline: {
+                useMaxWidth: true
+            }
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function toggleDir(element) {
+            element.classList.toggle('open');
+            element.classList.toggle('closed');
+            const ul = element.nextElementSibling.nextElementSibling;
+            if (ul && ul.tagName === 'UL') {
+                ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function renderFileTree(items, currentPath) {
+            let html = '';
+            items.forEach(function(item) {
+                if (item.is_truncated) {
+                    html += '<li><div style="color: #999; font-size: 12px; padding-left: 20px;">' + item.name + '</div></li>';
+                    return;
+                }
+                
+                if (item.is_dir) {
+                    html += '<li>';
+                    html += '<div class="file-tree-toggle closed" onclick="toggleDir(this)">▶</div>';
+                    html += '<a href="/browse/' + encodeURIComponent(item.path) + '" class="dir-icon">';
+                    html += '<i class="fas fa-folder"></i> ' + item.name + '</a>';
+                    if (item.children && item.children.length > 0) {
+                        html += '<ul class="file-tree" style="display: none;">';
+                        html += renderFileTree(item.children, currentPath);
+                        html += '</ul>';
+                    }
+                    html += '</li>';
+                } else {
+                    const isActive = currentPath === item.path;
+                    let classes = [];
+                    if (isActive) classes.push('active');
+                    if (item.ext === '.md') classes.push('md-icon');
+                    if (item.ext === '.py') classes.push('py-icon');
+                    if (item.ext === '.js') classes.push('js-icon');
+                    if (item.ext === '.html') classes.push('html-icon');
+                    if (item.ext === '.css') classes.push('css-icon');
+                    if (item.ext === '.json') classes.push('json-icon');
+                    
+                    let iconClass = 'fas fa-file-alt';
+                    if (item.ext === '.md') iconClass = 'fab fa-markdown';
+                    else if (item.ext === '.py') iconClass = 'fab fa-python';
+                    else if (item.ext === '.js') iconClass = 'fab fa-js-square';
+                    else if (item.ext === '.html') iconClass = 'fab fa-html5';
+                    else if (item.ext === '.css') iconClass = 'fab fa-css3-alt';
+                    else if (item.ext === '.json') iconClass = 'fas fa-file-code';
+                    
+                    html += '<li>';
+                    html += '<div class="file-tree-toggle" style="visibility: hidden;">•</div>';
+                    html += '<a href="/view/' + encodeURIComponent(item.path) + '"';
+                    if (classes.length > 0) {
+                        html += ' class="' + classes.join(' ') + '"';
+                    }
+                    html += '><i class="' + iconClass + '"></i> ' + item.name + '</a>';
+                    html += '</li>';
+                }
+            });
+            return html;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('file-tree-container');
+            if (container) {
+                fetch('/api/file-tree')
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        const currentPath = container.getAttribute('data-current-path');
+                        container.innerHTML = '<ul class="file-tree">' + renderFileTree(data, currentPath) + '</ul>';
+                    })
+                    .catch(function(error) {
+                        container.innerHTML = '<div style="color: #e74c3c; padding: 20px; text-align: center;">加载文件树失败</div>';
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

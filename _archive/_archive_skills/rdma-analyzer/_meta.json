@@ -1,0 +1,37 @@
+{
+  "name": "rdma-analyzer",
+  "description": "RDMA分析技能，用于服务器系统中高性能网络和GPU通信的性能评估",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "硬件分析",
+  "keywords": [
+    "RDMA",
+    "RoCE",
+    "InfiniBand",
+    "NVLink",
+    "NVSwitch",
+    "GPU通信",
+    "远程内存访问",
+    "高性能网络",
+    "延迟",
+    "带宽"
+  ],
+  "dependencies": {
+    "scripts": [
+      "rdma_analysis.py",
+      "nvlink_topology_analyzer.py"
+    ]
+  },
+  "related_skills": [
+    "si-analyzer",
+    "deep-tech-writer",
+    "doc-reviewer",
+    "knowledge-wiki",
+    "interconnect-analyzer"
+  ],
+  "trigger_conditions": [
+    "用户提及RDMA、RoCE、InfiniBand、NVLink、NVSwitch",
+    "用户提及GPU通信、远程内存访问、高性能网络",
+    "关键词：延迟分析、带宽测试、PFC、ECN、DCQCN"
+  ]
+}

@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# cowchat — 通过 CowAgent API 进行命令行对话
+#
+# 原理：使用 curl 直接与运行中的 CowAgent Web 服务通信
+#       避免 Python 层面的 WebChannel 实例隔离问题
+#
+# 用法:
+#   cowchat "你的问题"          # 一问一答
+#   echo "问题" | cowchat       # 管道输入
+#   cowchat                     # 交互模式
+#   cowchat -s <session_id>     # 指定会话
+#
+# 环境变量:
+#   COW_HOST      — 地址 (默认 localhost)
+#   COW_PORT      — 端口 (默认 9899)
+#   COW_PASSWORD  — Web 密码
+
+set -euo pipefail
+
+# ── 配置 ──
+HOST="${COW_HOST:-localhost}"
+PORT="${COW_PORT:-9899}"
+BASE="http://${HOST}:${PORT}"
+
+# 密码自动检测
+if [ -z "${COW_PASSWORD:-}" ]; then
+    CONFIG="${HOME}/CowAgent/config.json"
+    [ -f "$CONFIG" ] && COW_PASSWORD=$(python3 -c "import json; print(json.load(open('$CONFIG')).get('web_password',''))" 2>/dev/null) || true
+fi
+
+COOKIE_FILE="/tmp/.cowchat_cookies_$$"
+
+# 清理函数
+_cleanup() { rm -f "$COOKIE_FILE"; }
+trap _cleanup EXIT
+
+# ── 认证 ──
+_auth() {
+    if [ -z "${COW_PASSWORD:-}" ]; then
+        echo "❌ 未找到 Web 密码。设置 COW_PASSWORD 环境变量。" >&2
+        exit 1
+    fi
+    local resp
+    resp=$(curl -s -c "$COOKIE_FILE" -X POST -H "Content-Type: application/json" \
+        -d "{\"password\": \"${COW_PASSWORD}\"}" \
+        "${BASE}/auth/login" 2>/dev/null)
+    if ! echo "$resp" | python3 -c "import sys,json; d=json.load(sys.stdin); sys.exit(0 if d.get('status')=='success' else 1)" 2>/dev/null; then
+        echo "❌ 认证失败: $resp" >&2
+        exit 1
+    fi
+}
+
+# ── 发送并获取回复（轮询模式，绕开 SSE 实例问题）──
+_ask() {
+    local question="$1"
+    local session_id="$2"
+    local request_id
+
+    # 1. 发送消息
+    local resp
+    resp=$(curl -s -b "$COOKIE_FILE" -X POST -H "Content-Type: application/json" \
+        -d "{\"message\": $(echo "$question" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))"), \"session_id\": \"${session_id}\", \"stream\": false}" \
+        "${BASE}/message" 2>/dev/null)
+
+    request_id=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin).get('request_id',''))" 2>/dev/null)
+    if [ -z "$request_id" ]; then
+        echo "❌ 发送失败: $resp" >&2
+        return 1
+    fi
+
+    # 2. 轮询结果（最多等 5 分钟）
+    local waited=0
+    local max_wait=300
+    while [ $waited -lt $max_wait ]; do
+        local poll_resp
+        poll_resp=$(curl -s -b "$COOKIE_FILE" -X POST -H "Content-Type: application/json" \
+            -d "{\"session_id\": \"${session_id}\"}" \
+            "${BASE}/poll" 2>/dev/null)
+
+        if echo "$poll_resp" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+if d.get('has_content') and d.get('request_id','')=='${request_id}':
+    print(d.get('content',''))
+    sys.exit(0)
+sys.exit(1)
+" 2>/dev/null; then
+            return 0
+        fi
+        sleep 1
+        waited=$((waited + 1))
+    done
+
+    echo "⏱ 等待超时" >&2
+    return 1
+}
+
+# ── 交互模式 ──
+_interactive() {
+    local sid="${1:-}"
+    [ -z "$sid" ] && sid="cli_$$_$(date +%s)"
+    echo ""
+    echo -e "\033[1;32m🐄 CowAgent CLI\033[0m"
+    echo -e "\033[90m会话: ${sid}\033[0m"
+    echo -e "\033[90m输入 exit 或 Ctrl+C 退出\033[0m"
+    echo ""
+
+    while true; do
+        echo -ne "\033[1;34mYou:\033[0m "
+        if ! read -r line; then
+            echo ""
+            break
+        fi
+        case "${line,,}" in
+            exit|quit|/exit) break ;;
+            "") continue ;;
+        esac
+        echo -ne "\033[1;32mAgent:\033[0m "
+        _ask "$line" "$sid"
+        echo ""
+    done
+    echo -e "\033[90m再见 👋\033[0m"
+}
+
+# ── 一次性模式 ──
+_oneshot() {
+    local question="$1"
+    local sid="${2:-}"
+    [ -z "$sid" ] && sid="cli_$$_$(date +%s)"
+    echo -ne "\033[1;32mAgent:\033[0m "
+    _ask "$question" "$sid"
+    echo ""
+}
+
+# ── 主入口 ──
+main() {
+    local session_id=""
+    local question=""
+
+    # 解析参数
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -s|--session) session_id="$2"; shift 2 ;;
+            -h|--help)
+                echo "用法: cowchat [-s session_id] [问题]"
+                echo "       cowchat -h"
+                echo ""
+                echo "环境变量: COW_HOST, COW_PORT, COW_PASSWORD"
+                exit 0 ;;
+            *) question="$1"; shift ;;
+        esac
+    done
+
+    # 认证
+    _auth
+
+    if [ -n "$question" ]; then
+        _oneshot "$question" "$session_id"
+    elif ! [ -t 0 ]; then
+        # 管道输入
+        question=$(cat)
+        _oneshot "$question" "$session_id"
+    else
+        _interactive "$session_id"
+    fi
+}
+
+main "$@"

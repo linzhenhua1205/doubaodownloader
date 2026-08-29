@@ -1,0 +1,20 @@
+# Evolver Memory - Reflection Log
+# Records deep reflections and learned lessons
+
+## Learned Lessons
+1. **Start simple**: Begin with balanced strategy, adjust based on results
+2. **Audit everything**: Keep complete records in events.jsonl
+3. **Validate before apply**: Always run validation commands
+4. **Rollback is safety net**: Configure appropriate rollback mode
+
+## Improvement Areas
+1. Add more genes for common error patterns
+2. Implement automated validation
+3. Add webhook notifications
+4. Integrate with remote knowledge graph
+
+## Success Metrics
+- Number of successful evolutions
+- Reduction in recurring errors
+- Improvement in skill usage efficiency
+- User satisfaction feedback

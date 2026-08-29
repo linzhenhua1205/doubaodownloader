@@ -1,0 +1,1 @@
+| 2026-07-09 | skill-update-layers | 基于ai-usage-philosophy.md的五层管道框架，更新4个验证/审查技能——light-self-review(新增L3-L5检查项+方向锁定检测)、doc-reviewer(扩展三层→五层审查+知识/输出层审查)、depth-completer(新增五层映射+层平衡检测)、constraint-verifier(新增A-J十类失效检测+元层验证) | ✅ |

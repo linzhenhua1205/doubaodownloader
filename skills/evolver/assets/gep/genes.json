@@ -1,0 +1,152 @@
+[
+  {
+    "gene_id": "gene_timeout_retry",
+    "name": "Error Recovery - API Timeout",
+    "trigger_pattern": "TimeoutError|api_timeout|request timed out",
+    "modification": "When API timeout occurs, implement retry mechanism with exponential backoff (max 3 retries, base delay 1s)",
+    "validation_command": "python -c \"import socket; s = socket.socket(); s.close()\"",
+    "confidence": 0.85,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_connection_retry",
+    "name": "Error Recovery - Connection Refused",
+    "trigger_pattern": "ConnectionRefusedError|connection refused",
+    "modification": "When connection refused, add delay and retry logic with circuit breaker pattern",
+    "validation_command": "python -c \"import socket; s = socket.socket(); s.close()\"",
+    "confidence": 0.80,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_degradation_switch",
+    "name": "Error Recovery - Service Degradation",
+    "trigger_pattern": "503 Service Unavailable|service unavailable",
+    "modification": "When service unavailable, switch to cached data or fallback service",
+    "validation_command": "python -c \"import os; print('OK')\"",
+    "confidence": 0.75,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_code_simplify",
+    "name": "Optimization - Code Simplification",
+    "trigger_pattern": "overcomplicated|too complex|refactor",
+    "modification": "Apply Karpathy Guidelines: simplify code, remove unnecessary abstractions, reduce lines by 50%",
+    "validation_command": "python -c \"import ast; print('Syntax OK')\"",
+    "confidence": 0.90,
+    "category": "optimization",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_performance_optimize",
+    "name": "Optimization - Performance",
+    "trigger_pattern": "slow|performance|latency",
+    "modification": "Profile code to identify bottlenecks, apply optimization techniques (caching, vectorization, parallelization)",
+    "validation_command": "python -c \"import time; print('Performance check OK')\"",
+    "confidence": 0.85,
+    "category": "optimization",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_memory_update",
+    "name": "Memory - Update Guidelines",
+    "trigger_pattern": "learn|remember|update knowledge",
+    "modification": "Extract key insights from session and update RULE.md or MEMORY.md with new guidelines",
+    "validation_command": "python -c \"import os; print(os.path.exists('.trae/rules/RULE.md'))\"",
+    "confidence": 0.95,
+    "category": "memory",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_skill_enhance",
+    "name": "Innovation - Skill Enhancement",
+    "trigger_pattern": "new feature|enhance|improve",
+    "modification": "Analyze skill usage patterns and propose enhancements or new skills",
+    "validation_command": "python -c \"import os; print('Skill enhancement validation OK')\"",
+    "confidence": 0.70,
+    "category": "innovation",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_error_handling",
+    "name": "Reliability - Error Handling",
+    "trigger_pattern": "KeyError|IndexError|TypeError|AttributeError",
+    "modification": "Add proper error handling with try-except blocks, input validation, and meaningful error messages",
+    "validation_command": "python -c \"try: x = {}['a']; except KeyError: print('Error handling OK')\"",
+    "confidence": 0.88,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_unicode_encoding",
+    "name": "Reliability - Unicode Encoding",
+    "trigger_pattern": "UnicodeEncodeError|UnicodeDecodeError|gbk codec|utf-8 codec",
+    "modification": "Replace special Unicode characters with ASCII alternatives or ensure consistent UTF-8 encoding throughout scripts",
+    "validation_command": "python -c \"s = 'Test string with unicode: \\u2705'; print(s.encode('utf-8').decode('utf-8'))\"",
+    "confidence": 0.92,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_empty_list_check",
+    "name": "Reliability - Empty List Handling",
+    "trigger_pattern": "IndexError.*list index out of range|list index out of range",
+    "modification": "Add length checks before accessing list indices; handle empty list cases gracefully",
+    "validation_command": "python -c \"lst = []; print('Empty' if not lst else lst[0])\"",
+    "confidence": 0.90,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_topic_boundary",
+    "name": "Optimization - Topic Boundary Correction",
+    "trigger_pattern": "topic boundary|topic transition|task switching",
+    "modification": "Improve topic boundary detection using transition signals, intent consistency checks, and time interval analysis",
+    "validation_command": "python -c \"import os; print('Topic analysis OK')\"",
+    "confidence": 0.85,
+    "category": "optimization",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_intent_classification",
+    "name": "Optimization - Intent Classification",
+    "trigger_pattern": "intent misclassification|misclassification|category imbalance|other category",
+    "modification": "Expand intent categories and add more keywords to improve classification accuracy; add LLM-based semantic analysis",
+    "validation_command": "python -c \"import json; print('Intent analysis OK')\"",
+    "confidence": 0.88,
+    "category": "optimization",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_data_truncation",
+    "name": "Reliability - Data Truncation",
+    "trigger_pattern": "data truncation|content truncated|\\.\\.\\.|slice.*\\[:\\d+\\]",
+    "modification": "Remove content truncation limits or increase buffer size to ensure complete data preservation",
+    "validation_command": "python -c \"text = 'x' * 10000; print(f'Length: {len(text)}')\"",
+    "confidence": 0.85,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_git_clone",
+    "name": "Reliability - Git Clone Error",
+    "trigger_pattern": "git clone error|RPC failed|Connection was reset|request was aborted|cURL error",
+    "modification": "Use --depth 1 for shallow clones, implement retry logic for network errors, or use alternative download methods",
+    "validation_command": "python -c \"import subprocess; result = subprocess.run(['git', '--version'], capture_output=True); print(result.returncode == 0)\"",
+    "confidence": 0.80,
+    "category": "reliability",
+    "version": "1.0"
+  },
+  {
+    "gene_id": "gene_skill_not_found",
+    "name": "Reliability - Skill Not Found",
+    "trigger_pattern": "skill not found|Skill.*not found|skill.*not found",
+    "modification": "Implement fallback mechanisms when skills are unavailable; maintain skill registry with availability status",
+    "validation_command": "python -c \"import os; skills_dir = 'skills'; print(os.path.exists(skills_dir))\"",
+    "confidence": 0.82,
+    "category": "reliability",
+    "version": "1.0"
+  }
+]

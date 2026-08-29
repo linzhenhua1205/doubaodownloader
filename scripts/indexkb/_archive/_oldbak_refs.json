@@ -1,0 +1,165 @@
+{
+  "inbound_refs": [],
+  "mapping": {
+    "06_others/oldbak/superpod-archive-address-translation-supernode.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/03-address-translation.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-ai-supernode-intelligent-operations-deep-analysis.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/operations/02-deep-analysis.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-ai-supernode-intelligent-operations-project-proposal.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/operations/01-project-proposal.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-doubao-supernode-network-architecture.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/04-doubao-network.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-klx-512-storage-network-bandwidth.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/08-klx-storage-bandwidth.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-klx-scale-out-network-evaluation.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/07-klx-scale-out.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-odcc-2026-summer-conference-collection.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/standards/04-odcc-summer-collection.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-pod-terminology-deep-dive.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/06-pod-terminology.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-scale-up-scale-out-layered-expansion-report.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/05-scale-up-scale-out.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-architecture-complete.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/02-architecture-complete.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-engineering-topics.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/04-engineering-topics.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-knowledge-system.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/07-knowledge-system.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-latest-progress.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/05-latest-progress.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-maintainability-observability-design.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/11-maintainability.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-network-architecture-design.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/02-network-architecture-design.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-network-architecture.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/01-network-architecture.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-performance-deep-dive-deeplink.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/evaluation/03-deep-dive.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-power-management-deep-dive.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/10-power-management.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-wechat-supernode-collection-2026-05.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/12-wechat-collection.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-服务器整机研发全流程事务性Checklist.md": {
+      "canonical": "02_rd/00_rd-management/ipd/server-rd-full-process-checklist.md",
+      "similarity": 1.0,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-performance-evaluation-framework.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/evaluation/02-evaluation-framework.md",
+      "similarity": 0.875,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-supernode-ai-performance-metrics-handbook.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/evaluation/01-metrics-handbook.md",
+      "similarity": 0.7647,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-superpod_arch.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/network/04-doubao-network.md",
+      "similarity": 0.7647,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/superpod-archive-工艺工序技术全景分析：从传统经验到智能制造的跨行业演进与实践.md": {
+      "canonical": "02_rd/00_rd-management/npi/process-technology-cross-industry-analysis.md",
+      "similarity": 0.7647,
+      "type": "duplicate"
+    },
+    "06_others/oldbak/arch2-merged-2026-06-12/arch2.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/02-architecture-complete.md",
+      "similarity": 0.5,
+      "type": "complementary"
+    },
+    "06_others/oldbak/superpod-archive-bmc-lightweight-intent-algorithms.md": {
+      "canonical": "02_rd/03_hardware/02_firmware/bmc/bmc-lightweight-intent-algorithm.md",
+      "similarity": 0.4286,
+      "type": "complementary"
+    },
+    "06_others/oldbak/superpod-archive-ai-supernode-project-background.md": {
+      "canonical": "02_rd/06_O&M/project-info/project-intelligent-om/project-background-significance.md",
+      "similarity": 0.3636,
+      "type": "complementary"
+    },
+    "06_others/oldbak/superpod-archive-supernode-standards.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/06-standards-tracker.md",
+      "similarity": 0.3043,
+      "type": "related"
+    },
+    "06_others/oldbak/superpod-archive-服务器研发核心关注维度及要点.md": {
+      "canonical": "02_rd/02_system/specifications/key-dimensions-def.md",
+      "similarity": 0.3043,
+      "type": "related"
+    },
+    "06_others/oldbak/superpod-archive-supernode-technology-overview.md": {
+      "canonical": "02_rd/03_hardware/06_superpod/arch/07-knowledge-system.md",
+      "similarity": 0.25,
+      "type": "related"
+    },
+    "06_others/oldbak/superpod-archive-服务器架构演进_cleaned.md": {
+      "canonical": "02_rd/03_hardware/01_hw_core/_interconnect/network-topology-complete-analysis.md",
+      "similarity": 0.25,
+      "type": "related"
+    },
+    "06_others/oldbak/doubao-raw-sources-2026-06-29/2026-06-29-doubao-server-architecture-evolution-report-full.md": {
+      "canonical": "02_rd/03_hardware/01_hw_core/_interconnect/network-topology-complete-analysis.md",
+      "similarity": 0.25,
+      "type": "related"
+    }
+  }
+}

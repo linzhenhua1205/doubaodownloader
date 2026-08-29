@@ -1,0 +1,37 @@
+{
+  "name": "method-analysis",
+  "description": "方法论分析与固化技能，用于创建、验证、固化方法论框架",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "方法论分析",
+  "keywords": [
+    "方法论",
+    "MECE",
+    "第一性原理",
+    "五看三定",
+    "鱼骨图",
+    "架构五工具",
+    "固化",
+    "验证",
+    "制定"
+  ],
+  "dependencies": {
+    "scripts": [
+      "identify_method.py",
+      "init_method_session.py",
+      "save_method_session.py",
+      "resume_method_session.py"
+    ]
+  },
+  "related_skills": [
+    "deep-tech-writer",
+    "doc-reviewer",
+    "knowledge-wiki"
+  ],
+  "trigger_conditions": [
+    "用户提出方法论名称（MECE、第一性原理、五看三定等）",
+    "用户描述分析框架（"我要做XX分析"、"XX框架"）",
+    "用户要求制定标准（"制定XX标准"、"固化XX框架"）",
+    "关键词：方法论制定、固化、验证、优化"
+  ]
+}

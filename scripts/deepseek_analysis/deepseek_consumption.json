@@ -1,0 +1,51 @@
+{
+  "total_cost": 214.62,
+  "total_requests": 31141,
+  "total_tokens": 2345207163,
+  "period_days": 30,
+  "period_range": "2026-06-29 ~ 2026-07-28",
+  "source": "DeepSeek Platform Usage Page (2026-07-28)",
+  "model": "deepseek-v4-flash",
+  "pricing": {
+    "input_cache_hit": 0.02,
+    "input_cache_miss": 1.00,
+    "output": 2.00
+  },
+  "user_estimates": {
+    "cron_daily": 3.50,
+    "workday_peak": 13.00,
+    "notes": "用户直觉: 定时任务¥3.5/天, 峰值工作日¥13/天. 用于优化设计和分解依据."
+  },
+  "daily_breakdown": [
+    {"date": "06-29", "weekday": "Mon", "cost": 10.93},
+    {"date": "06-30", "weekday": "Tue", "cost": 8.31},
+    {"date": "07-01", "weekday": "Wed", "cost": 8.10},
+    {"date": "07-02", "weekday": "Thu", "cost": 8.10},
+    {"date": "07-03", "weekday": "Fri", "cost": 0.12},
+    {"date": "07-04", "weekday": "Sat", "cost": 0.00},
+    {"date": "07-05", "weekday": "Sun", "cost": 0.00},
+    {"date": "07-06", "weekday": "Mon", "cost": 11.06},
+    {"date": "07-07", "weekday": "Tue", "cost": 6.49},
+    {"date": "07-08", "weekday": "Wed", "cost": 10.03},
+    {"date": "07-09", "weekday": "Thu", "cost": 9.54},
+    {"date": "07-10", "weekday": "Fri", "cost": 8.17},
+    {"date": "07-11", "weekday": "Sat", "cost": 2.32},
+    {"date": "07-12", "weekday": "Sun", "cost": 2.80},
+    {"date": "07-13", "weekday": "Mon", "cost": 12.30},
+    {"date": "07-14", "weekday": "Tue", "cost": 11.94},
+    {"date": "07-15", "weekday": "Wed", "cost": 10.29},
+    {"date": "07-16", "weekday": "Thu", "cost": 13.78},
+    {"date": "07-17", "weekday": "Fri", "cost": 5.54},
+    {"date": "07-18", "weekday": "Sat", "cost": 2.69},
+    {"date": "07-19", "weekday": "Sun", "cost": 3.18},
+    {"date": "07-20", "weekday": "Mon", "cost": 14.55},
+    {"date": "07-21", "weekday": "Tue", "cost": 9.33},
+    {"date": "07-22", "weekday": "Wed", "cost": 11.17},
+    {"date": "07-23", "weekday": "Thu", "cost": 11.83},
+    {"date": "07-24", "weekday": "Fri", "cost": 4.63},
+    {"date": "07-25", "weekday": "Sat", "cost": 0.00},
+    {"date": "07-26", "weekday": "Sun", "cost": 1.97},
+    {"date": "07-27", "weekday": "Mon", "cost": 12.75},
+    {"date": "07-28", "weekday": "Tue", "cost": 3.41}
+  ]
+}

@@ -1,0 +1,467 @@
+{
+ "version": 1,
+ "updated_at": "2026-08-14 16:30",
+ "policy": {
+  "strategy": "L1 专业站站内搜索 → L2 Bing → L3 搜狗系兜底",
+  "professional_first": true,
+  "fail_fast": true,
+  "max_sources_per_query": 3,
+  "access_priority_template": [
+   "rss",
+   "api",
+   "jina",
+   "static",
+   "web_fetch",
+   "js",
+   "browser",
+   "local"
+  ],
+  "access_principle": "按 token 省→贵尝试：rss/api 结构化最省 → jina Markdown → static 正文提取 → web_fetch 工具提取 → js 渲染 → browser CDP 兜底；失败自动降级下一级；每次访问后写 web-access-log 台账"
+ },
+ "professional_sites": [
+  {
+   "id": "arxiv",
+   "name": "arXiv",
+   "grade": "A",
+   "type": "academic",
+   "lang": "en",
+   "search_url": "https://arxiv.org/search/?query={query}&searchtype=all&start=0",
+   "notes": "学术前沿，稳定可用",
+   "reachable": true,
+   "access_chain": [
+    "api",
+    "static",
+    "web_fetch"
+   ],
+   "access": "api"
+  },
+  {
+   "id": "hpcwire",
+   "name": "HPCwire",
+   "grade": "B",
+   "type": "industry",
+   "lang": "en",
+   "search_url": "https://www.hpcwire.com/?s={query}",
+   "notes": "高性能计算/AI集群/互联技术 ⚠️反爬(Are we human?/403 2026-08-12)",
+   "reachable": false,
+   "access_chain": [
+    "web_fetch",
+    "jina",
+    "browser"
+   ],
+   "access": "web_fetch"
+  },
+  {
+   "id": "ieee-spectrum",
+   "name": "IEEE Spectrum",
+   "grade": "B",
+   "type": "academic",
+   "lang": "en",
+   "search_url": "https://spectrum.ieee.org/search?q={query}",
+   "notes": "人工智能/芯片架构深度文章",
+   "reachable": true,
+   "access_chain": [
+    "static",
+    "web_fetch",
+    "jina"
+   ],
+   "access": "static"
+  },
+  {
+   "id": "laoyaoba",
+   "name": "老Yaob",
+   "grade": "B",
+   "type": "chinese-industry",
+   "lang": "zh",
+   "search_url": "https://www.laoyaoba.com/search?q={query}",
+   "notes": "半导体/消费电子中文产业新闻",
+   "reachable": true,
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ],
+   "access": "static"
+  },
+  {
+   "id": "semianalysis",
+   "name": "SemiAnalysis",
+   "grade": "A",
+   "type": "deep-analysis",
+   "lang": "en",
+   "search_url": "https://newsletter.semianalysis.com/api/v1/archive?sort=new&offset=0&limit=50",
+   "notes": "AI/半导体产业深度研究顶级源(Dylan Patel)。⚠️主站 semianalysis.com(WordPress) 2025-09-16 停更；内容迁移至 Substack newsletter.semianalysis.com。Archive API 公开可抓全部文章元数据(标题/副标题/日期/audience/链接/字数)，正文付费墙(only_paid)。2025-12-04~2026-06-03 停更6个月后恢复高频。近半年23篇全付费。",
+   "reachable": true,
+   "access": "api",
+   "access_chain": [
+    "api",
+    "static",
+    "jina"
+   ]
+  },
+  {
+   "id": "semiengineering",
+   "name": "SemiEngineering",
+   "grade": "B",
+   "type": "industry",
+   "lang": "en",
+   "search_url": "https://semiengineering.com/?s={query}",
+   "notes": "半导体/封装/EDA深度分析",
+   "reachable": true,
+   "access_chain": [
+    "static",
+    "web_fetch",
+    "jina"
+   ],
+   "access": "static"
+  },
+  {
+   "id": "servethehome",
+   "name": "ServeTheHome",
+   "grade": "A",
+   "type": "hardware",
+   "lang": "en",
+   "reachable": false,
+   "search_url": "https://www.servethehome.com/?s={query}",
+   "notes": "❌ requests 搜索路径挂死(2026-08-12 实测: 连接无响应, timeout 不生效); web_fetch/curl 可直连, 自动路由跳过",
+   "access_chain": [
+    "web_fetch",
+    "static",
+    "jina"
+   ],
+   "access": "web_fetch"
+  },
+  {
+   "id": "storagereview",
+   "name": "StorageReview",
+   "grade": "A",
+   "type": "storage",
+   "lang": "en",
+   "search_url": "https://www.storagereview.com/?s={query}",
+   "notes": "存储评测专业站（SSD/HDD/企业存储/存储架构），WordPress 站内搜索静态可解析，2026-08-12 实测 ?s= 命中",
+   "reachable": true,
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ],
+   "access": "static"
+  },
+  {
+   "id": "techcrunch",
+   "name": "TechCrunch",
+   "grade": "A",
+   "type": "tech-news",
+   "lang": "en",
+   "search_url": "https://techcrunch.com/search/{query}",
+   "notes": "AI编程工具/创业/AI Agent/开源动态",
+   "reachable": true,
+   "access_chain": [
+    "rss",
+    "web_fetch",
+    "jina"
+   ],
+   "access": "rss"
+  },
+  {
+   "id": "the-next-platform",
+   "name": "The Next Platform",
+   "grade": "B",
+   "type": "deep-analysis",
+   "lang": "en",
+   "search_url": "https://www.nextplatform.com/?s={query}",
+   "notes": "服务器/AI芯片深度分析 ⚠️反爬(Are we human?/403 2026-08-12)",
+   "reachable": false,
+   "access_chain": [
+    "web_fetch",
+    "jina"
+   ],
+   "access": "web_fetch"
+  },
+  {
+   "id": "theregister",
+   "name": "The Register",
+   "grade": "B",
+   "type": "tech-news",
+   "lang": "en",
+   "search_url": "https://www.theregister.com/search/?q={query}",
+   "notes": "IT企业级新闻 ⚠️反爬(Are we human?/403 2026-08-12)",
+   "reachable": false,
+   "access_chain": [
+    "web_fetch",
+    "jina"
+   ],
+   "access": "web_fetch"
+  },
+  {
+   "id": "tomshardware",
+   "name": "Tom's Hardware",
+   "grade": "B",
+   "type": "hardware",
+   "lang": "en",
+   "search_url": "https://www.tomshardware.com/search?searchTerm={query}",
+   "notes": "消费级/服务器硬件评测，GPU/CPU/SSD；新闻栏目 /news（2026-08-12 实测 200）",
+   "reachable": true,
+   "access_chain": [
+    "web_fetch",
+    "jina",
+    "js",
+    "browser"
+   ],
+   "access": "web_fetch"
+  }
+ ],
+ "content_sources": [
+  {
+   "id": "21icsearch",
+   "name": "21IC datasheet 搜索",
+   "grade": "B",
+   "type": "semiconductor",
+   "lang": "zh",
+   "notes": "21IC 电子网 datasheet 搜索：IC 型号查询/数据手册/元器件资料。⚠️ 站内搜索 JS 渲染(2026-08-12 实测 ?q= 骨架无结果)，需 browser 工具；主页静态可抓",
+   "reachable": true,
+   "url": "https://www.21icsearch.com/",
+   "access": "js",
+   "access_chain": [
+    "js",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "ai-bot",
+   "name": "AI-BOT 日报",
+   "grade": "A",
+   "type": "ai-news-daily",
+   "lang": "zh",
+   "url": "https://ai-bot.cn/daily-ai-news/",
+   "access": "static",
+   "reachable": true,
+   "notes": "每日 AI 新闻聚合（产品发布/融资/论文），日更 feed 型，直接抓取页面即当日汇总",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "cloud-tencent",
+   "name": "腾讯云",
+   "grade": "B",
+   "type": "cloud-vendor",
+   "lang": "zh",
+   "url": "https://cloud.tencent.com/",
+   "access": "js",
+   "reachable": true,
+   "notes": "云厂商文档/产品/公告源；站内搜索 JS 渲染(2026-08-12 实测 curl 无结果)，CLI 仅可抓静态页面，深度检索建议 browser 工具",
+   "access_chain": [
+    "js",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "developer-aliyun",
+   "name": "阿里云开发者社区",
+   "grade": "B",
+   "type": "cloud-vendor",
+   "lang": "zh",
+   "url": "https://developer.aliyun.com/",
+   "access": "js",
+   "reachable": true,
+   "notes": "云技术文章/最佳实践/开源动态；站内搜索 JS 渲染(2026-08-12 实测 curl 无结果)，页面静态可抓",
+   "access_chain": [
+    "js",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "electronics-tutorials",
+   "name": "Electronics Tutorials",
+   "grade": "C",
+   "type": "education",
+   "lang": "en",
+   "url": "https://www.electronics-tutorials.ws/",
+   "access": "static",
+   "reachable": false,
+   "notes": "电子学教程（模拟/数字电路基础，如运算放大器/电源设计）❌ 2026-08-12 实测不可达：无 www 301→www 但 www 连接超时(000)，暂不可用",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "geeksforgeeks",
+   "name": "GeeksforGeeks",
+   "grade": "C",
+   "type": "education",
+   "lang": "en",
+   "notes": "编程/计算机科学教程参考（非产业源）。⚠️ 站内搜索 JS 渲染(2026-08-12 实测 ?s= 骨架无结果)；教程文章页静态可抓，作技术知识参考",
+   "reachable": true,
+   "url": "https://www.geeksforgeeks.org/",
+   "access": "static",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "hhs-gov",
+   "name": "美国 HHS 卫生部",
+   "grade": "B",
+   "type": "policy",
+   "lang": "en",
+   "url": "https://www.hhs.gov/",
+   "access": "web_fetch",
+   "reachable": true,
+   "notes": "美国政府卫生政策/法规/新闻；curl/requests 403(海外 IP 拦截 2026-08-12 实测)，web_fetch 工具可正常访问；相关政策对数据中心/医疗 AI/公共卫生算力需求有影响",
+   "access_chain": [
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "hothardware",
+   "name": "HotHardware",
+   "grade": "B",
+   "type": "hardware",
+   "lang": "en",
+   "notes": "硬件评测/科技新闻（GPU/CPU/存储）。⚠️ 站内搜索 JS 渲染(2026-08-12 实测 ?s= 与 /search?q= 均骨架无结果)；首页文章列表静态可抓(--fetch-content)",
+   "reachable": true,
+   "url": "https://hothardware.com/",
+   "access": "static",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "idc",
+   "name": "IDC 市场研究",
+   "grade": "A",
+   "type": "market-research",
+   "lang": "en",
+   "url": "https://www.idc.com/",
+   "access": "static",
+   "reachable": true,
+   "notes": "权威 ICT 市场研究机构（服务器/存储/云份额数据）；⚠️ 2026-08-12 实测官网恢复可用（此前记忆记录 404），站内搜索 404 未接入；报告多为付费摘要，新闻稿/观点/新闻室可抓，量化数据引用须注明 IDC 口径",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "maomu",
+   "name": "猫木新闻",
+   "grade": "B",
+   "type": "ai-news-daily",
+   "lang": "zh",
+   "url": "https://maomu.com/news",
+   "access": "static",
+   "reachable": true,
+   "notes": "AI 新闻聚合站，日更 feed 型，直接抓取页面",
+   "access_chain": [
+    "static",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "techtarget",
+   "name": "TechTarget",
+   "grade": "B",
+   "type": "tech-news",
+   "lang": "en",
+   "notes": "IT 企业技术媒体（存储/服务器/网络/云，子站制 searchstorage/searchdatacenter 等）。⚠️ 站内搜索 JS 渲染(2026-08-12 实测 /search?q= 骨架无结果)，需 browser；文章页静态可抓",
+   "reachable": true,
+   "url": "https://www.techtarget.com/",
+   "access": "js",
+   "access_chain": [
+    "js",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "csdn-daily-ai-research",
+   "name": "CSDN 每日AI研究简报",
+   "grade": "B",
+   "type": "ai-news",
+   "lang": "zh",
+   "notes": "CSDN debug_fan 每日 AI 研究简报：三主线归纳（可控性竞赛/多智能体收益/成本约束）+大事件+看点；周度 AI 热点 Top10 同源（zylyw123）；⚠️ 反爬(521/验证页)需 playwright 抓取，2026-08-13 实测 PLAYWRIGHT_ENABLED=1 可抓",
+   "reachable": true,
+   "url": "https://blog.csdn.net/debug_fan/article/details/163614983",
+   "access": "browser",
+   "access_chain": [
+    "browser",
+    "web_fetch"
+   ]
+  },
+  {
+   "id": "github-researcher-daily",
+   "name": "GitHub 趋势研究日报 (lohasle)",
+   "grade": "B",
+   "type": "github-trend",
+   "lang": "zh",
+   "notes": "lohasle.github.io/github-researcher/daily.html：每日 GitHub 趋势研究简报（架构视角/主题归纳/star 数据），2026-04 至今持续更新；静态页可直抓",
+   "reachable": true,
+   "url": "https://lohasle.github.io/github-researcher/daily.html",
+   "access": "static",
+   "access_chain": [
+    "static"
+   ]
+  },
+  {
+   "id": "github-daily-rank",
+   "name": "Github 每日飙升榜 Top10 (OpenGithubs)",
+   "grade": "B",
+   "type": "github-trend",
+   "lang": "zh",
+   "notes": "OpenGithubs/github-daily-rank：每日开源项目飙升榜 top10+最佳项目详情；已作为子工程导入 import/github-daily-rank/（2026-08-13），本地数据直接可用，无需抓取",
+   "reachable": true,
+   "url": "https://github.com/OpenGithubs/github-daily-rank",
+   "access": "local",
+   "access_chain": [
+    "local"
+   ]
+  }
+ ],
+ "search_engines": {
+  "bing": {
+   "name": "Bing",
+   "grade": "B",
+   "search_url": "https://www.bing.com/search?q={query}&count={limit}",
+   "notes": "国际通用；中文查询可用，Bing 国内版 RSS 更稳（format=rss）"
+  },
+  "sogou-weixin": {
+   "name": "搜狗微信",
+   "grade": "C",
+   "search_url": "https://weixin.sogou.com/weixin?type=2&query={query}",
+   "notes": "微信文章检索；验证码频繁，fail-fast 后跳下一级"
+  },
+  "sogou-zhihu": {
+   "name": "搜狗知乎",
+   "grade": "C",
+   "search_url": "https://zhihu.sogou.com/zhihu?query={query}",
+   "notes": "知乎内容检索"
+  },
+  "sogou-general": {
+   "name": "搜狗通用",
+   "grade": "C",
+   "search_url": "https://www.sogou.com/web?query={query}",
+   "notes": "中文通用兜底"
+  }
+ },
+ "routing": {
+  "default_chain": [
+   "auto",
+   "bing",
+   "sogou-weixin",
+   "sogou-zhihu",
+   "sogou-general"
+  ],
+  "zh_chain": [
+   "auto",
+   "bing",
+   "sogou-weixin",
+   "sogou-general"
+  ],
+  "en_chain": [
+   "auto",
+   "bing",
+   "sogou-general"
+  ]
+ }
+}

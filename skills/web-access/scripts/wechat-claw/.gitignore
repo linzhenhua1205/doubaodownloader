@@ -1,0 +1,5 @@
+credentials*.json
+credentials.json
+output/
+login_qrcode.png
+__pycache__/

@@ -1,0 +1,26 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD024": { "siblings_only": true },
+    "MD041": false,
+    "MD012": { "maximum": 3 },
+    "MD009": { "br_spaces": 0 }
+  },
+  "globs": [
+    "knowledge/02_rd/**/*.md",
+    "knowledge/03_AI/**/*.md",
+    "knowledge/04_person/**/*.md",
+    "knowledge/05_tools/**/*.md",
+    "knowledge/06_others/**/*.md",
+    "knowledge/07_industry-research/**/*.md"
+  ],
+  "ignores": [
+    "**/bak/**",
+    "**/oldbak/**",
+    "**/tmp/**",
+    "knowledge/01_survey/**",
+    "knowledge/weekly-reports/**"
+  ]
+}

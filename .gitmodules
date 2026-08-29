@@ -1,0 +1,978 @@
+[submodule "import/github-daily-rank"]
+	path = import/github-daily-rank
+	url = https://github.com/OpenGithubs/github-daily-rank
+[submodule "import/ai-agent-book"]
+	path = import/ai-agent-book
+	url = https://github.com/bojieli/ai-agent-book
+[submodule "import/ebook-treasure-chest"]
+	path = import/ebook-treasure-chest
+	url = https://github.com/linzhenhua1205/ebook-treasure-chest
+[submodule "import/free-science-books"]
+	path = import/free-science-books
+	url = https://github.com/EbookFoundation/free-science-books
+[submodule "import/Free-Security-eBooks"]
+	path = import/Free-Security-eBooks
+	url = https://github.com/Hack-with-Github/Free-Security-eBooks
+[submodule "import/EbookFoundation-free-programming-books"]
+	path = import/EbookFoundation-free-programming-books
+	url = https://github.com/aluismoya/EbookFoundation-free-programming-books
+[submodule "import/free-books"]
+	path = import/free-books
+	url = https://github.com/ruanyf/free-books
+[submodule "import/justjavac-free-programming-books-zh_CN"]
+	path = import/justjavac-free-programming-books-zh_CN
+	url = https://github.com/justjavac/free-programming-books-zh_CN
+[submodule "import/free-programming-books"]
+	path = import/free-programming-books
+	url = https://github.com/EbookFoundation/free-programming-books
+[submodule "import/JSbooks"]
+	path = import/JSbooks
+	url = https://github.com/revolunet/JSbooks
+[submodule "import/PythonBooks"]
+	path = import/PythonBooks
+	url = https://github.com/revolunet/PythonBooks
+[submodule "import/yinhonggen-free-programming-books-zh_CN"]
+	path = import/yinhonggen-free-programming-books-zh_CN
+	url = https://github.com/yinhonggen/free-programming-books-zh_CN
+[submodule "import/ui-ux-design-library"]
+	path = import/ui-ux-design-library
+	url = https://github.com/justinhartman/ui-ux-design-library
+[submodule "import/FastGPT"]
+	path = import/FastGPT
+	url = https://github.com/labring/FastGPT
+[submodule "import/awesome-llm-apps"]
+	path = import/awesome-llm-apps
+	url = https://github.com/Shubhamsaboo/awesome-llm-apps
+[submodule "import/awesome-mcp-servers"]
+	path = import/awesome-mcp-servers
+	url = https://github.com/punkpeye/awesome-mcp-servers
+[submodule "import/llm_wiki"]
+	path = import/llm_wiki
+	url = https://github.com/nashsu/llm_wiki
+[submodule "import/Langchain-Chatchat"]
+	path = import/Langchain-Chatchat
+	url = https://github.com/chatchat-space/Langchain-Chatchat
+[submodule "import/claude-obsidian"]
+	path = import/claude-obsidian
+	url = https://github.com/AgriciDaniel/claude-obsidian
+[submodule "import/KAG"]
+	path = import/KAG
+	url = https://github.com/OpenSPG/KAG
+[submodule "import/llm-zoomcamp"]
+	path = import/llm-zoomcamp
+	url = https://github.com/DataTalksClub/llm-zoomcamp
+[submodule "import/open-knowledge"]
+	path = import/open-knowledge
+	url = https://github.com/inkeep/open-knowledge
+[submodule "import/anomaly-detection-resources"]
+	path = import/anomaly-detection-resources
+	url = https://github.com/yzhao062/anomaly-detection-resources
+[submodule "import/second-brain-ai-assistant-course"]
+	path = import/second-brain-ai-assistant-course
+	url = https://github.com/decodingai-magazine/second-brain-ai-assistant-course
+[submodule "import/notebooklm-skill"]
+	path = import/notebooklm-skill
+	url = https://github.com/PleasePrompto/notebooklm-skill
+[submodule "import/basic-memory"]
+	path = import/basic-memory
+	url = https://github.com/basicmachines-co/basic-memory
+[submodule "import/llm-wiki-agent"]
+	path = import/llm-wiki-agent
+	url = https://github.com/SamurAIGPT/llm-wiki-agent
+[submodule "import/KG-LLM-Papers"]
+	path = import/KG-LLM-Papers
+	url = https://github.com/zjukg/KG-LLM-Papers
+[submodule "import/awesome-systematic-trading"]
+	path = import/awesome-systematic-trading
+	url = https://github.com/paperswithbacktest/awesome-systematic-trading
+[submodule "import/totogo-awesome-knowledge-graph"]
+	path = import/totogo-awesome-knowledge-graph
+	url = https://github.com/totogo/awesome-knowledge-graph
+[submodule "import/QASystemOnMedicalKG"]
+	path = import/QASystemOnMedicalKG
+	url = https://github.com/liuhuanyong/QASystemOnMedicalKG
+[submodule "import/Neurite"]
+	path = import/Neurite
+	url = https://github.com/satellitecomponent/Neurite
+[submodule "import/Awesome-Knowledge-Distillation"]
+	path = import/Awesome-Knowledge-Distillation
+	url = https://github.com/FLHonker/Awesome-Knowledge-Distillation
+[submodule "import/awesome-knowledge-distillation"]
+	path = import/awesome-knowledge-distillation
+	url = https://github.com/dkozlov/awesome-knowledge-distillation
+[submodule "import/Knowledge-Graph-Tutorials-and-Papers"]
+	path = import/Knowledge-Graph-Tutorials-and-Papers
+	url = https://github.com/heathersherry/Knowledge-Graph-Tutorials-and-Papers
+[submodule "import/swarmvault"]
+	path = import/swarmvault
+	url = https://github.com/swarmclawai/swarmvault
+[submodule "import/knowledge-graph-learning"]
+	path = import/knowledge-graph-learning
+	url = https://github.com/BrambleXu/knowledge-graph-learning
+[submodule "import/Trilium"]
+	path = import/Trilium
+	url = https://github.com/TriliumNext/Trilium
+[submodule "import/AFFiNE"]
+	path = import/AFFiNE
+	url = https://github.com/toeverything/AFFiNE
+[submodule "import/khoj"]
+	path = import/khoj
+	url = https://github.com/khoj-ai/khoj
+[submodule "import/foam"]
+	path = import/foam
+	url = https://github.com/foambubble/foam
+[submodule "import/zotero-better-notes"]
+	path = import/zotero-better-notes
+	url = https://github.com/windingwind/zotero-better-notes
+[submodule "import/digital-gardeners"]
+	path = import/digital-gardeners
+	url = https://github.com/MaggieAppleton/digital-gardeners
+[submodule "import/obsidian-mind"]
+	path = import/obsidian-mind
+	url = https://github.com/breferrari/obsidian-mind
+[submodule "import/My-Brain-Is-Full-Crew"]
+	path = import/My-Brain-Is-Full-Crew
+	url = https://github.com/gnekt/My-Brain-Is-Full-Crew
+[submodule "import/obsidian-second-brain"]
+	path = import/obsidian-second-brain
+	url = https://github.com/eugeniughelbur/obsidian-second-brain
+[submodule "import/dendron"]
+	path = import/dendron
+	url = https://github.com/dendronhq/dendron
+[submodule "import/revezone"]
+	path = import/revezone
+	url = https://github.com/revezone/revezone
+[submodule "import/knowledge-garden"]
+	path = import/knowledge-garden
+	url = https://github.com/oldwinter/knowledge-garden
+[submodule "import/Second-Brain"]
+	path = import/Second-Brain
+	url = https://github.com/KasperZutterman/Second-Brain
+[submodule "import/zk"]
+	path = import/zk
+	url = https://github.com/zk-org/zk
+[submodule "import/obsidian-claude-pkm"]
+	path = import/obsidian-claude-pkm
+	url = https://github.com/ballred/obsidian-claude-pkm
+[submodule "import/brain"]
+	path = import/brain
+	url = https://github.com/swyxio/brain
+[submodule "import/notesnook"]
+	path = import/notesnook
+	url = https://github.com/streetwriters/notesnook
+[submodule "import/obsidian-ai-orange-book"]
+	path = import/obsidian-ai-orange-book
+	url = https://github.com/alchaincyf/obsidian-ai-orange-book
+[submodule "import/mateclaw"]
+	path = import/mateclaw
+	url = https://github.com/mateaix/mateclaw
+[submodule "import/notabase"]
+	path = import/notabase
+	url = https://github.com/churichard/notabase
+[submodule "import/COG-second-brain"]
+	path = import/COG-second-brain
+	url = https://github.com/huytieu/COG-second-brain
+[submodule "import/obsidian-Smart2Brain"]
+	path = import/obsidian-Smart2Brain
+	url = https://github.com/your-papa/obsidian-Smart2Brain
+[submodule "import/coding-interview-university"]
+	path = import/coding-interview-university
+	url = https://github.com/jwasham/coding-interview-university
+[submodule "import/CyC2018-CS-Notes"]
+	path = import/CyC2018-CS-Notes
+	url = https://github.com/CyC2018/CS-Notes
+[submodule "import/JavaGuide"]
+	path = import/JavaGuide
+	url = https://github.com/Snailclimb/JavaGuide
+[submodule "import/system-design-primer"]
+	path = import/system-design-primer
+	url = https://github.com/donnemartin/system-design-primer
+[submodule "import/awesome-interview-questions"]
+	path = import/awesome-interview-questions
+	url = https://github.com/DopplerHQ/awesome-interview-questions
+[submodule "import/tech-interview-handbook"]
+	path = import/tech-interview-handbook
+	url = https://github.com/yangshun/tech-interview-handbook
+[submodule "import/Front-end-Developer-Interview-Questions"]
+	path = import/Front-end-Developer-Interview-Questions
+	url = https://github.com/h5bp/Front-end-Developer-Interview-Questions
+[submodule "import/reactjs-interview-questions"]
+	path = import/reactjs-interview-questions
+	url = https://github.com/sudheerj/reactjs-interview-questions
+[submodule "import/interviews"]
+	path = import/interviews
+	url = https://github.com/kdn251/interviews
+[submodule "import/front-end-interview-handbook"]
+	path = import/front-end-interview-handbook
+	url = https://github.com/yangshun/front-end-interview-handbook
+[submodule "import/interview"]
+	path = import/interview
+	url = https://github.com/huihut/interview
+[submodule "import/reverse-interview"]
+	path = import/reverse-interview
+	url = https://github.com/viraptor/reverse-interview
+[submodule "import/javascript-interview-questions"]
+	path = import/javascript-interview-questions
+	url = https://github.com/sudheerj/javascript-interview-questions
+[submodule "import/Interview_Question_for_Beginner"]
+	path = import/Interview_Question_for_Beginner
+	url = https://github.com/jbee37142/Interview_Question_for_Beginner
+[submodule "import/system-design-interview"]
+	path = import/system-design-interview
+	url = https://github.com/checkcheckzz/system-design-interview
+[submodule "import/jobbole-awesome-programming-books"]
+	path = import/jobbole-awesome-programming-books
+	url = https://github.com/jobbole/awesome-programming-books
+[submodule "import/Daily-Interview-Question"]
+	path = import/Daily-Interview-Question
+	url = https://github.com/Advanced-Frontend/Daily-Interview-Question
+[submodule "import/system-design-notes"]
+	path = import/system-design-notes
+	url = https://github.com/liquidslr/system-design-notes
+[submodule "import/interview_internal_reference"]
+	path = import/interview_internal_reference
+	url = https://github.com/0voice/interview_internal_reference
+[submodule "import/CS-Book"]
+	path = import/CS-Book
+	url = https://github.com/iamshuaidi/CS-Book
+[submodule "import/fe-interview"]
+	path = import/fe-interview
+	url = https://github.com/haizlin/fe-interview
+[submodule "import/awesome-java-books"]
+	path = import/awesome-java-books
+	url = https://github.com/sorenduan/awesome-java-books
+[submodule "import/awesome-DeepLearning"]
+	path = import/awesome-DeepLearning
+	url = https://github.com/PaddlePaddle/awesome-DeepLearning
+[submodule "import/Awesome-Android-Interview"]
+	path = import/Awesome-Android-Interview
+	url = https://github.com/JsonChao/Awesome-Android-Interview
+[submodule "import/Developer-Zero-To-Mastery"]
+	path = import/Developer-Zero-To-Mastery
+	url = https://github.com/wx-chevalier/Developer-Zero-To-Mastery
+[submodule "import/DotNetGuide"]
+	path = import/DotNetGuide
+	url = https://github.com/YSGStudyHards/DotNetGuide
+[submodule "import/JavaGuide-Interview"]
+	path = import/JavaGuide-Interview
+	url = https://github.com/Snailclimb/JavaGuide-Interview
+[submodule "import/Awesome-Software-Engineering-Interview"]
+	path = import/Awesome-Software-Engineering-Interview
+	url = https://github.com/imkgarg/Awesome-Software-Engineering-Interview
+[submodule "import/SDE-Interview-Materials"]
+	path = import/SDE-Interview-Materials
+	url = https://github.com/bhartik021/SDE-Interview-Materials
+[submodule "import/JavaGuideBooster"]
+	path = import/JavaGuideBooster
+	url = https://github.com/JGPY/JavaGuideBooster
+[submodule "import/awesome-courses"]
+	path = import/awesome-courses
+	url = https://github.com/prakhar1989/awesome-courses
+[submodule "import/build-web-application-with-golang"]
+	path = import/build-web-application-with-golang
+	url = https://github.com/astaxie/build-web-application-with-golang
+[submodule "import/rust-course"]
+	path = import/rust-course
+	url = https://github.com/sunface/rust-course
+[submodule "import/open-notebook"]
+	path = import/open-notebook
+	url = https://github.com/lfnovo/open-notebook
+[submodule "import/koodo-reader"]
+	path = import/koodo-reader
+	url = https://github.com/koodo-reader/koodo-reader
+[submodule "import/awesome-english-ebooks"]
+	path = import/awesome-english-ebooks
+	url = https://github.com/hehonghui/awesome-english-ebooks
+[submodule "import/pumpkin-book"]
+	path = import/pumpkin-book
+	url = https://github.com/datawhalechina/pumpkin-book
+[submodule "import/koreader"]
+	path = import/koreader
+	url = https://github.com/koreader/koreader
+[submodule "import/pydata-book"]
+	path = import/pydata-book
+	url = https://github.com/wesm/pydata-book
+[submodule "import/calibre"]
+	path = import/calibre
+	url = https://github.com/kovidgoyal/calibre
+[submodule "import/CS-Books"]
+	path = import/CS-Books
+	url = https://github.com/forthespada/CS-Books
+[submodule "import/readest"]
+	path = import/readest
+	url = https://github.com/readest/readest
+[submodule "import/Some-Many-Books"]
+	path = import/Some-Many-Books
+	url = https://github.com/Dujltqzv/Some-Many-Books
+[submodule "import/Anime-Girls-Holding-Programming-Books"]
+	path = import/Anime-Girls-Holding-Programming-Books
+	url = https://github.com/cat-milk/Anime-Girls-Holding-Programming-Books
+[submodule "import/advanced-go-programming-book"]
+	path = import/advanced-go-programming-book
+	url = https://github.com/chai2010/advanced-go-programming-book
+[submodule "import/ebook2audiobook"]
+	path = import/ebook2audiobook
+	url = https://github.com/DrewThomasson/ebook2audiobook
+[submodule "import/programthink-books"]
+	path = import/programthink-books
+	url = https://github.com/programthink/books
+[submodule "import/deeplearning_ai_books"]
+	path = import/deeplearning_ai_books
+	url = https://github.com/fengdu78/deeplearning_ai_books
+[submodule "import/BookStack"]
+	path = import/BookStack
+	url = https://github.com/BookStackApp/BookStack
+[submodule "import/husthuke-awesome-knowledge-graph"]
+	path = import/husthuke-awesome-knowledge-graph
+	url = https://github.com/husthuke/awesome-knowledge-graph
+[submodule "import/GoBooks"]
+	path = import/GoBooks
+	url = https://github.com/dariubs/GoBooks
+[submodule "import/quarkdown"]
+	path = import/quarkdown
+	url = https://github.com/iamgio/quarkdown
+[submodule "import/geektime-books"]
+	path = import/geektime-books
+	url = https://github.com/it-ebooks-0/geektime-books
+[submodule "import/DeDRM_tools"]
+	path = import/DeDRM_tools
+	url = https://github.com/apprenticeharper/DeDRM_tools
+[submodule "import/Mind-Expanding-Books"]
+	path = import/Mind-Expanding-Books
+	url = https://github.com/hackerkid/Mind-Expanding-Books
+[submodule "import/software-architecture-books"]
+	path = import/software-architecture-books
+	url = https://github.com/mhadidg/software-architecture-books
+[submodule "import/calibre-web"]
+	path = import/calibre-web
+	url = https://github.com/janeczku/calibre-web
+[submodule "import/expert_readed_books"]
+	path = import/expert_readed_books
+	url = https://github.com/0voice/expert_readed_books
+[submodule "import/awesome-security"]
+	path = import/awesome-security
+	url = https://github.com/sbilly/awesome-security
+[submodule "import/github"]
+	path = import/github
+	url = https://github.com/phodal/github
+[submodule "import/awesome-nextjs"]
+	path = import/awesome-nextjs
+	url = https://github.com/unicodeveloper/awesome-nextjs
+[submodule "import/dsa.js-data-structures-algorithms-javascript"]
+	path = import/dsa.js-data-structures-algorithms-javascript
+	url = https://github.com/amejiarosario/dsa.js-data-structures-algorithms-javascript
+[submodule "import/Game-Programmer-Study-Notes"]
+	path = import/Game-Programmer-Study-Notes
+	url = https://github.com/QianMo/Game-Programmer-Study-Notes
+[submodule "import/linsa-io-books"]
+	path = import/linsa-io-books
+	url = https://github.com/linsa-io/books
+[submodule "import/Machine-learning-learning-notes"]
+	path = import/Machine-learning-learning-notes
+	url = https://github.com/Vay-keen/Machine-learning-learning-notes
+[submodule "import/epub.js"]
+	path = import/epub.js
+	url = https://github.com/futurepress/epub.js
+[submodule "import/ebooks"]
+	path = import/ebooks
+	url = https://github.com/kska32/ebooks
+[submodule "import/java-books-collections"]
+	path = import/java-books-collections
+	url = https://github.com/RongleXie/java-books-collections
+[submodule "import/awesome-artificial-intelligence"]
+	path = import/awesome-artificial-intelligence
+	url = https://github.com/owainlewis/awesome-artificial-intelligence
+[submodule "import/introduction-to-bash-scripting"]
+	path = import/introduction-to-bash-scripting
+	url = https://github.com/bobbyiliev/introduction-to-bash-scripting
+[submodule "import/Awesome-Fuzzing"]
+	path = import/Awesome-Fuzzing
+	url = https://github.com/secfigo/Awesome-Fuzzing
+[submodule "import/Hacking-Security-Ebooks"]
+	path = import/Hacking-Security-Ebooks
+	url = https://github.com/yeahhub/Hacking-Security-Ebooks
+[submodule "import/Calibre-Web-Automated"]
+	path = import/Calibre-Web-Automated
+	url = https://github.com/crocodilestick/Calibre-Web-Automated
+[submodule "import/Sigil"]
+	path = import/Sigil
+	url = https://github.com/Sigil-Ebook/Sigil
+[submodule "import/awesome-selfhosted"]
+	path = import/awesome-selfhosted
+	url = https://github.com/awesome-selfhosted/awesome-selfhosted
+[submodule "import/royeo-awesome-programming-books"]
+	path = import/royeo-awesome-programming-books
+	url = https://github.com/royeo/awesome-programming-books
+[submodule "import/learning-notes"]
+	path = import/learning-notes
+	url = https://github.com/keyvanakbary/learning-notes
+[submodule "import/the-book-of-secret-knowledge"]
+	path = import/the-book-of-secret-knowledge
+	url = https://github.com/trimstray/the-book-of-secret-knowledge
+[submodule "import/hello-algo"]
+	path = import/hello-algo
+	url = https://github.com/krahets/hello-algo
+[submodule "import/JeecgBoot"]
+	path = import/JeecgBoot
+	url = https://github.com/jeecgboot/JeecgBoot
+[submodule "import/frontend-dev-bookmarks"]
+	path = import/frontend-dev-bookmarks
+	url = https://github.com/dypsilon/frontend-dev-bookmarks
+[submodule "import/Coursera-ML-AndrewNg-Notes"]
+	path = import/Coursera-ML-AndrewNg-Notes
+	url = https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes
+[submodule "import/Best-websites-a-programmer-should-visit"]
+	path = import/Best-websites-a-programmer-should-visit
+	url = https://github.com/sdmg15/Best-websites-a-programmer-should-visit
+[submodule "import/spellbook-of-modern-webdev"]
+	path = import/spellbook-of-modern-webdev
+	url = https://github.com/dexteryy/spellbook-of-modern-webdev
+[submodule "import/halo"]
+	path = import/halo
+	url = https://github.com/halo-dev/halo
+[submodule "import/Web"]
+	path = import/Web
+	url = https://github.com/qianguyihao/Web
+[submodule "import/7days-golang"]
+	path = import/7days-golang
+	url = https://github.com/geektutu/7days-golang
+[submodule "import/LangBot"]
+	path = import/LangBot
+	url = https://github.com/langbot-app/LangBot
+[submodule "import/jackfrued-Python-100-Days"]
+	path = import/jackfrued-Python-100-Days
+	url = https://github.com/jackfrued/Python-100-Days
+[submodule "import/note-gen"]
+	path = import/note-gen
+	url = https://github.com/codexu/note-gen
+[submodule "import/machine-learning-notes"]
+	path = import/machine-learning-notes
+	url = https://github.com/roboticcam/machine-learning-notes
+[submodule "import/rnote"]
+	path = import/rnote
+	url = https://github.com/flxzt/rnote
+[submodule "import/LearningNotes"]
+	path = import/LearningNotes
+	url = https://github.com/francistao/LearningNotes
+[submodule "import/BigData-Notes"]
+	path = import/BigData-Notes
+	url = https://github.com/heibaiying/BigData-Notes
+[submodule "import/codimd"]
+	path = import/codimd
+	url = https://github.com/hackmdio/codimd
+[submodule "import/PandaWiki"]
+	path = import/PandaWiki
+	url = https://github.com/chaitin/PandaWiki
+[submodule "import/Mars"]
+	path = import/Mars
+	url = https://github.com/AlloyTeam/Mars
+[submodule "import/PythonSpiderNotes"]
+	path = import/PythonSpiderNotes
+	url = https://github.com/lining0806/PythonSpiderNotes
+[submodule "import/Data-Science-Notes"]
+	path = import/Data-Science-Notes
+	url = https://github.com/fengdu78/Data-Science-Notes
+[submodule "import/notes-python"]
+	path = import/notes-python
+	url = https://github.com/lijin-THU/notes-python
+[submodule "import/ML-Course-Notes"]
+	path = import/ML-Course-Notes
+	url = https://github.com/dair-ai/ML-Course-Notes
+[submodule "import/CS-Base"]
+	path = import/CS-Base
+	url = https://github.com/xiaolincoder/CS-Base
+[submodule "import/Web-Dev-For-Beginners"]
+	path = import/Web-Dev-For-Beginners
+	url = https://github.com/microsoft/Web-Dev-For-Beginners
+[submodule "import/QOwnNotes"]
+	path = import/QOwnNotes
+	url = https://github.com/pbek/QOwnNotes
+[submodule "import/fullstack-web-developer-path"]
+	path = import/fullstack-web-developer-path
+	url = https://github.com/shovanch/fullstack-web-developer-path
+[submodule "import/AndroidNote"]
+	path = import/AndroidNote
+	url = https://github.com/GcsSloop/AndroidNote
+[submodule "import/ZiniuLu-Python-100-Days"]
+	path = import/ZiniuLu-Python-100-Days
+	url = https://github.com/ZiniuLu/Python-100-Days
+[submodule "import/huangruiteng-CS-Notes"]
+	path = import/huangruiteng-CS-Notes
+	url = https://github.com/huangruiteng/CS-Notes
+[submodule "import/Awesome-POC"]
+	path = import/Awesome-POC
+	url = https://github.com/Threekiii/Awesome-POC
+[submodule "import/CS-Notes-PDF"]
+	path = import/CS-Notes-PDF
+	url = https://github.com/sjsdfg/CS-Notes-PDF
+[submodule "import/sqa-wiki"]
+	path = import/sqa-wiki
+	url = https://github.com/ligurio/sqa-wiki
+[submodule "import/cs228-notes"]
+	path = import/cs228-notes
+	url = https://github.com/ermongroup/cs228-notes
+[submodule "import/100-days-of-python"]
+	path = import/100-days-of-python
+	url = https://github.com/appbrewery/100-days-of-python
+[submodule "import/cs224n-winter17-notes"]
+	path = import/cs224n-winter17-notes
+	url = https://github.com/stanfordnlp/cs224n-winter17-notes
+[submodule "import/ArchLinuxTutorial"]
+	path = import/ArchLinuxTutorial
+	url = https://github.com/ArchLinuxStudio/ArchLinuxTutorial
+[submodule "import/GATE-CSE-notes"]
+	path = import/GATE-CSE-notes
+	url = https://github.com/Priyanshuu-2109/GATE-CSE-notes
+[submodule "import/css-refresher-notes"]
+	path = import/css-refresher-notes
+	url = https://github.com/vasanthk/css-refresher-notes
+[submodule "import/ZJU-CS-GIS-ClassNotes"]
+	path = import/ZJU-CS-GIS-ClassNotes
+	url = https://github.com/yunwei37/ZJU-CS-GIS-ClassNotes
+[submodule "import/Awesome-Redteam"]
+	path = import/Awesome-Redteam
+	url = https://github.com/Threekiii/Awesome-Redteam
+[submodule "import/100-days-of-code-youtube"]
+	path = import/100-days-of-code-youtube
+	url = https://github.com/CodeWithHarry/100-days-of-code-youtube
+[submodule "import/freeCodeCamp"]
+	path = import/freeCodeCamp
+	url = https://github.com/freeCodeCamp/freeCodeCamp
+[submodule "import/ML-For-Beginners"]
+	path = import/ML-For-Beginners
+	url = https://github.com/microsoft/ML-For-Beginners
+[submodule "import/awesome-for-beginners"]
+	path = import/awesome-for-beginners
+	url = https://github.com/MunGell/awesome-for-beginners
+[submodule "import/developer-roadmap"]
+	path = import/developer-roadmap
+	url = https://github.com/nilbuild/developer-roadmap
+[submodule "import/30-Days-Of-Python"]
+	path = import/30-Days-Of-Python
+	url = https://github.com/Asabeneh/30-Days-Of-Python
+[submodule "import/project-based-learning"]
+	path = import/project-based-learning
+	url = https://github.com/practical-tutorials/project-based-learning
+[submodule "import/notes-to-cs-freshmen-from-the-future"]
+	path = import/notes-to-cs-freshmen-from-the-future
+	url = https://github.com/nushackers/notes-to-cs-freshmen-from-the-future
+[submodule "import/AspNetCore-Developer-Roadmap"]
+	path = import/AspNetCore-Developer-Roadmap
+	url = https://github.com/MoienTajik/AspNetCore-Developer-Roadmap
+[submodule "import/DevOps-Roadmap"]
+	path = import/DevOps-Roadmap
+	url = https://github.com/milanm/DevOps-Roadmap
+[submodule "import/android-developer-roadmap"]
+	path = import/android-developer-roadmap
+	url = https://github.com/skydoves/android-developer-roadmap
+[submodule "import/react-developer-roadmap"]
+	path = import/react-developer-roadmap
+	url = https://github.com/adam-golab/react-developer-roadmap
+[submodule "import/DeFi-Developer-Road-Map"]
+	path = import/DeFi-Developer-Road-Map
+	url = https://github.com/OffcierCia/DeFi-Developer-Road-Map
+[submodule "import/.NET-Backend-Developer-Roadmap"]
+	path = import/.NET-Backend-Developer-Roadmap
+	url = https://github.com/Elfocrash/.NET-Backend-Developer-Roadmap
+[submodule "import/learn-python"]
+	path = import/learn-python
+	url = https://github.com/trekhleb/learn-python
+[submodule "import/freecodecamp.cn"]
+	path = import/freecodecamp.cn
+	url = https://github.com/FreeCodeCampChina/freecodecamp.cn
+[submodule "import/game-developer-roadmap"]
+	path = import/game-developer-roadmap
+	url = https://github.com/utilForever/game-developer-roadmap
+[submodule "import/kubernetes-learning-path"]
+	path = import/kubernetes-learning-path
+	url = https://github.com/techiescamp/kubernetes-learning-path
+[submodule "import/projectlearn-project-based-learning"]
+	path = import/projectlearn-project-based-learning
+	url = https://github.com/Xtremilicious/projectlearn-project-based-learning
+[submodule "import/golang-developer-roadmap"]
+	path = import/golang-developer-roadmap
+	url = https://github.com/darius-khll/golang-developer-roadmap
+[submodule "import/Laravel-Roadmap-Learning-Path"]
+	path = import/Laravel-Roadmap-Learning-Path
+	url = https://github.com/LaravelDaily/Laravel-Roadmap-Learning-Path
+[submodule "import/awesome-infosec"]
+	path = import/awesome-infosec
+	url = https://github.com/onlurking/awesome-infosec
+[submodule "import/Nodejs-Developer-Roadmap"]
+	path = import/Nodejs-Developer-Roadmap
+	url = https://github.com/aliyr/Nodejs-Developer-Roadmap
+[submodule "import/iOS-Developer-Roadmap"]
+	path = import/iOS-Developer-Roadmap
+	url = https://github.com/BohdanOrlov/iOS-Developer-Roadmap
+[submodule "import/awesome-certificates"]
+	path = import/awesome-certificates
+	url = https://github.com/PanXProject/awesome-certificates
+[submodule "import/learn-x-by-doing-y"]
+	path = import/learn-x-by-doing-y
+	url = https://github.com/aquadzn/learn-x-by-doing-y
+[submodule "import/comments-for-awesome-courses"]
+	path = import/comments-for-awesome-courses
+	url = https://github.com/conanhujinming/comments-for-awesome-courses
+[submodule "import/awesome-cyber-security-university"]
+	path = import/awesome-cyber-security-university
+	url = https://github.com/brootware/awesome-cyber-security-university
+[submodule "import/study-path"]
+	path = import/study-path
+	url = https://github.com/joebew42/study-path
+[submodule "import/java-developer-roadmap"]
+	path = import/java-developer-roadmap
+	url = https://github.com/s4kibs4mi/java-developer-roadmap
+[submodule "import/blockchain-learning-path"]
+	path = import/blockchain-learning-path
+	url = https://github.com/protofire/blockchain-learning-path
+[submodule "import/awesome-ml-courses"]
+	path = import/awesome-ml-courses
+	url = https://github.com/luspr/awesome-ml-courses
+[submodule "import/system-design-primer-zh-tw"]
+	path = import/system-design-primer-zh-tw
+	url = https://github.com/kevingo/system-design-primer-zh-tw
+[submodule "import/awesome-python"]
+	path = import/awesome-python
+	url = https://github.com/vinta/awesome-python
+[submodule "import/awesome"]
+	path = import/awesome
+	url = https://github.com/sindresorhus/awesome
+[submodule "import/ossu-computer-science-progress"]
+	path = import/ossu-computer-science-progress
+	url = https://github.com/t-miller/ossu-computer-science-progress
+[submodule "import/computer-science-br"]
+	path = import/computer-science-br
+	url = https://github.com/ossu/computer-science-br
+[submodule "import/Python"]
+	path = import/Python
+	url = https://github.com/TheAlgorithms/Python
+[submodule "import/HelloGitHub"]
+	path = import/HelloGitHub
+	url = https://github.com/521xueweihan/HelloGitHub
+[submodule "import/Awesome-Hacking"]
+	path = import/Awesome-Hacking
+	url = https://github.com/Hack-with-Github/Awesome-Hacking
+[submodule "import/awesome-go"]
+	path = import/awesome-go
+	url = https://github.com/avelino/awesome-go
+[submodule "import/awesome-react"]
+	path = import/awesome-react
+	url = https://github.com/enaqx/awesome-react
+[submodule "import/awesome-mac"]
+	path = import/awesome-mac
+	url = https://github.com/jaywcjlove/awesome-mac
+[submodule "import/awesome-design-md"]
+	path = import/awesome-design-md
+	url = https://github.com/VoltAgent/awesome-design-md
+[submodule "import/awesome-public-datasets"]
+	path = import/awesome-public-datasets
+	url = https://github.com/awesomedata/awesome-public-datasets
+[submodule "import/papers-we-love"]
+	path = import/papers-we-love
+	url = https://github.com/papers-we-love/papers-we-love
+[submodule "import/awesome-cpp"]
+	path = import/awesome-cpp
+	url = https://github.com/fffaraz/awesome-cpp
+[submodule "import/awesome-scalability"]
+	path = import/awesome-scalability
+	url = https://github.com/binhnguyennus/awesome-scalability
+[submodule "import/tldr"]
+	path = import/tldr
+	url = https://github.com/tldr-pages/tldr
+[submodule "import/functional-programming-learning-path"]
+	path = import/functional-programming-learning-path
+	url = https://github.com/imteekay/functional-programming-learning-path
+[submodule "import/awesome-piracy"]
+	path = import/awesome-piracy
+	url = https://github.com/Igglybuff/awesome-piracy
+[submodule "import/navi"]
+	path = import/navi
+	url = https://github.com/denisidoro/navi
+[submodule "import/nginx-admins-handbook"]
+	path = import/nginx-admins-handbook
+	url = https://github.com/trimstray/nginx-admins-handbook
+[submodule "import/awesome-cheatsheets"]
+	path = import/awesome-cheatsheets
+	url = https://github.com/LeCoupa/awesome-cheatsheets
+[submodule "import/CheatSheetSeries"]
+	path = import/CheatSheetSeries
+	url = https://github.com/OWASP/CheatSheetSeries
+[submodule "import/cheat"]
+	path = import/cheat
+	url = https://github.com/cheat/cheat
+[submodule "import/awesome-compilers"]
+	path = import/awesome-compilers
+	url = https://github.com/aalhour/awesome-compilers
+[submodule "import/reference"]
+	path = import/reference
+	url = https://github.com/Fechin/reference
+[submodule "import/awesome-database-learning"]
+	path = import/awesome-database-learning
+	url = https://github.com/pingcap/awesome-database-learning
+[submodule "import/awesome-zero-knowledge-proofs"]
+	path = import/awesome-zero-knowledge-proofs
+	url = https://github.com/matter-labs/awesome-zero-knowledge-proofs
+[submodule "import/awesome-kubernetes"]
+	path = import/awesome-kubernetes
+	url = https://github.com/ramitsurana/awesome-kubernetes
+[submodule "import/awesome-openclaw-usecases-zh"]
+	path = import/awesome-openclaw-usecases-zh
+	url = https://github.com/AlexAnys/awesome-openclaw-usecases-zh
+[submodule "import/awesome-eventstorming"]
+	path = import/awesome-eventstorming
+	url = https://github.com/mariuszgil/awesome-eventstorming
+[submodule "import/awesome-gis"]
+	path = import/awesome-gis
+	url = https://github.com/sshuair/awesome-gis
+[submodule "import/ReduxSimpleStarter"]
+	path = import/ReduxSimpleStarter
+	url = https://github.com/StephenGrider/ReduxSimpleStarter
+[submodule "import/awesome-iam"]
+	path = import/awesome-iam
+	url = https://github.com/kdeldycke/awesome-iam
+[submodule "import/cheat-sheets"]
+	path = import/cheat-sheets
+	url = https://github.com/ChristianLempa/cheat-sheets
+[submodule "import/awesome-soc"]
+	path = import/awesome-soc
+	url = https://github.com/cyb3rxp/awesome-soc
+[submodule "import/knowledge"]
+	path = import/knowledge
+	url = https://github.com/f2e-awesome/knowledge
+[submodule "import/awesome-streamlit"]
+	path = import/awesome-streamlit
+	url = https://github.com/MarcSkovMadsen/awesome-streamlit
+[submodule "import/Awesome-DynamicGraphLearning"]
+	path = import/Awesome-DynamicGraphLearning
+	url = https://github.com/SpaceLearner/Awesome-DynamicGraphLearning
+[submodule "import/build-your-own-x"]
+	path = import/build-your-own-x
+	url = https://github.com/codecrafters-io/build-your-own-x
+[submodule "import/computer-science"]
+	path = import/computer-science
+	url = https://github.com/ossu/computer-science
+[submodule "import/git-flight-rules"]
+	path = import/git-flight-rules
+	url = https://github.com/k88hudson/git-flight-rules
+[submodule "import/math"]
+	path = import/math
+	url = https://github.com/ossu/math
+[submodule "import/AlgoNote"]
+	path = import/AlgoNote
+	url = https://github.com/itcharge/AlgoNote
+[submodule "import/x86-bare-metal-examples"]
+	path = import/x86-bare-metal-examples
+	url = https://github.com/cirosantilli/x86-bare-metal-examples
+[submodule "import/skywater-pdk"]
+	path = import/skywater-pdk
+	url = https://github.com/google/skywater-pdk
+[submodule "import/distsysbook"]
+	path = import/distsysbook
+	url = https://github.com/mixu/distsysbook
+[submodule "import/stat-cookbook"]
+	path = import/stat-cookbook
+	url = https://github.com/mavam/stat-cookbook
+[submodule "import/rust-atomics-and-locks"]
+	path = import/rust-atomics-and-locks
+	url = https://github.com/m-ou-se/rust-atomics-and-locks
+[submodule "import/ugo-compiler-book"]
+	path = import/ugo-compiler-book
+	url = https://github.com/wa-lang/ugo-compiler-book
+[submodule "import/fusesoc"]
+	path = import/fusesoc
+	url = https://github.com/olofk/fusesoc
+[submodule "import/ClassicComputerScienceProblemsInPython"]
+	path = import/ClassicComputerScienceProblemsInPython
+	url = https://github.com/davecom/ClassicComputerScienceProblemsInPython
+[submodule "import/Computer-Networking_A-Top-Down-Approach"]
+	path = import/Computer-Networking_A-Top-Down-Approach
+	url = https://github.com/IT-Book-Organization/Computer-Networking_A-Top-Down-Approach
+[submodule "import/tcs"]
+	path = import/tcs
+	url = https://github.com/boazbk/tcs
+[submodule "import/designing-distributed-systems"]
+	path = import/designing-distributed-systems
+	url = https://github.com/brendandburns/designing-distributed-systems
+[submodule "import/xv6-riscv-book"]
+	path = import/xv6-riscv-book
+	url = https://github.com/mit-pdos/xv6-riscv-book
+[submodule "import/or-pandas"]
+	path = import/or-pandas
+	url = https://github.com/zhouyanasd/or-pandas
+[submodule "import/os-series"]
+	path = import/os-series
+	url = https://github.com/davidcallanan/os-series
+[submodule "import/Manim-Tutorial"]
+	path = import/Manim-Tutorial
+	url = https://github.com/malhotra5/Manim-Tutorial
+[submodule "import/Python-for-Probability-Statistics-and-Machine-Learning"]
+	path = import/Python-for-Probability-Statistics-and-Machine-Learning
+	url = https://github.com/unpingco/Python-for-Probability-Statistics-and-Machine-Learning
+[submodule "import/riscv-soc-book"]
+	path = import/riscv-soc-book
+	url = https://github.com/cnrv/riscv-soc-book
+[submodule "import/storage-book"]
+	path = import/storage-book
+	url = https://github.com/Lularible/storage-book
+[submodule "import/FPGADesignElements"]
+	path = import/FPGADesignElements
+	url = https://github.com/laforest/FPGADesignElements
+[submodule "import/LinAlg4DataScience"]
+	path = import/LinAlg4DataScience
+	url = https://github.com/mikexcohen/LinAlg4DataScience
+[submodule "import/rvemu-for-book"]
+	path = import/rvemu-for-book
+	url = https://github.com/d0iasm/rvemu-for-book
+[submodule "import/mathematics-of-machine-learning-book"]
+	path = import/mathematics-of-machine-learning-book
+	url = https://github.com/cosmic-cortex/mathematics-of-machine-learning-book
+[submodule "import/Modern-Compiler-Implementation-in-C"]
+	path = import/Modern-Compiler-Implementation-in-C
+	url = https://github.com/ethanhe42/Modern-Compiler-Implementation-in-C
+[submodule "import/Data_Structures_and_Algorithms_in_Python"]
+	path = import/Data_Structures_and_Algorithms_in_Python
+	url = https://github.com/jihoonerd/Data_Structures_and_Algorithms_in_Python
+[submodule "import/Computer-Networks-Notes"]
+	path = import/Computer-Networks-Notes
+	url = https://github.com/vincenzobaz/Computer-Networks-Notes
+[submodule "import/massivemimobook"]
+	path = import/massivemimobook
+	url = https://github.com/emilbjornson/massivemimobook
+[submodule "import/intro_continual_learning"]
+	path = import/intro_continual_learning
+	url = https://github.com/clam004/intro_continual_learning
+[submodule "import/parconc-examples"]
+	path = import/parconc-examples
+	url = https://github.com/simonmar/parconc-examples
+[submodule "import/compiling-to-assembly-from-scratch"]
+	path = import/compiling-to-assembly-from-scratch
+	url = https://github.com/keleshev/compiling-to-assembly-from-scratch
+[submodule "import/Linear-Algebra-and-Learning-from-Data"]
+	path = import/Linear-Algebra-and-Learning-from-Data
+	url = https://github.com/niuers/Linear-Algebra-and-Learning-from-Data
+[submodule "import/hammer"]
+	path = import/hammer
+	url = https://github.com/ucb-bar/hammer
+[submodule "import/MML-Companion"]
+	path = import/MML-Companion
+	url = https://github.com/vbartle/MML-Companion
+[submodule "import/calculus-made-easy"]
+	path = import/calculus-made-easy
+	url = https://github.com/nadvornix/calculus-made-easy
+[submodule "import/Sedgewick-algorithms-in-c-exercises-and-examples"]
+	path = import/Sedgewick-algorithms-in-c-exercises-and-examples
+	url = https://github.com/caisah/Sedgewick-algorithms-in-c-exercises-and-examples
+[submodule "import/thor"]
+	path = import/thor
+	url = https://github.com/ivanallen/thor
+[submodule "import/stanford-cs240h"]
+	path = import/stanford-cs240h
+	url = https://github.com/bos/stanford-cs240h
+[submodule "import/Stanford-CS-Course"]
+	path = import/Stanford-CS-Course
+	url = https://github.com/isLinXu/Stanford-CS-Course
+[submodule "import/CS231n-2017-Summary"]
+	path = import/CS231n-2017-Summary
+	url = https://github.com/mbadry1/CS231n-2017-Summary
+[submodule "import/cs229t"]
+	path = import/cs229t
+	url = https://github.com/percyliang/cs229t
+[submodule "import/CS231N_17_KOR_SUB"]
+	path = import/CS231N_17_KOR_SUB
+	url = https://github.com/visionNoob/CS231N_17_KOR_SUB
+[submodule "import/cs231n"]
+	path = import/cs231n
+	url = https://github.com/Halfish/cs231n
+[submodule "import/CS231n-Note-Translation_CN"]
+	path = import/CS231n-Note-Translation_CN
+	url = https://github.com/whyscience/CS231n-Note-Translation_CN
+[submodule "import/CS224n-2019-solutions"]
+	path = import/CS224n-2019-solutions
+	url = https://github.com/ZacBi/CS224n-2019-solutions
+[submodule "import/cs224n-Squad-Project"]
+	path = import/cs224n-Squad-Project
+	url = https://github.com/priya-dwivedi/cs224n-Squad-Project
+[submodule "import/gcloud"]
+	path = import/gcloud
+	url = https://github.com/cs231n/gcloud
+[submodule "import/Awsome-Courses"]
+	path = import/Awsome-Courses
+	url = https://github.com/forthespada/Awsome-Courses
+[submodule "import/libcs50"]
+	path = import/libcs50
+	url = https://github.com/cs50/libcs50
+[submodule "import/python-cs50"]
+	path = import/python-cs50
+	url = https://github.com/cs50/python-cs50
+[submodule "import/submit50"]
+	path = import/submit50
+	url = https://github.com/cs50/submit50
+[submodule "import/PKUCourse"]
+	path = import/PKUCourse
+	url = https://github.com/tongtzeho/PKUCourse
+[submodule "import/online-doc"]
+	path = import/online-doc
+	url = https://github.com/pku-minic/online-doc
+[submodule "import/Learning-SICP"]
+	path = import/Learning-SICP
+	url = https://github.com/DeathKing/Learning-SICP
+[submodule "import/flink-training-course"]
+	path = import/flink-training-course
+	url = https://github.com/flink-china/flink-training-course
+[submodule "import/iam"]
+	path = import/iam
+	url = https://github.com/marmotedu/iam
+[submodule "import/dive_into_deep_learning"]
+	path = import/dive_into_deep_learning
+	url = https://github.com/Miraclelucy/dive_into_deep_learning
+[submodule "import/lectures"]
+	path = import/lectures
+	url = https://github.com/CS50/lectures
+[submodule "import/the-art-of-command-line"]
+	path = import/the-art-of-command-line
+	url = https://github.com/jlevy/the-art-of-command-line
+[submodule "import/awesome-falsehood"]
+	path = import/awesome-falsehood
+	url = https://github.com/kdeldycke/awesome-falsehood
+[submodule "import/awesome-podcasts"]
+	path = import/awesome-podcasts
+	url = https://github.com/rShetty/awesome-podcasts
+[submodule "import/post-mortems"]
+	path = import/post-mortems
+	url = https://github.com/danluu/post-mortems
+[submodule "import/one-person-businesses-methodology"]
+	path = import/one-person-businesses-methodology
+	url = https://github.com/easychen/one-person-businesses-methodology
+[submodule "import/awesome-cold-showers"]
+	path = import/awesome-cold-showers
+	url = https://github.com/hwayne/awesome-cold-showers
+[submodule "import/ThinkPython2"]
+	path = import/ThinkPython2
+	url = https://github.com/AllenDowney/ThinkPython2
+[submodule "import/aposd-vs-clean-code"]
+	path = import/aposd-vs-clean-code
+	url = https://github.com/johnousterhout/aposd-vs-clean-code
+[submodule "import/loopy"]
+	path = import/loopy
+	url = https://github.com/ncase/loopy
+[submodule "import/succinct-cybernetics"]
+	path = import/succinct-cybernetics
+	url = https://github.com/espadrine/succinct-cybernetics
+[submodule "import/cc-thinking-skills"]
+	path = import/cc-thinking-skills
+	url = https://github.com/tjboudreaux/cc-thinking-skills
+[submodule "import/awesome-knowledge-management"]
+	path = import/awesome-knowledge-management
+	url = https://github.com/brettkromkamp/awesome-knowledge-management
+[submodule "import/awesome-concepts"]
+	path = import/awesome-concepts
+	url = https://github.com/lukasz-madon/awesome-concepts
+[submodule "import/awesome-complexity"]
+	path = import/awesome-complexity
+	url = https://github.com/sellisd/awesome-complexity
+[submodule "import/awesome-philosophy"]
+	path = import/awesome-philosophy
+	url = https://github.com/HussainAther/awesome-philosophy
+[submodule "import/pm"]
+	path = import/pm
+	url = https://github.com/simonhoo/pm

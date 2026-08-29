@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>存储行业洞察与服务器整机研发方向 — 五看三定领导汇报</title>
+<style>
+  :root{
+    --bg:#060d1a; --bg2:#0a1628; --card:#101f38; --card2:#16294a;
+    --line:#1e3a5f; --primary:#4da3ff; --accent:#00e5ff; --warn:#ffb020;
+    --good:#3ddc84; --text:#e8f0fb; --muted:#8fa8c8; --danger:#ff5d73;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--text);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    overflow:hidden}
+  /* ── 幻灯片容器 ── */
+  .deck{height:100vh;position:relative}
+  section.slide{position:absolute;inset:0;display:none;padding:52px 60px 70px;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(0,229,255,.06), transparent 60%),
+      radial-gradient(900px 400px at -10% 110%, rgba(77,163,255,.07), transparent 60%),
+      var(--bg);
+    flex-direction:column;overflow-y:auto}
+  section.slide.active{display:flex}
+  /* ── 导航 ── */
+  nav{position:fixed;top:0;left:0;right:0;height:4px;background:var(--line);z-index:50}
+  nav .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s}
+  .pager{position:fixed;bottom:18px;right:24px;font-size:13px;color:var(--muted);z-index:50}
+  .hint{position:fixed;bottom:18px;left:24px;font-size:12px;color:var(--muted);z-index:50;opacity:.7}
+  /* ── 排版 ── */
+  .kicker{display:inline-block;font-size:13px;letter-spacing:2px;color:var(--accent);
+    text-transform:uppercase;margin-bottom:12px;font-weight:600}
+  h1{font-size:44px;line-height:1.25;font-weight:800;letter-spacing:.5px}
+  h1 .hl{color:var(--accent)}
+  h1 .hl2{color:var(--primary)}
+  h2{font-size:30px;font-weight:800;margin-bottom:4px}
+  h2 .no{color:var(--accent);font-size:18px;vertical-align:middle;margin-right:10px}
+  h3{font-size:18px;font-weight:700;margin:16px 0 8px;color:var(--primary)}
+  p{font-size:16px;line-height:1.75;color:var(--text)}
+  .lead{font-size:18px;color:var(--text);line-height:1.8;max-width:1100px}
+  .muted{color:var(--muted)}
+  .small{font-size:12.5px}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;
+    background:var(--card2);color:var(--accent);border:1px solid var(--line);margin-left:6px;vertical-align:middle}
+  .tag.w{background:rgba(255,176,32,.12);color:var(--warn);border-color:rgba(255,176,32,.4)}
+  .tag.g{background:rgba(61,220,132,.12);color:var(--good);border-color:rgba(61,220,132,.4)}
+  .tag.o{background:rgba(77,163,255,.12);color:var(--primary);border-color:rgba(77,163,255,.4)}
+  .tag.r{background:rgba(255,93,115,.12);color:var(--danger);border-color:rgba(255,93,115,.4)}
+  /* ── 卡片/网格 ── */
+  .grid{display:grid;gap:14px;margin-top:14px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+    border-radius:14px;padding:18px 20px}
+  .card h4{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .card .num{font-size:32px;font-weight:800;color:var(--accent);line-height:1.2}
+  .card .num small{font-size:14px;color:var(--muted);font-weight:400}
+  .card ul{list-style:none;margin-top:6px}
+  .card li{font-size:13.5px;line-height:1.65;color:var(--muted);padding-left:14px;position:relative;margin-top:3px}
+  .card li::before{content:"▸";position:absolute;left:0;color:var(--primary)}
+  .card li b{color:var(--text)}
+  /* ── 表格 ── */
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+  th{background:var(--card2);color:var(--accent);font-weight:700;text-align:left;
+    padding:9px 11px;border-bottom:2px solid var(--primary);white-space:nowrap}
+  td{padding:8px 11px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top}
+  tr:hover td{background:rgba(77,163,255,.05)}
+  td b{color:var(--accent)}
+  .tbl-scroll{overflow-x:auto}
+  /* ── 条形图 ── */
+  .bars{margin-top:12px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .bar-label{width:110px;font-size:13px;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:24px;background:var(--card);border-radius:6px;position:relative;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;font-size:12px;font-weight:700;color:#06121f;min-width:44px}
+  .legend{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  /* ── 流程 ── */
+  .flow{display:flex;align-items:stretch;gap:0;margin-top:16px;flex-wrap:wrap}
+  .flow .step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:12px;position:relative;text-align:center}
+  .flow .step .st{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:1px}
+  .flow .step .nm{font-size:14.5px;font-weight:700;margin-top:4px}
+  .flow .step .ds{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .flow .arrow{align-self:center;color:var(--primary);font-size:20px;padding:0 5px;flex-shrink:0}
+  .flow .step.cpu{border-color:var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.08),var(--card))}
+  .flow .step.gpu{border-color:var(--primary);background:linear-gradient(180deg,rgba(77,163,255,.10),var(--card))}
+  /* ── 列表强调 ── */
+  .points{list-style:none;margin-top:12px}
+  .points li{font-size:15px;line-height:1.65;padding:8px 0 8px 28px;position:relative;
+    border-bottom:1px dashed var(--line);color:var(--text)}
+  .points li:last-child{border-bottom:none}
+  .points li::before{content:"✔";position:absolute;left:4px;color:var(--good);font-weight:700}
+  .points li b{color:var(--accent)}
+  .points.warn li::before{content:"!";color:var(--warn)}
+  /* ── 对比双栏 ── */
+  .vs{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;margin-top:14px;align-items:stretch}
+  .vs .side{padding:16px 18px;border-radius:12px}
+  .vs .a{background:linear-gradient(180deg,rgba(77,163,255,.12),var(--card));border:1px solid rgba(77,163,255,.35)}
+  .vs .b{background:linear-gradient(180deg,rgba(0,229,255,.10),var(--card));border:1px solid rgba(0,229,255,.35)}
+  .vs .mid{display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--warn)}
+  .vs h4{font-size:15.5px;margin-bottom:8px}
+  .vs ul{list-style:none}
+  .vs li{font-size:13px;color:var(--muted);line-height:1.6;padding-left:13px;position:relative;margin-top:4px}
+  .vs li::before{content:"•";position:absolute;left:0;color:var(--primary)}
+  .vs li b{color:var(--text)}
+  /* ── 配图卡片 ── */
+  .imgcard{display:flex;align-items:center;gap:20px;background:linear-gradient(180deg,var(--card),var(--bg2));
+    border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:14px}
+  .imgcard img{max-height:150px;max-width:40%;border-radius:8px;border:1px solid var(--line);
+    background:var(--bg2);object-fit:contain;flex-shrink:0}
+  .imgcard .cap{flex:1;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .imgcard .cap b{color:var(--accent)}
+  .imgcard .cap a{color:var(--primary);text-decoration:none}
+  .imgcard .cap a:hover{text-decoration:underline}
+  /* ── 过渡页 ── */
+  .part{justify-content:center;align-items:flex-start}
+  .part .big{font-size:58px;font-weight:800;line-height:1.2;margin-top:20px}
+  .part .big .hl{color:var(--accent)}
+  .part .sub{font-size:19px;color:var(--muted);margin-top:16px;max-width:900px;line-height:1.8}
+  /* ── 封面 ── */
+  .cover{justify-content:center}
+  .cover .title{font-size:50px;font-weight:800;line-height:1.3;max-width:1100px}
+  .cover .meta{margin-top:32px;font-size:15px;color:var(--muted);line-height:2}
+  .cover .meta b{color:var(--text)}
+  .cover .line{width:90px;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));
+    border-radius:2px;margin:24px 0}
+  /* ── 机会卡 ── */
+  .opp{border-left:4px solid var(--accent);background:linear-gradient(180deg,rgba(0,229,255,.07),var(--card));
+    border-radius:0 12px 12px 0}
+  .opp h4{color:var(--accent)}
+  .opp.hot{border-left-color:var(--warn)}
+  .opp.hot h4{color:var(--warn)}
+  /* ── 脚注/来源 ── */
+  .src{margin-top:auto;padding-top:12px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);opacity:.8}
+  .src b{color:var(--muted)}
+  /* ── 打印 ── */
+  @media print{
+    html,body{overflow:visible;background:#fff}
+    section.slide{position:relative;display:flex!important;page-break-after:always;height:100vh}
+    nav,.pager,.hint{display:none}
+  }
+  @media (max-width:900px){
+    section.slide{padding:32px 24px 56px}
+    h1{font-size:30px}h2{font-size:24px}.cover .title{font-size:32px}
+    .part .big{font-size:36px}.g2,.g3,.g4{grid-template-columns:1fr}
+    .vs{grid-template-columns:1fr}.imgcard{flex-direction:column}.imgcard img{max-width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+<nav><div class="bar" id="bar"></div></nav>
+<div class="pager" id="pager"></div>
+<div class="hint">← → 翻页 · ESC 目录 · F 全屏 · P 打印导出 · 点击左右半区翻页</div>
+
+<!-- ═══════════ 1 封面 ═══════════ -->
+<section class="slide cover" data-title="封面">
+  <span class="kicker">STORAGE INDUSTRY INSIGHT · WU-KAN SAN-DING · 2026-08</span>
+  <div class="title">存储行业洞察 <span class="hl">×</span> 服务器整机研发方向<br><span class="hl2">从「数据仓库」到「AI 算力的扩展内存」</span><br><span style="font-size:28px;color:var(--muted)">五看三定方法论 · 软件栈 = 整机差异化主战场</span></div>
+  <div class="line"></div>
+  <div class="meta">
+    <b>核心命题</b>：存储行业正在发生什么范式转移？对服务器整机（尤其软件栈）研发意味着什么？我们应该做什么？<br>
+    <b>汇报日期</b>：2026-08-12　|　<b>方法论</b>：五看三定（看宏观/市场/竞争/自身/机会 → 定战略/目标/策略）<br>
+    <b>数据分级</b>：✅官方一手 · ⚠️行业共识/转引 · 🔶第一性原理推导 · 🏷厂商声称（未独立验证）
+  </div>
+  <div class="src">材料基于知识库 2700+ 文档与五大会（GTC/FMS/ODCC/OCP/AI Advanced）一手信息交叉验证；G3.5 需求规格 · KV 三场景机型设计 · FMS2026 复盘为深度支撑</div>
+</section>
+
+<!-- ═══════════ 2 目录 ═══════════ -->
+<section class="slide" data-title="目录">
+  <span class="kicker">AGENDA · 五看三定</span>
+  <h2 style="margin-top:10px"><span class="no">01</span>看宏观 / 行业：存储范式转移</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">$803.9B 超逻辑芯片 · 超级周期 · 四大统一信号</p>
+  <h2 style="margin-top:20px"><span class="no">02</span>看市场 / 客户：AI 推理存储需求爆发</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">KV Cache 第一性需求 · 三类负载场景 · 客户分层</p>
+  <h2 style="margin-top:20px"><span class="no">03</span>看竞争：三条存储技术路线</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">NVIDIA CMX/G3.5 · Intel CXL/JBOF · 中国 ODCC 标准</p>
+  <h2 style="margin-top:20px"><span class="no">04</span>看自身：整机 + 软件研发能力盘点</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">软件栈 = 最大短板 = 最大机会</p>
+  <h2 style="margin-top:20px"><span class="no">05</span>看机会：四大专题机会窗口</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">G3.5 共享闪存层 · LPDDR · CXL 软件栈 · KV 场景化机型 + 分层 · 故障诊断</p>
+  <h2 style="margin-top:20px"><span class="no">06</span>行业会议信号整合（五大会）</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">GTC2026 · FMS2026 · ODCC · OCP APAC · AI Advanced 2026</p>
+  <h2 style="margin-top:20px"><span class="no">07</span>三定：战略 · 目标 · 策略</h2>
+  <p class="muted" style="margin-left:50px;margin-top:2px">定战略定位 · 定量化指标 · 定 P0/P1/P2 落地路径</p>
+  <div class="src">总时长约 20 分钟 · 领导看 §0 + §7（战略）；架构决策者看 §1-§5；研发执行看 §7 策略</div>
+</section>
+
+<!-- ═══════════ 3 Part1 过渡 ═══════════ -->
+<section class="slide part" data-title="Part1">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <div class="big">存储行业正从<span class="hl">「数据仓库」</span><br>转向<span class="hl">「AI 算力的扩展内存」</span></div>
+  <div class="sub">2026 年存储产值首次超越逻辑芯片——存储不再是配角，而是 AI 性能与成本的第一杠杆。<span style="color:var(--accent)">范式转移正在发生</span>。</div>
+</section>
+
+<!-- ═══════════ 4 1.1 市场拐点 ═══════════ -->
+<section class="slide" data-title="1.1 市场拐点">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <h2><span class="no">1.1</span>历史性拐点：存储产值首超逻辑芯片 <span class="tag g">超级周期实证</span></h2>
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card"><div class="num">$803.9<span small>B</span></div><h4>2026 存储产值，首超逻辑芯片</h4><ul><li>占半导体 $1.5T 的 <b>53%</b>（内存 +250% YoY）· ✅WSTS</li></ul></div>
+    <div class="card"><div class="num">+257<span small>%</span></div><h4>SK hynix 2Q26 营收 KRW 79.32T</h4><ul><li>margin <b>75-77%</b> 超 TSMC · ✅官方财报</li></ul></div>
+    <div class="card"><div class="num">×5</div><h4>存储成本暴涨（结构性短缺三级传导）</h4><ul><li>DRAM→NAND→模块逐级涨价，BOM 占比 <b>29%</b> 历史峰值</li></ul></div>
+    <div class="card"><div class="num">8<span small>线</span></div><h4>2026 史上首次八线同紧</h4><ul><li>GPU/HBM/DRAM/NAND/CPU/封装/MLCC/光模块/电力</li></ul></div>
+  </div>
+  <div class="imgcard">
+    <img src="https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/07/28133250/en-2q-2026-business-results_Thumb.jpg"
+         alt="SK hynix 2Q26 财报" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：SK hynix 2Q26 财报（存储超级周期实证）——<a href="https://news.skhynix.com/en/q2-2026-business-results/" target="_blank">news.skhynix.com Q2 财报</a> · 2026-07-28<br>
+    超级周期实证：Sandisk FY26 <b>$20.25B/+175%</b> · Phison 2Q26 <b>+280%</b> · Micron 3Q26 <b>+347%</b>（涨价贡献 2/3 + AI 需求 1/3）</div>
+  </div>
+  <div class="points" style="margin-top:10px">
+    <li><b>8/12 实时信号</b>：SK hynix 重启大连 NAND 扩产 <b>+50%</b>（DIGITIMES，付费墙）；Samsung HBM4 良率近 <b>80%</b>；Micron <b>满足不足一半</b>数据中心需求（供给仍紧于 2026H1）</li>
+    <li class="warn"><b>退潮预警</b>：DIGITIMES 报道内存短缺或于 <b>2028 转过剩</b>（扩产周期 ~2 年）——需求侧跟踪，列入附录 B 待交叉验证</li>
+  </div>
+  <div class="src">✅WSTS 06-09（wsts.org）；✅SK hynix 官方财报 2026-07-28；⚠️DIGITIMES 08-12（付费墙限全文，标题摘要为准）；⚠️TrendForce 08-12 转引</div>
+</section>
+
+<!-- ═══════════ 5 1.2 推动力 ═══════════ -->
+<section class="slide" data-title="1.2 推动力">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <h2><span class="no">1.2</span>五大推动力（第一性原理推导）——四堵墙催生新层级</h2>
+  <div class="flow">
+    <div class="step gpu"><div class="st">内存墙</div><div class="nm">KV Cache 溢出</div><div class="ds">HBM &lt; model+KV → G3.5 温层诞生（CMX/CXL/高性能 SSD）</div></div>
+    <div class="arrow">→</div>
+    <div class="step gpu"><div class="st">带宽墙</div><div class="nm">PCIe Gen5 28GB/s 不够</div><div class="ds">Gen6 56-60GB/s + GDS 直通（GPU 绕过 CPU）</div></div>
+    <div class="arrow">→</div>
+    <div class="step cpu"><div class="st">成本墙</div><div class="nm">HBM 占 BOM 29%</div><div class="ds">分层存储：hot HBM / warm CXL / cold NVMe</div></div>
+    <div class="arrow">→</div>
+    <div class="step cpu"><div class="st">可靠性墙</div><div class="nm">万卡故障常态化</div><div class="ds">故障诊断/预告警（NHA/PHM/BMC Agent）</div></div>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><h4>① KV Cache 需求爆炸</h4><ul><li>GQA 口径 <b>~160KB/token</b>，1M 上下文单实例 160-320GB &gt; HBM → 推理场景成存储<b>第一消费者</b></li></ul></div>
+    <div class="card"><h4>② Checkpoint 频繁化</h4><ul><li>万卡训练每 <b>15-30 分钟</b>全量/增量 checkpoint；万亿参数 ~<b>4TB/次</b> → PB 级聚合带宽</li></ul></div>
+    <div class="card"><h4>③ Token 经济学</h4><ul><li>中国日均 Token 调用 <b>破 140 万亿</b>（两年 1000×）——评价标准转向 Token 吞吐/成本</li></ul></div>
+    <div class="card"><h4>④ 供给刚性约束</h4><ul><li>晶圆投产 ~2 年、HBM 挤占通用 DRAM、LTA 长协锁定（Kioxia 2028 年 50% 目标）</li></ul></div>
+    <div class="card"><h4>⑤ 内存 BOM 改写</h4><ul><li>Vera Rubin SOCAMM 减半（192→96GB/CPU）→ <b>存储分层 = 成本解药</b></li></ul></div>
+    <div class="card opp hot"><h4>时间维度判断</h4><ul><li><b>短期看供给约束（价格）→ 中期看 KV Cache（架构）→ 长期看数据（规模）</b></li></ul></div>
+  </div>
+  <div class="src">🔶推动力链为第一性推导（知识库 ai-storage-market-drivers-deep-analysis）；✅字节/腾讯/OasisKV 实证见后页</div>
+</section>
+
+<!-- ═══════════ 6 1.3 四大统一信号 ═══════════ -->
+<section class="slide" data-title="1.3 四大统一信号">
+  <span class="kicker">PART 01 · 看宏观</span>
+  <h2><span class="no">1.3</span>技术范式：四大统一信号（三独立主体收敛 → 高置信）</h2>
+  <table>
+    <tr><th style="width:40px">#</th><th>统一趋势</th><th>证据强度</th><th>证据链（GTC × FMS × ODCC）</th></tr>
+    <tr><td><b>1</b></td><td><b>存储内存化</b>（闪存=算力扩展内存）</td><td>⭐⭐⭐⭐⭐</td><td>GTC Storage-Next/CMX + FMS Flash-as-Memory/HBF + ODCC 存储直通</td></tr>
+    <tr><td><b>2</b></td><td><b>GPU 中心化</b>（GPU 直连存储/内存，绕过 CPU）</td><td>⭐⭐⭐⭐⭐</td><td>GTC GPU-Initiated SSD + FMS ScaleFlux×NVIDIA + ODCC 去 CPU</td></tr>
+    <tr><td><b>3</b></td><td><b>标准化落地</b>（NHA/ODS/HBF 从概念进实施）</td><td>⭐⭐⭐⭐</td><td>FMS CXL 量产 + ODCC NHA/ODS + GTC 遥测呼应</td></tr>
+    <tr><td><b>4</b></td><td><b>中国方案崛起</b>（应用层领先/基础层追赶）</td><td>⭐⭐⭐⭐</td><td>ODCC 四大专题 + FMS 中国厂商 + 澜起/大普微/美团</td></tr>
+  </table>
+  <div class="points" style="margin-top:14px">
+    <li><b>置信度判断（方法论）</b>：当三个利益独立的主体（GPU 生态 / 存储原厂 / 中国标准组织）得出同一结论，该结论置信度远高于单一来源——本报告全部核心判断均基于此三角验证原则</li>
+    <li><b>对整机的含义</b>：存储接口语义从「CPU 语义」转向「GPU/数据语义」——<b>软件栈（GDS/cuFile/KV 分层）成为整机能否吃下范式的关键</b></li>
+  </div>
+  <div class="src">✅知识库 three-conferences-unified-signals-deep-analysis（三大会统一信号专题）· 五大会闭环见 §6</div>
+</section>
+
+<!-- ═══════════ 7 Part2 过渡 ═══════════ -->
+<section class="slide part" data-title="Part2">
+  <span class="kicker">PART 02 · 看市场</span>
+  <div class="big">AI 推理存储需求爆发<br><span class="hl">KV Cache</span> 是第一性需求</div>
+  <div class="sub">推理 KV 从 HBM 溢出到 DDR/CXL/SSD 分层是<b>必然</b>；512B 小随机读成为 SSD 新瓶颈；<span style="color:var(--accent)">负载形态决定机型设计</span>。</div>
+</section>
+
+<!-- ═══════════ 8 2.1 KV 第一性需求 ═══════════ -->
+<section class="slide" data-title="2.1 KV 第一性需求">
+  <span class="kicker">PART 02 · 看市场</span>
+  <h2><span class="no">2.1</span>KV Cache 容量公式（第一性原理）与硬件诉求</h2>
+  <div class="vs">
+    <div class="side a"><h4>KV 容量公式（🔶推导）</h4>
+      <ul><li><b>KV = batch × seq × 2 × L × D_eff × dtype</b></li>
+      <li>70B (GQA 8:1, FP16)：<b>320 KB/token</b></li>
+      <li>128K ctx → <b>41.9 GB/req</b>；1M ctx → <b>320 GB/req</b></li>
+      <li>每 token：Llama2-7B MHA 512KB / Llama3-8B GQA 128KB / V3 MLA 137KB</li></ul></div>
+    <div class="mid">⇒</div>
+    <div class="side b"><h4>decode 全量读带宽（🔶）</h4>
+      <ul><li>128K × 20 tok/s = <b>838 GB/s</b>——远超 CXL(64GB/s) 与 SSD(14GB/s)</li>
+      <li>仅 HBM(8TB/s) / CPU DRAM(~450GB/s) 可支撑</li>
+      <li><b>必须依赖注意力稀疏性只读子集</b>（OasisKV/HiSparse 技术前提）</li></ul></div>
+  </div>
+  <h3>对整机硬件的诉求（从公式反推）</h3>
+  <table>
+    <tr><th>诉求</th><th>量化</th><th>说明</th></tr>
+    <tr><td><b>HBM 容量仍不足</b></td><td>141→288 GB/卡</td><td>KV 必然溢出 → 分层不可避免</td></tr>
+    <tr><td><b>分层迁移带宽</b></td><td>DDR 450GB/s / CXL 64GB/s / SSD 14GB/s</td><td>冷热分层需带宽匹配</td></tr>
+    <tr><td><b>SSD 小随机读</b></td><td>512B 粒度，4K 优化盘 <b>8× 读放大</b></td><td>KV 层 SSD 新三围：512B IOPS + 有效 DWPD + FDP 流数</td></tr>
+    <tr><td><b>host DRAM 容量</b></td><td><b>≥ 8× GPU HBM</b><span class="tag r">P0 结论</span></td><td>超节点稀疏推理短板（GB300 Grace LPDDR ~480GB ≤ GPU HBM）</td></tr>
+  </table>
+  <div class="src">✅KV 公式与分层依据：知识库 kv-cache 深度分析 / kv-cache-ttft-tpot-budget / HiSparse 专题；🔶decode 带宽为第一性推导</div>
+</section>
+
+<!-- ═══════════ 9 2.2 三类负载场景 ═══════════ -->
+<section class="slide" data-title="2.2 三类负载场景">
+  <span class="kicker">PART 02 · 看市场</span>
+  <h2><span class="no">2.2</span>三类负载场景决定三类机型——负载形态是机型设计的第一输入</h2>
+  <div class="grid g3">
+    <div class="card opp hot"><h4>场景 A：单请求长上下文 <span class="tag r">容量驱动</span></h4>
+      <ul><li>典型：长文档分析、RAG、多模态</li><li>核心矛盾：KV 总量 &gt; HBM 容量（128K≈41.9GB）</li><li>机型：<b>分层存储 + CXL 池化 + 大容量内存</b></li></ul></div>
+    <div class="card opp"><h4>场景 B：高并发短请求 <span class="tag o">吞吐驱动</span></h4>
+      <ul><li>典型：办公助手、Agent 多轮、代码生成</li><li>核心矛盾：并发 KV × decode 带宽</li><li>机型：<b>PD 分离 + 强调度 + KV 通道</b></li></ul></div>
+    <div class="card opp"><h4>场景 C：MoE 动态路由 <span class="tag o">结构驱动</span></h4>
+      <ul><li>典型：DeepSeek V3 类 MoE</li><li>核心矛盾：专家跨节点 AllToAll</li><li>机型：<b>确定性互联 + 在网计算</b></li></ul></div>
+  </div>
+  <div class="points" style="margin-top:14px">
+    <li><b>场景切换的含义（对整机架构）</b>：同一 GPU 平台通过<b>可配置外围模块</b>（内存层容量/带宽、调度软件、互联拓扑）覆盖三类场景 = <b>产品线 SKU 化的第一原则</b></li>
+    <li><b>架构要求</b>：<b>内存层与计算层解耦设计</b> + 软件栈支持<b>场景感知的 KV 放置策略</b>——这是软件研发的直接需求输入</li>
+    <li><b>量化实证</b>：字节 CXL 卸载实测 <b>batch +30% / GPU 需求 -87% / prefill 利用率 ×7.5</b>——"以存储换计算"从口号变可复现数据（✅广发证券引述）</li>
+  </div>
+  <div class="src">✅知识库 kv-cache-three-scenarios-workload-driven-machine-design（2026-08-11 三场景机型设计专题）· 字节实证见 §5.2</div>
+</section>
+
+<!-- ═══════════ 10 2.3 客户分层 ═══════════ -->
+<section class="slide" data-title="2.3 客户分层">
+  <span class="kicker">PART 02 · 看市场</span>
+  <h2><span class="no">2.3</span>客户分层与付费意愿——需求侧的差异化</h2>
+  <table>
+    <tr><th>客户类型</th><th>核心需求</th><th>痛点</th><th>付费意愿</th><th>对整机含义</th></tr>
+    <tr><td><b>推理云</b>（tokens-as-a-service）</td><td>单位 token 成本最低</td><td>HBM 机型 TCO 高</td><td>高（成本敏感）</td><td>容量型 SKU / KV 卸载是直接卖点</td></tr>
+    <tr><td><b>超大规模 CSP</b></td><td>KV 卸载、GPU 利用率</td><td>扩容受制于内存</td><td>高</td><td>CXL 池化 + GPU-Initiated I/O</td></tr>
+    <tr><td><b>主权 AI / 企业私有化</b></td><td>供应安全 + 风冷易部署</td><td>生态锁定</td><td>中高</td><td>国产介质 + 开放标准兼容（ODCC）</td></tr>
+    <tr><td><b>传统企业</b></td><td>存储容量/可靠性</td><td>成本敏感</td><td>中</td><td>故障诊断差异化（NHA）</td></tr>
+  </table>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><h4>推理云（成本驱动）</h4><ul><li>token 成本 = 硬件 + 存储分层成本；<b>$10-20B G3.5 市场</b>（2029E 推导）</li></ul></div>
+    <div class="card"><h4>CSP（效率驱动）</h4><ul><li>字节/腾讯实测证明：<b>存储换计算</b>在规模化场景 ROI 为正</li></ul></div>
+    <div class="card"><h4>私有化（安全驱动）</h4><ul><li>国产 NAND/DRAM + 风冷 LPDDR 容量型 = <b>合规 + 易部署</b>双优势</li></ul></div>
+  </div>
+  <div class="src">✅客户分层依据：知识库 ai-storage 洞察报告 §2.3 + 容量型 SKU 五看三定（国际/国内版）· ⚠️G3.5 市场规模为推理需求推导（附录 B 标注待补 Gartner/IDC 精确数据）</div>
+</section>
+
+<!-- ═══════════ 11 Part3 过渡 ═══════════ -->
+<section class="slide part" data-title="Part3">
+  <span class="kicker">PART 03 · 看竞争</span>
+  <div class="big">三条存储技术路线<br><span class="hl">并存分层</span>，不是互斥</div>
+  <div class="sub">NVIDIA 定义推理内存层级 · Intel 定义池化内存 · 中国定义标准化与可靠性——<span style="color:var(--accent)">整机厂商的差异化空间在中间层</span>：把三家组件与软件栈整合成可交付的推理存储方案。</div>
+</section>
+
+<!-- ═══════════ 12 3.1 NVIDIA 路线 ═══════════ -->
+<section class="slide" data-title="3.1 NVIDIA 路线">
+  <span class="kicker">PART 03 · 看竞争</span>
+  <h2><span class="no">3.1</span>NVIDIA 路线：CMX / G3.5（存储 = 算力扩展内存）</h2>
+  <div class="imgcard">
+    <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/gtc/social-image/gtc26-web-homepage-best-of-gtc-og.jpg"
+         alt="NVIDIA GTC 2026" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：NVIDIA GTC 2026（存储/NVLink/Data Center 主线）——<a href="https://www.nvidia.com/gtc/" target="_blank">nvidia.com/gtc</a> · <a href="https://docs.nvidia.com/cuda/gpudirect-storage/" target="_blank">CUDA GPUDirect Storage 官方文档</a></div>
+  </div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>Storage-Next 倡议（GTC 2026）</h4>
+      <ul><li>SSD 厂商设计 <b>GPU-initiated 专用盘</b>；闪存定位从"存储设备"升级为<b>"HBM 的容量扩展层"</b>（语义跃迁）</li><li>Kioxia GP 系列：1 亿 IOPS / 512B 粒度 / P99&lt;100μs</li></ul></div>
+    <div class="card"><h4>cuFile 开源（FMS 2026）</h4>
+      <ul><li>XIO-SIG（<b>Google/Intel/Meta/NVIDIA 共治</b>）+ Storage-Next <b>40+ 厂商</b></li><li>NVIDIA 首次开放存储控制面——封闭 CUDA 惯例的例外，说明<b>必须生态共建</b></li></ul></div>
+    <div class="card"><h4>CMX（Context Memory Extension）</h4>
+      <ul><li>推理 KV 的官方框架；Kioxia GP 系列、铠侠 CM10 直接对齐 CMX 场景</li><li>软件栈：Dynamo / NIXL / DOCA Memos / Grove</li></ul></div>
+    <div class="card"><h4>ICMS 五层 tier model</h4>
+      <ul><li>G1 HBM → G2 DDR → G3 本地 NVMe → <b>G3.5 共享 Flash</b>（NVMe-oF + RDMA + IPU）→ G4 远端共享</li><li><b>G3.5 = KV Cache 温存储全新战场</b>（50-200μs / 200-800GB/s）</li></ul></div>
+  </div>
+  <div class="src">✅知识库 gtc2026-storage-technology-special + fms2026-tech-points-extraction · 🏷厂商生态规模（NVIDIA 披露口径）</div>
+</section>
+
+<!-- ═══════════ 13 3.2 Intel 路线 ═══════════ -->
+<section class="slide" data-title="3.2 Intel 路线">
+  <span class="kicker">PART 03 · 看竞争</span>
+  <h2><span class="no">3.2</span>Intel 路线：CXL / JBOF（内存池化）</h2>
+  <div class="imgcard">
+    <img src="https://computeexpresslink.org/wp-content/uploads/2023/09/CXL_Logo_R_RGB-300x62.png"
+         alt="CXL Consortium" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：CXL 联盟（规范与成员生态 SSOT）——<a href="https://www.computeexpresslink.org/" target="_blank">computeexpresslink.org</a></div>
+  </div>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card"><h4>Crescent Island</h4>
+      <ul><li>CXL 内存池（4-8 TB/池）+ KV Cache 放置 + GPU 调度</li><li>Xeon 作为 <b>KV Cache 管理器</b></li></ul></div>
+    <div class="card"><h4>JBOF 方案</h4>
+      <ul><li>三种硬件组成：独立 CXL 控制器 / GMM+SSD 混合 / GNR-D+CXL Switch+NIC</li><li>CXL Switch = 协议翻译 + 热点缓存 + QoS 仲裁</li></ul></div>
+    <div class="card"><h4>CXL 3.2 标准</h4>
+      <ul><li>多级交换、内存池化、Fabric；<b>DRAM 涨价 5× 背景下 CXL 池化 = 成本对冲首选</b></li></ul></div>
+  </div>
+  <div class="points" style="margin-top:12px">
+    <li><b>Intel 推理 GPU（Crescent Island 新品）</b>：<b>160GB LPDDR5X 风冷</b>——容量型推理 GPU 细分赛道实证（官方英文稿 160 / 中文稿 128GB 不一致，待确认）；规避 HBM 危机，"容量换带宽"匹配 KV 推理真实瓶颈</li>
+    <li><b>关键认知</b>：CXL 的瓶颈不在硬件而在<b>软件栈成熟度</b>——内存分层透明化、池化 QoS、故障隔离是整机厂商可做的差异化软件资产（memkind/CXL 感知分配器）</li>
+  </div>
+  <div class="src">✅知识库 intel-kv-cache-g35 + cxl-memory-and-storage-class-memory-special · 🏷Intel Crescent Island 规格为厂商披露口径</div>
+</section>
+
+<!-- ═══════════ 14 3.3 中国路线 ═══════════ -->
+<section class="slide" data-title="3.3 中国路线">
+  <span class="kicker">PART 03 · 看竞争</span>
+  <h2><span class="no">3.3</span>中国路线：ODCC 标准 + 国产介质——应用层领先 / 基础层追赶</h2>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>ODCC 2026 双全会</h4>
+      <ul><li>春季（4/2 舟山）：AI 存储实验室授牌 + <b>存算分离 DPU+NVMe-oF 强制标准</b></li><li>夏季（6/24-26 景德镇）：<b>15 项标准 11 项 AI 相关（73%）</b>——存储成 ODCC 一等公民</li></ul></div>
+    <div class="card"><h4>GPU 直通技术研究</h4>
+      <ul><li>ODCC 首次系统性研究 GPU 直通存储（昇腾/寒武纪/海光 + 存储厂商 <b>GDS 适配标准化</b>）</li><li>ODS 开放解构超节点 + ETH-X Scale-Up + 3.2T NPO：国产超节点差异化路径</li></ul></div>
+    <div class="card"><h4>美团 NHA（ODCC2505002）</h4>
+      <ul><li>NVMe 子系统<b>全息健康评估</b>：1-5 分评分 / 24h IO 延时+块大小分布 / 多源融合+ML</li><li>可靠性从厂商私有能力变<b>行业公共基础设施</b>——中国在可靠性标准化上领先</li></ul></div>
+    <div class="card"><h4>国产介质</h4>
+      <ul><li>大普微 R6060 <b>512TB E2</b>（FMS 现场最大容量）；长鑫 <b>LPDDR6 2026H2 全球首发</b>；CXMT DDR5 良率目标 80%（2026H2）；YMTC 13% NAND 市占</li></ul></div>
+  </div>
+  <div class="points" style="margin-top:12px">
+    <li><b>双线卡位</b>：澜起（CXL 3.2 MXC <b>全球首个试产</b>，2026-02 IPO 首日 +64%）+ 大普微（512TB E2）——<b>控制器与容量两端领先，介质与生态端跟随</b></li>
+    <li><b>对整机的意义</b>：国产存储替代 ¥300B+ 市场 + 强制标准合规 = <b>借标准之力做整机差异化</b>（R6 ODS 兼容 / R4 NHA 适配）</li>
+  </div>
+  <div class="src">✅知识库 odcc2026-storage-technology-special + g35-supernode-storage-new-requirements-spec · 🏷国产厂商产品规格为披露口径</div>
+</section>
+
+<!-- ═══════════ 15 3.4 竞争格局小结 ═══════════ -->
+<section class="slide" data-title="3.4 竞争格局小结">
+  <span class="kicker">PART 03 · 看竞争</span>
+  <h2><span class="no">3.4</span>竞争格局小结：三线并存分层，差异化在中间层</h2>
+  <table>
+    <tr><th>路线</th><th>主导者</th><th>核心介质</th><th>软件栈</th><th>对整机厂商</th></tr>
+    <tr><td><b>CMX/G3.5</b></td><td>NVIDIA</td><td>HBM + NVMe-oF</td><td>cuFile/CMX/DOCA</td><td>跟随生态，做整机集成</td></tr>
+    <tr><td><b>CXL/JBOF</b></td><td>Intel</td><td>DDR5 + CXL + LPDDR</td><td>memkind/CXL 软件栈</td><td><b>差异化机会</b>（非 NVIDIA 锁定）</td></tr>
+    <tr><td><b>中国标准</b></td><td>ODCC/国产厂商</td><td>国产 NAND/DRAM</td><td>GDS 适配标准化</td><td><b>借标准之力做整机差异化</b></td></tr>
+  </table>
+  <div class="vs" style="margin-top:16px">
+    <div class="side a"><h4>判断：三层不是互斥</h4>
+      <ul><li>NVIDIA 定义<b>推理内存层级</b>（G1-G5）</li><li>Intel 定义<b>池化内存</b>（CXL 生态）</li><li>中国定义<b>标准化与可靠性</b>（NHA/ODS）</li></ul></div>
+    <div class="mid">⇒</div>
+    <div class="side b"><h4>整机厂商的位置</h4>
+      <ul><li>把三家的<b>组件与软件栈整合</b>成"可交付的推理存储方案"</li><li><b>硬件容量是买得到的，软件能力是买不到的</b></li><li>G3.5 14 条需求中 P0 五条<b>全部是软件栈需求</b></li></ul></div>
+  </div>
+  <div class="src">✅竞争格局判断：知识库 ai-storage 洞察报告 §3.4 + 领导汇报版 §3 · 中间层定位为第一性推导</div>
+</section>
+
+<!-- ═══════════ 16 Part4 过渡 ═══════════ -->
+<section class="slide part" data-title="Part4">
+  <span class="kicker">PART 04 · 看自身</span>
+  <div class="big">整机 + 软件研发能力盘点<br><span class="hl">软件栈 = 最大短板 = 最大机会</span></div>
+  <div class="sub">硬件容量是买得到的，软件能力是买不到的——<span style="color:var(--accent)">G3.5 的 P0 五条需求全部是软件栈需求</span>：GPU-Initiated I/O、KV 分层管理、故障诊断三块空白。</div>
+</section>
+
+<!-- ═══════════ 17 4.1 能力盘点 ═══════════ -->
+<section class="slide" data-title="4.1 能力盘点">
+  <span class="kicker">PART 04 · 看自身</span>
+  <h2><span class="no">4.1</span>能力盘点：整机架构中强，软件栈弱→中（最大短板）</h2>
+  <table>
+    <tr><th>维度</th><th>现状评估</th><th>依据</th><th>差距（研发重点）</th></tr>
+    <tr><td><b>整机架构</b></td><td>中强</td><td>超节点/风冷/液冷产品线经验</td><td>内存层解耦设计（三类场景 SKU 化）未落地</td></tr>
+    <tr><td><b>存储硬件</b></td><td>中</td><td>本地 NVMe/盘阵设计能力</td><td>GPU-Initiated SSD、512B 优化、E2 形态新知识</td></tr>
+    <tr><td><b>软件栈</b></td><td><b style="color:var(--warn)">弱→中</b></td><td>GDS/NVMe-oF/KV 分层调度软件经验不足</td><td><b>GPU-Initiated I/O、KV 分层管理、故障诊断</b>三块空白</td></tr>
+    <tr><td><b>故障诊断</b></td><td>中</td><td>基础 RAS 能力</td><td>I/O 层监控（命令完成率/队列深度）、假存活识别缺失</td></tr>
+    <tr><td><b>标准化参与</b></td><td>中</td><td>有 ODCC 参与基础</td><td>可借 NHA/ODS 标准提升话语权</td></tr>
+  </table>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card opp hot"><h4>核心认知 ①</h4><ul><li><b>硬件容量是买得到的，软件能力是买不到的</b>——差异化在主战场（软件）</li></ul></div>
+    <div class="card opp"><h4>核心认知 ②</h4><ul><li>G3.5 的 14 条需求中，P0 五条（R9 KV 分层 / R1 GPU-Initiated SSD / R13 存储 QoS / R14 Prestaging / R5 DPU 卸载）<b>全部是软件栈需求</b></li></ul></div>
+    <div class="card opp"><h4>核心认知 ③</h4><ul><li>时机：G3.5 尚在定义期（2026H2 MVP），ODCC 标准落地窗口 2026-2027——<b>先建软件能力者拿船票</b></li></ul></div>
+  </div>
+  <div class="src">✅能力盘点依据：领导汇报版 §4（结合团队现状评估）· G3.5 需求规格 §1.2（P0 五条判定）</div>
+</section>
+
+<!-- ═══════════ 18 Part5 过渡 ═══════════ -->
+<section class="slide part" data-title="Part5">
+  <span class="kicker">PART 05 · 看机会</span>
+  <div class="big">四大专题机会窗口<br><span class="hl">G3.5 · LPDDR · CXL · KV 分层</span></div>
+  <div class="sub">每一个机会都指向同一个结论：<span style="color:var(--accent)">软件栈（GPU-Initiated I/O、KV 分层调度、故障诊断）是整机差异化的真正主战场</span>。</div>
+</section>
+
+<!-- ═══════════ 19 5.1 G3.5 共享闪存层 ═══════════ -->
+<section class="slide" data-title="5.1 G3.5 共享闪存层">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.1</span>机会一：G3.5 共享闪存层（存储深度描述）</h2>
+  <p class="lead" style="margin-top:4px">G3.5 = NVIDIA ICMS 五层模型中位于 G3（本地 NVMe）与 G4（远端共享）之间的<b style="color:var(--accent)">共享闪存层</b>（Ethernet-attached flash，NVMe-oF + RDMA + IPU 卸载），专为 KV Cache 数据类设计：</p>
+  <div class="grid g4" style="margin-top:10px">
+    <div class="card"><div class="num">50-200<span small>μs</span></div><h4>时延</h4><ul><li>介于本地闪存（10-100μs）与远端共享（1-10ms）</li></ul></div>
+    <div class="card"><div class="num">25-50<span small>GB/s</span></div><h4>带宽/链路</h4><ul><li>200-800 GB/s/pod 聚合；网络直连 + 控制面卸载</li></ul></div>
+    <div class="card"><div class="num">100s<span small>TB</span></div><h4>容量</h4><ul><li>pod 共享，填补容量断层</li></ul></div>
+    <div class="card"><div class="num">5×</div><h4>能效</h4><ul><li>无通用保护机制（KV 是 transient/recomputable）</li></ul></div>
+  </div>
+  <div class="vs" style="margin-top:12px">
+    <div class="side a"><h4>G3.5 是什么</h4>
+      <ul><li>KV Cache 卸载核心承载层（50-200μs / 100GB/s+）</li><li>解决 5 问题：KV 溢出 / 长上下文容量 / PD 分离 K/V 共享 / 高并发弹性 / 成本（HBM $/GB 低 5-20×）</li><li>三路线：NVMe 池（CMX 🟢）/ CXL 池（🟡）/ 计算型 SSD（🟡）</li></ul></div>
+    <div class="mid">≠</div>
+    <div class="side b"><h4>G3.5 不是什么（澄清认知）</h4>
+      <ul><li>不是通用存储（无快照/去重/复制/RAID）</li><li>不是训练 checkpoint 层（那是 G4）</li><li>不是 CXL 内存扩展（那是 Intel 路线 G2.5）</li><li><b>不服务 decode 路径</b>（decode 期间 KV 必须在 HBM，延迟 &lt;1ms）——只服务<b>换入换出（prestage）与跨节点恢复</b></li></ul></div>
+  </div>
+  <div class="src">✅知识库 g35-supernode-storage-new-requirements-spec（14 条需求规格 SSOT）· G3.5 五层模型来自 NVIDIA ICMS 官方框架</div>
+</section>
+
+<!-- ═══════════ 20 5.1b G3.5 14条需求 ═══════════ -->
+<section class="slide" data-title="5.1b G3.5 需求规格">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.1</span>G3.5 新增需求规格：14 条 × 5 组 MECE（P0 五条高亮）</h2>
+  <table>
+    <tr><th style="width:44px">需求</th><th>组</th><th style="width:50px">优先级</th><th>关键规格（量化）</th></tr>
+    <tr><td><b>R1 GPU-Initiated SSD</b></td><td>A 数据通路</td><td><span class="tag r">P0</span></td><td>1 亿 IOPS / 512B 粒度 / P99&lt;100μs / 25-50GB/s 链路（Kioxia GP + ODCC 直通）</td></tr>
+    <tr><td><b>R9 KV 分层 G3.5</b></td><td>B 分层共享</td><td><span class="tag r">P0</span></td><td>50-200μs / 200-800GB/s 聚合 / 100s TB / 64KB 块 / 5× 能效（ICMS + CMX）</td></tr>
+    <tr><td><b>R13 网络 QoS</b></td><td>C 网络协议</td><td><span class="tag r">P0</span></td><td>无损 RoCE / 8 级队列 / OS 比 5.3:1 / P99&gt;100μs Critical</td></tr>
+    <tr><td><b>R14 Prestaging</b></td><td>B 分层共享</td><td><span class="tag r">P0</span></td><td>decode 前预载 / 2-4μs bubble / CS7 最高优先级（Dynamo 语义）</td></tr>
+    <tr><td><b>R5 DPU 存算分离</b></td><td>D 控制面</td><td><span class="tag r">P0</span></td><td>带宽利用 3-5× / 时延 -50% / KV 命中 ≥70% / CPU &lt;5%（ZTE + ODCC 强制标准）</td></tr>
+    <tr><td>R2 CXL 内存池 / R3 去 CPU 化 / R10 GDS / R11 软件栈 Proxy</td><td>A/B</td><td><span class="tag o">P1</span></td><td>350ns / 数十-100s TB / +2-8× / SPDK 1-3μs Proxy hit 7-15μs</td></tr>
+    <tr><td>R4 NHA / R12 统一编址 / R6 ODS / R7 3.2T NPO / R8 BMC Agent</td><td>E/C/D</td><td><span class="tag w">P2</span></td><td>1-5 分评分 / UVA 1024 加速器 / 89 页白皮书 / 3.2T 密度 10× / 400% 提速</td></tr>
+  </table>
+  <div class="points" style="margin-top:12px">
+    <li><b>组映射</b>：A 数据通路（R1/R2/R3/R10）· B 存储分层与共享（R9/R11/R14）· C 网络与协议（R13/R12/R7）· D 控制面与解构（R5/R6）· E 可靠性与运维（R4/R8）</li>
+    <li><b>三阶段路线</b>：2026H2 <b>P0 MVP</b>（R9/R13/R14 先行）→ 2027H1 <b>规模化+可靠性</b>（R1/R2/R4/R10/R11）→ 2027H2+ <b>开放生态+运维智能</b>（R3/R5/R6/R7/R8/R12）</li>
+    <li><b>超节点场景量化</b>：KLX 512 GPU 超节点 KV Cache 总量 <b>512GB-2TB</b>（128K~1M 上下文）→ 存储网需 TB 级读写；BF4 单口 800G 为核心推荐</li>
+  </div>
+  <div class="src">✅14 条需求规格 SSOT：knowledge/03_AI/train/ai-storage/2026-08-03-g35-supernode-storage-new-requirements-spec.md · 超节点场景量化：supernode-storage-requirements-training</div>
+</section>
+
+<!-- ═══════════ 21 5.2 LPDDR ═══════════ -->
+<section class="slide" data-title="5.2 LPDDR 应用机会">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.2</span>机会二：LPDDR 大容量内存应用——「容量换带宽」路线</h2>
+  <div class="imgcard">
+    <img src="https://img.global.news.samsung.com/global/wp-content/uploads/2026/08/04144353/Samsung-Semiconductors-Next-Gen-3D-Memory-Vision-FMS-2026_Thumb932.jpg"
+         alt="Samsung 3D Memory Vision" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：Samsung FMS 2026 下一代 3D 内存愿景（zHBM/V10 NAND 路线佐证）——<a href="https://news.samsung.com/global/samsung-unveils-next-gen-3d-memory-vision-at-fms-2026-charting-the-future-of-ai-infrastructure" target="_blank">news.samsung.com</a> · 2026-08-04</div>
+  </div>
+  <table>
+    <tr><th>信号</th><th>内容</th><th>对整机的意义</th></tr>
+    <tr><td><b>Intel Crescent Island</b></td><td><b>160GB LPDDR5X 风冷推理 GPU</b>（官方口径 160 vs 128GB 待确认）</td><td>容量型 SKU 市场验证——"容量换带宽"匹配 KV 推理真实瓶颈</td></tr>
+    <tr><td><b>长鑫 LPDDR6</b></td><td><b>2026H2 全球首发</b>（x6 子通道 / 512GB 系统容量）</td><td>国产大容量内存供应窗口；LPDDR6 向服务器渗透（SOCAMM 形态）</td></tr>
+    <tr><td><b>LPDDR5X-PIM</b></td><td>FMS2026 行业首个 PIM LPDDR（内存内计算）</td><td>PIM 从 HBM 下沉到 LPDDR——端侧/低功耗推理降本</td></tr>
+    <tr><td><b>AMD Helios 500</b></td><td>Verano（Zen6 衍生）+ LPDDR5X + MI500（2027）</td><td>超节点级 LPDDR 应用；Zen7 指向 LPDDR6（AI Advanced 2026）</td></tr>
+    <tr><td><b>GB300 Grace</b></td><td>LPDDR ~480GB ≤ GPU HBM</td><td>超节点稀疏推理短板 → <b>host DRAM ≥ 8× GPU HBM（P0 结论）</b></td></tr>
+  </table>
+  <div class="src">✅知识库 ai-storage 洞察报告 §3.2 + 容量型 SKU 五看三定（国际/国内版）· 🏷Intel/AMD 规格为厂商披露口径</div>
+</section>
+
+<!-- ═══════════ 22 5.3 CXL 及配套软件 ═══════════ -->
+<section class="slide" data-title="5.3 CXL 及配套软件">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.3</span>机会三：CXL 及配套软件栈——系统级内存池化（2027 规模商用元年）</h2>
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card"><div class="num">5TB</div><h4>腾讯云 H3 Platform</h4><ul><li>120GB/s / 2 亿随机读 IOPS / 机箱式</li></ul></div>
+    <div class="card"><div class="num">144TB</div><h4>Enfabrica EMFASYS</h4><ul><li>DDR5 池 / 机架式（NVIDIA 已收购 Enfabrica）</li></ul></div>
+    <div class="card"><div class="num">10.2×</div><h4>Samsung Pangea v2</h4><ul><li>较 RDMA 10.2× / 内存瓶颈优化 96%</li></ul></div>
+    <div class="card"><div class="num">应用级</div><h4>阿里 PolarDB 磐久</h4><ul><li>全球首款 CXL 2.0 Switch 服务器 / 百纳秒</li></ul></div>
+  </div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>CXL 四大池化系统的意义</h4>
+      <ul><li>机箱（5TB）→ 机架（144TB，~29× 规模跨度）——机架级需要"<b>内存网络</b>"（交换/路由）</li><li><b>Pangea 10.2× = 语义红利</b>（load/store vs RDMA：延迟×拷贝消除×并发），非硬件快 10 倍</li><li>FMS2026 四级爆发：澜起 MXC 3.2 试产 → Kioxia XL1 → Liqid 160TB → Marvell Structera X；PNNL 160TB 生产级部署</li></ul></div>
+    <div class="card"><h4>配套软件实现要点（整机差异化资产）</h4>
+      <ul><li><b>内存池分配/回收 + QoS + 多主机仲裁</b>（CXL Switch 软件栈）</li><li><b>memkind / CXL 感知分配器</b>——应用无感内存分层（透明迁移）</li><li><b>famfs/DAX 文件语义 + 字节寻址</b>（2026-07 LSFMM 合入讨论）</li><li>生态：Google TPU v8 剥离 HBM + OCS 光交换 = CXL 类池化最强背书</li></ul></div>
+  </div>
+  <div class="src">✅知识库 cxl-memory-and-storage-class-memory-special（四大系统/SCM 连续谱/生态博弈）· 池化系统指标为厂商披露 + 广发证券</div>
+</section>
+
+<!-- ═══════════ 23 5.4 KV 场景切换 + 分层 ═══════════ -->
+<section class="slide" data-title="5.4 KV 分层设计">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.4</span>机会四：KV Cache 场景化机型 + 分层设计（对整机软件的五需求）</h2>
+  <div class="imgcard">
+    <img src="https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/08/07163856/ai-infrastructure-insigh-ep1_THM_2.jpg"
+         alt="SK hynix AI Infrastructure" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：SK hynix AI 基础设施洞察系列（AI 内存/存储架构演进佐证）——<a href="https://news.skhynix.com/en/ai-infrastructure-insigh-ep1/" target="_blank">news.skhynix.com</a></div>
+  </div>
+  <div class="flow" style="margin-top:10px">
+    <div class="step gpu"><div class="st">L0</div><div class="nm">HBM (hot)</div><div class="ds">~35ns · 22TB/s · in-GPU</div></div>
+    <div class="arrow">→</div>
+    <div class="step gpu"><div class="st">L1</div><div class="nm">CPU DRAM (staging)</div><div class="ds">~80ns · 614GB/s · 本地主存</div></div>
+    <div class="arrow">→</div>
+    <div class="step cpu"><div class="st">L2</div><div class="nm">CXL/SSD (persistent)</div><div class="ds">跨请求复用 · 冷数据层</div></div>
+    <div class="arrow">→</div>
+    <div class="step cpu"><div class="st">L3</div><div class="nm">Checkpoint</div><div class="ds">G4/G5 远端 · 归档</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>分层设计五需求（对整机软件）</h4>
+      <ul><li>① <b>KV 放置决策器</b>：按访问热度/生命周期在四层间迁移（场景 A 容量驱动 → 分层为主）</li><li>② <b>带宽预算管理</b>：decode 全量读不可能 → 注意力稀疏性感知的 KV 子集读取</li><li>③ <b>主导权切换点</b> T_cross = W/k：8B@131K / 70B@452K / V3@10.3M</li><li>④ <b>迁移成本模型</b>：320GB SSD→HBM 23s（离线）/ DDR→HBM 0.7s（在线预热）</li><li>⑤ <b>KV 层 SSD 新三围</b>：512B IOPS + 有效 DWPD + FDP 流数</li></ul></div>
+    <div class="card"><h4>实证参考（软件实现范式）</h4>
+      <ul><li><b>HiSparse</b>（已合入 SGLang）= host 权威副本 + GPU cache + Resolve fused kernel（软件 TLB）</li><li>Qwen Quest GH200 200K：<b>4.7×</b>；每请求 KV <b>13.09GB→0.4GB（~30×）</b>；B=2k 稳健默认</li><li><b>OasisKV</b>（arXiv:2608.08097）：KV 分层迁移主旋律</li><li><b>字节 CXL 卸载</b>：batch +30% / GPU -87% / prefill ×7.5</li><li>腾讯 128K:2K = 64:1 访问稀疏性——内存池化本质 = 用"大而慢的池"承接"小而快的热点"</li></ul></div>
+  </div>
+  <div class="src">✅知识库 hisparse-hierarchical-kv-cache-deep-analysis + kv-compression-global-allocation-gracekv-aoh-deep-analysis（2026-08-11 专题）</div>
+</section>
+
+<!-- ═══════════ 24 5.5 软件设计与故障诊断 ═══════════ -->
+<section class="slide" data-title="5.5 软件设计与故障诊断">
+  <span class="kicker">PART 05 · 看机会</span>
+  <h2><span class="no">5.5</span>机会五：软件设计与故障诊断——「链路 UP ≠ 可用」</h2>
+  <table>
+    <tr><th style="width:70px">案例</th><th>现象</th><th>分诊手段</th><th>根因</th></tr>
+    <tr><td rowspan="2"><b>NCCL 假存活</b><br>（marin#7344）</td><td>死锁 GPU 100% util + 功耗冻结到小数点两位 + SM 时钟钉死 1950MHz</td><td>power.draw 双采样 <b>5 判据合取</b></td><td>NCCL 2.28.9 aarch64 <b>proxy-op slot 泄漏</b>（弱 CAS 重试旧值）</td></tr>
+    <tr><td colspan="3">启示：监控不能只看 GPU 利用率；功耗指纹是"假忙"识别关键信号；<b>国产 ARM 芯片 NCCL 移植必须 ISA 级验证</b></td></tr>
+  </table>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>"假存活"陷阱机制（GDS 直通形态最危险）</h4>
+      <ul><li>数据面硬件（NIC/Switch/存储）全部存活、链路 UP，但控制面在 CPU——CPU 挂起后<b>任何新 I/O 都无法发起</b></li><li>仅看链路/端口状态会误判"存储可用"，上层请求超时才暴露</li></ul></div>
+    <div class="card"><h4>I/O 层监控成标配（软件可靠性设计清单）</h4>
+      <ul><li>① 监控 <b>I/O 层</b>而非链路层：命令完成率/队列深度/超时计数，告警阈值 = 完成率 <b>&lt;95% 持续 10s</b></li><li>② watchdog 分层：应用级 &gt; 框架级 &gt; 系统级</li><li>③ NHA 全息健康评估（ODCC2505002）多源融合</li><li>④ BMC Agent 化（G3.5 R8）：提速 400% / 准确率 ≥90%</li><li>⑤ "验证实际加载物"：/proc/self/maps 而非包元数据</li></ul></div>
+  </div>
+  <div class="src">✅知识库 cpu-fault-network-survivability-design（NCCL 假存活案 marin#7344）· NHA：ODCC2505002 · BMC Agent：元脑/新华三 HDM 商用对标</div>
+</section>
+
+<!-- ═══════════ 25 Part6 过渡 ═══════════ -->
+<section class="slide part" data-title="Part6">
+  <span class="kicker">PART 06 · 会议信号</span>
+  <div class="big">五大会闭环：<span class="hl">独立但同构</span><br>年度信号闭环形成</div>
+  <div class="sub">GTC 定调 → AI Advanced 补位 → FMS 验证介质 → OCP 定标准 → ODCC 落地中国标准——<span style="color:var(--accent)">KV Cache 温存储、存算协同、可靠性标配化、大容量内存路线是共同主线</span>。</div>
+</section>
+
+<!-- ═══════════ 26 6.1 五大会矩阵 ═══════════ -->
+<section class="slide" data-title="6.1 五大会矩阵">
+  <span class="kicker">PART 06 · 会议信号</span>
+  <h2><span class="no">6.1</span>五大会矩阵：GTC / FMS / ODCC / OCP / AI Advanced</h2>
+  <table>
+    <tr><th>会议</th><th>时间/地点</th><th>主导方</th><th>对存储研发的核心信号</th></tr>
+    <tr><td><b>GTC 2026</b></td><td>2026.3 圣何塞</td><td>NVIDIA</td><td>Storage-Next（闪存=HBM 扩展层）；GPU-Initiated SSD；CMX/DOCA Memos</td></tr>
+    <tr><td><b>FMS 2026</b></td><td>2026.8.4-6 圣克拉拉</td><td>存储原厂</td><td><b>cuFile 开源；HBF 首个 OCP 规范；zHBM；V10 BV-NAND 400+ 层；512B 问题；大普微 512TB E2</b></td></tr>
+    <tr><td><b>ODCC 2026</b></td><td>4/2 舟山 + 6/24-26 景德镇</td><td>中国标准组织</td><td>存算分离强制标准；15 项标准 11 项 AI；NHA；KV Cache 分层；ODS/ETH-X/3.2T NPO</td></tr>
+    <tr><td><b>OCP（APAC）</b></td><td>2026.8.11-12 台北</td><td>开放计算</td><td>HBF 规范（512GB/8-16Hi/0.4-3TB/s/UCIe）仅 Google+Tenstorrent 响应；<b>实况（8/12）：电力墙→硬件协同优化；NVIDIA 否认 Rubin Ultra 降配称"灵活 SKU"</b></td></tr>
+    <tr><td><b>AI Advanced 2026</b></td><td>2026.7（AMD）</td><td>AMD</td><td>Zen7 2028（A14 1.4nm，MRDIMM+LPDDR6）；MI500 2027（HBM4E）；Helios 500 Verano+LPDDR5X</td></tr>
+  </table>
+  <div class="imgcard">
+    <img src="https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/08/07121502/fms-2026-en-thmb.jpg"
+         alt="SK hynix FMS 2026" loading="lazy" onerror="this.style.display='none'">
+    <div class="cap"><b>🖼 官方配图</b>：SK hynix FMS 2026 参展报道（FMS 实况佐证）——<a href="https://news.skhynix.com/en/fms-2026/" target="_blank">news.skhynix.com</a> · 2026-08-07<br>
+    下一锚点：<b>9/2-4 ODX（北京）</b>"开放算力生态，Token 普惠创新"</div>
+  </div>
+  <div class="src">✅知识库五大会专题（gtc2026 / fms2026 / odcc2026 / ocp-hbf / amd-aai2026）· OCP APAC 实况：DIGITIMES 08-12</div>
+</section>
+
+<!-- ═══════════ 27 6.2 FMS 深度 ═══════════ -->
+<section class="slide" data-title="6.2 FMS 2026 深度">
+  <span class="kicker">PART 06 · 会议信号</span>
+  <h2><span class="no">6.2</span>FMS 2026 深度：五大信号 + 预测核对 10/10 零证伪 + 新预测 P11-P15</h2>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>会后五大信号</h4>
+      <ul><li><b>S1 HBF 开放规范落地</b>（P10 意外兑现：OCP 首个技术规范，Google+Tenstorrent 加入，九大厂无兴趣→2027 商用存疑）</li><li><b>S2 CXL 生态四级爆发</b>（P3 兑现：澜起 MXC 3.2 试产 → Kioxia XL1 → Liqid 160TB → Marvell Structera X）</li><li><b>S3 内存解聚三级架构</b>（Marvell 光内存 32TB 加入内存层级）</li><li><b>S4 GPU 发起 I/O 产品化</b>（P1/P2 兑现：cuFile 开源 + Storage-Next 40+ 厂商）</li><li><b>S5 Agentic AI 成叙事关键词</b>（高频小 IO/长多轮上下文成存储新画像）</li></ul></div>
+    <div class="card"><h4>P1-P10 预测核对</h4>
+      <ul><li><b>10/10 零证伪</b>：5 兑现 + 4 部分兑现 + 1 大幅兑现（P10 HBF 最重磅意外）</li><li>高置信组全中——预测体系整体有效</li><li>24 个技术要点核心：三星 V10 BV-NAND 400+ 层（+58%）· zHBM · 铠侠 BiCS10 QLC 37 Gb/mm² · 美光 9650 5.5M IOPS 纪录 · 三星 PM1763 首款量产 Gen6 · <b>512B 问题</b>（KV 小随机读 8× 读放大，Gen7 目标 100M IOPS/颗）· LPDDR5X-PIM</li></ul></div>
+  </div>
+  <table style="margin-top:10px">
+    <tr><th style="width:44px">#</th><th>复盘后新预测（2026-08-07 建立）</th><th style="width:60px">置信度</th><th>验证锚点</th></tr>
+    <tr><td><b>P11</b></td><td>HBF 生态成员扩展至 6+ 家（Micron/WD/中国厂商 ≥1 家）</td><td>60%</td><td>2027 底 OCP workstream 成员列表</td></tr>
+    <tr><td><b>P12</b></td><td>CXL 3.2 内存模块 2027H1 量产（澜起 MXC 3.2 已集成三星/SK）</td><td>60%</td><td>2027 三星 CMM-D 3.2 / SK 产品线</td></tr>
+    <tr><td><b>P13</b></td><td>光内存首个生产部署 2027（Marvell Photonic Fabric 类 ≥32TB）</td><td>45%</td><td>hyperscaler 架构 / 2027 GTC</td></tr>
+    <tr><td><b>P14</b></td><td>Gen7 SSD 100M IOPS 成规格共识（≥3 家公开对齐）</td><td>70%</td><td>2027 主控/SSD 规格书</td></tr>
+    <tr><td><b>P15</b></td><td>国产 Gen6 主控 2027H1 量产（英韧/联芸/大普微/忆恒 ≥1 家）</td><td>55%</td><td>2027 产品发布/评测</td></tr>
+  </table>
+  <div class="src">✅知识库 fms2026-recap-prediction-verification（P1-P10 核对 + P11-P15 下轮跟踪）· 验证锚点：9/2-4 ODX + 2027 GTC/FMS</div>
+</section>
+
+<!-- ═══════════ 28 6.3 信号一致性 + 研发动作 ═══════════ -->
+<section class="slide" data-title="6.3 信号一致性与研发动作">
+  <span class="kicker">PART 06 · 会议信号</span>
+  <h2><span class="no">6.3</span>信号一致性判断 + 会议驱动的研发动作建议</h2>
+  <table>
+    <tr><th>信号</th><th>GTC</th><th>FMS</th><th>ODCC</th><th>OCP</th><th>AI Adv</th><th>收敛度</th></tr>
+    <tr><td>GPU 发起 I/O</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>KV Cache 存储化</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>大容量内存路线</td><td>—</td><td>✅</td><td>—</td><td>—</td><td>✅</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>存储可靠性标准化</td><td>—</td><td>—</td><td>✅ NHA</td><td>—</td><td>—</td><td>⭐⭐⭐（中国领先）</td></tr>
+    <tr><td>容量军备降温</td><td>—</td><td>✅</td><td>✅</td><td>✅ HBF 叫好不叫座</td><td>—</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>电力墙→软硬件协同</td><td>—</td><td>—</td><td>—</td><td>✅ APAC 实况</td><td>—</td><td>⭐⭐⭐（新信号）</td></tr>
+  </table>
+  <h3>会议驱动的研发动作（五条）</h3>
+  <div class="points" style="margin-top:6px">
+    <li><b>FMS 已兑现 → 立即跟进</b>：cuFile 开源（XIO-SIG）纳入软件栈评估；512B 优化 SSD 纳入选型</li>
+    <li><b>ODCC 夏季全会 → 深度参与</b>：NHA 标准适配（可靠性卖点）；ODS 开放解构兼容（R6）</li>
+    <li><b>OCP APAC 实况 → 电力墙是系统级议题</b>：软硬件协同能效优化纳入整机软件栈规划（低功耗 SSD、CXL 动态功率管理、DPU 卸载省 CPU 功耗）；HBF 保持观察</li>
+    <li><b>AMD AI Advanced → 平台预研</b>：Zen7 LPDDR6 与 Helios 路线纳入 2027 平台规划</li>
+    <li><b>GTC 遗留 → 持续跟踪</b>：Storage-Next 生态成员扩展、CMX 软件栈更新</li>
+  </div>
+  <div class="src">✅信号收敛判断：知识库 three-conferences-unified-signals + 领导汇报版 §9.2 · OCP 电力墙信号为 8/12 新增（需后续会议确认）</div>
+</section>
+
+<!-- ═══════════ 29 Part7 过渡 ═══════════ -->
+<section class="slide part" data-title="Part7">
+  <span class="kicker">PART 07 · 三定</span>
+  <div class="big">定战略 · 定目标 · 定策略<br><span class="hl">存储 = AI 性能与成本的第一杠杆</span></div>
+  <div class="sub">不做存储芯片/介质（巨头战场）；不做纯硬件组装（无壁垒）——<span style="color:var(--accent)">做整机 + 软件栈集成：硬件可买，软件不可买</span>。</div>
+</section>
+
+<!-- ═══════════ 30 7.1 定战略 ═══════════ -->
+<section class="slide" data-title="7.1 定战略">
+  <span class="kicker">PART 07 · 三定</span>
+  <h2><span class="no">7.1</span>定战略：一句话战略定位</h2>
+  <div class="card" style="border-left:4px solid var(--accent);margin-top:14px">
+    <p style="font-size:21px;line-height:1.8"><b style="color:var(--accent)">以「AI 推理存储方案」为整机差异化主轴</b>——硬件上做「内存分层 + 场景化 SKU」，软件上做「<b style="color:var(--text)">GPU-Initiated I/O + KV 分层调度 + 故障诊断</b>」三件套，借 ODCC 标准与国产介质之力，成为 AI 服务器整机的"存储软件能力标杆"。</p>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card opp hot"><h4>不做</h4><ul><li>不做存储芯片/介质（巨头战场，资本密集）</li><li>不做纯硬件组装（无壁垒，利润 5-10%）</li></ul></div>
+    <div class="card opp"><h4>要做</h4><ul><li>做<b>整机 + 软件栈集成</b>（硬件可买，软件不可买）</li><li>存储软件能力 = 差异化护城河</li></ul></div>
+    <div class="card opp"><h4>时机</h4><ul><li>G3.5 尚在定义期（2026H2 MVP）</li><li>ODCC 标准落地窗口 2026-2027——<b>先建软件能力者拿船票</b></li></ul></div>
+  </div>
+  <div class="points" style="margin-top:14px">
+    <li><b>软件三件套 = 整机差异化主战场</b>：GPU-Initiated I/O（R1，1 亿 IOPS 语义）· KV 分层调度（R9/R14，场景感知放置）· I/O 层故障诊断（NHA + 假存活识别）</li>
+    <li><b>承载四条主线</b>：G3.5 分层 · CXL 池化 · KV 三场景机型 · 故障预告警；跟踪 HBF 为第四支点</li>
+  </div>
+  <div class="src">🔶战略定位为综合研判（基于 G3.5 需求规格 P0 五条全为软件的事实 + 行业窗口分析）</div>
+</section>
+
+<!-- ═══════════ 31 7.2 定目标 ═══════════ -->
+<section class="slide" data-title="7.2 定目标">
+  <span class="kicker">PART 07 · 三定</span>
+  <h2><span class="no">7.2</span>定目标（量化指标，2026H2 → 2028）</h2>
+  <table>
+    <tr><th>目标类别</th><th>指标</th><th>2026H2</th><th>2027</th><th>2028</th></tr>
+    <tr><td><b>产品</b></td><td>G3.5 共享闪存层 MVP</td><td>✅ 完成 P0 五条</td><td>规模化</td><td>开放解构</td></tr>
+    <tr><td><b>产品</b></td><td>KV 分层软件栈</td><td>与 SGLang/vLLM 集成</td><td>HiSparse 级成熟</td><td>自研调度器</td></tr>
+    <tr><td><b>产品</b></td><td>LPDDR 容量型 SKU</td><td>立项</td><td>样机</td><td>量产</td></tr>
+    <tr><td><b>可靠性</b></td><td>I/O 层监控覆盖率</td><td>100% 新品</td><td>存量改造</td><td>行业标准参与</td></tr>
+    <tr><td><b>市场</b></td><td>存储软件方案标杆客户</td><td>1-2 个</td><td>3-5 个</td><td>推理云 TOP10 进 3</td></tr>
+    <tr><td><b>标准</b></td><td>ODCC 标准参与</td><td>NHA 适配</td><td>主导 1 项标准</td><td>国际输出</td></tr>
+  </table>
+  <h3>监控指标体系（数据可验证）</h3>
+  <div class="grid g2" style="margin-top:8px">
+    <div class="card"><h4>技术指标</h4><ul><li>KV 卸载率（HBM 溢出比例）</li><li>G3.5 演示端到端时延（目标 &lt;200μs）</li><li>GPU-Initiated IOPS 达标率</li><li>假存活漏报率</li></ul></div>
+    <div class="card"><h4>经营指标</h4><ul><li>单位 token 存储成本（$/GB·Token）</li><li>存储故障预告警准确率/提前量</li><li>Gen6 SSD 导入率 / 国产存储占比</li><li>KV Cache 卸载命中率</li></ul></div>
+  </div>
+  <div class="src">✅目标体系依据：领导汇报版 §7 + 洞察报告 §7.5（三定落地）——指标均为可测量、有基线</div>
+</section>
+
+<!-- ═══════════ 32 7.3 定策略 ═══════════ -->
+<section class="slide" data-title="7.3 定策略">
+  <span class="kicker">PART 07 · 三定</span>
+  <h2><span class="no">7.3</span>定策略：P0/P1/P2 落地路径（软件研发重点）</h2>
+  <table>
+    <tr><th style="width:64px">阶段</th><th>时间</th><th>关键任务</th><th>里程碑</th><th>软件研发重点</th></tr>
+    <tr><td><b style="color:var(--warn)">P0</b></td><td>2026H2</td><td>G3.5 MVP：让共享层可用</td><td>512 GPU 超节点 KV 分层演示</td><td><b>R1 GPU-Initiated SSD + R9 KV 分层 + R13 QoS + R14 Prestaging + R5 DPU 卸载</b></td></tr>
+    <tr><td><b style="color:var(--warn)">P0</b></td><td>2026H2</td><td>KV 三场景机型定义</td><td>容量/吞吐/结构三型 SKU 规格书</td><td>场景感知 KV 放置策略</td></tr>
+    <tr><td><b style="color:var(--warn)">P0</b></td><td>2026H2</td><td>I/O 层监控落地</td><td>假存活识别告警上线</td><td>命令完成率/队列深度监控</td></tr>
+    <tr><td><b style="color:var(--accent)">P1</b></td><td>2027H1</td><td>G3.5 规模化 + 可靠性</td><td>P0 五条生产级</td><td>NHA 全息评估 + BMC Agent</td></tr>
+    <tr><td><b style="color:var(--accent)">P1</b></td><td>2027H1</td><td>CXL 软件栈</td><td>CXL 池化 QoS + 透明分层</td><td>memkind/CXL 感知分配器</td></tr>
+    <tr><td><b style="color:var(--accent)">P1</b></td><td>2027H1</td><td>LPDDR 容量型 SKU 样机</td><td>风冷容量型推理节点</td><td>KV 分层软件适配 LPDDR</td></tr>
+    <tr><td>P2</td><td>2027H2+</td><td>开放解构 + 全光 + Agent</td><td>ODS 兼容 + 3.2T NPO</td><td>统一编址 + 存储网络自动化</td></tr>
+  </table>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h4>资源需求</h4><ul><li>软件团队（存储软件栈 <b>5-8 人</b>：GDS/NVMe-oF/KV 分层各 2-3 人）</li><li>系统架构 1-2 人 + 测试 1-2 人（含故障注入验证 T14）</li></ul></div>
+    <div class="card"><h4>风险与应对（Top 3）</h4><ul><li><b>NVIDIA 生态锁定</b>（高）→ 双轨：NVIDIA 跟随 + CXL/ODCC 开放并行</li><li><b>G3.5 商业化不及预期</b>（中）→ 以 KV 分层（确定需求）为 MVP 切入</li><li><b>软件人才稀缺</b>（中）→ 内部培养 + ODCC 标准工作组借力</li></ul></div>
+  </div>
+  <div class="src">✅策略路径依据：领导汇报版 §8 + 洞察报告 §7.5 · 资源需求为研发规划建议（内部）</div>
+</section>
+
+<!-- ═══════════ 33 结论 ═══════════ -->
+<section class="slide" data-title="结论">
+  <span class="kicker">SUMMARY</span>
+  <h2>结论与下一步</h2>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card"><div class="num">01</div><h4>存储 = AI 性能与成本的第一杠杆</h4><ul><li>$803.9B 首超逻辑芯片；KV Cache 分层 + 存算协同成确定性主线（三大会独立印证）</li></ul></div>
+    <div class="card"><div class="num">02</div><h4>软件栈 = 整机差异化主战场</h4><ul><li>G3.5 P0 五条需求全部是软件；GPU-Initiated I/O + KV 分层调度 + 故障诊断三件套</li></ul></div>
+    <div class="card"><div class="num">03</div><h4>窗口 = 2026H2-2027</h4><ul><li>G3.5 定义期 + ODCC 标准落地 + 五大会年度闭环——先建软件能力者拿船票</li></ul></div>
+  </div>
+  <h3 style="margin-top:20px">建议行动（A1-A5）</h3>
+  <div class="points">
+    <li><b>A1</b>：立项「G3.5 共享闪存层 MVP」（P0 五条 R9/R1/R13/R14/R5），2 周内出需求文档，对接 512 GPU 超节点演示</li>
+    <li><b>A2</b>：KV 三场景机型定义（容量/吞吐/结构 SKU 规格书），软件栈支持场景感知 KV 放置</li>
+    <li><b>A3</b>：I/O 层监控落地（命令完成率/队列深度，假存活识别），新品 100% 内置</li>
+    <li><b>A4</b>：加入 ODCC 存储焦点组/AI 存储实验室（NHA 适配 + 主导评测规范）</li>
+    <li><b>A5</b>：跟踪 P11-P15 预测与 9/2-4 ODX（北京）——下一次大会闭环更新</li>
+  </div>
+  <div class="src">✅全部结论基于五看三定框架 + 五大会一手信息交叉验证 · 官方源清单见洞察报告 v1.5 §参考文献（15 条 URL + 8 张配图，curl 验证 HTTP 200）</div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('section.slide'));
+  var cur=0, timer=null, overview=false;
+  var bar=document.getElementById('bar'), pager=document.getElementById('pager');
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===cur)});
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    pager.textContent=(cur+1)+' / '+slides.length;
+    if(overview) exitOverview();
+  }
+  function enterOverview(){
+    overview=true;
+    slides.forEach(function(s,k){
+      s.style.cssText='position:fixed;display:block;transform:scale(.14);transform-origin:top left;'+
+        'left:'+(8+(k%5)*18.8)+'%;top:'+(5+Math.floor(k/5)*46)+'%;z-index:60;opacity:.85;'+
+        'cursor:pointer;box-shadow:0 0 0 1px #1e3a5f;pointer-events:auto;background:#0a1628;height:42vh;overflow:hidden';
+      s.onclick=function(){slides.forEach(function(x){x.style.cssText='';x.onclick=null});show(k);};
+    });
+  }
+  function exitOverview(){
+    overview=false;
+    slides.forEach(function(s){s.style.cssText='';s.onclick=null});
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(cur-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='Escape'){overview?exitOverview():enterOverview();}
+    else if(e.key==='f'||e.key==='F'){
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+      else document.exitFullscreen&&document.exitFullscreen();
+    }
+  });
+  document.addEventListener('click',function(e){
+    if(overview)return;
+    if(e.clientX>window.innerWidth*0.75)show(cur+1);
+    else if(e.clientX<window.innerWidth*0.25)show(cur-1);
+  });
+  var tx=0,ty=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))show(cur+(dx<0?1:-1));
+  },{passive:true});
+  show(0);
+})();
+</script>
+</body>
+</html>

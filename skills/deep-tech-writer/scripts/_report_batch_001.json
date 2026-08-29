@@ -1,0 +1,89 @@
+{
+  "stats": {
+    "ok": 20,
+    "skip": 0,
+    "fail": 0
+  },
+  "detail": [
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_agent_security.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_agent_smart.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_agent_smart_2.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_agentsecurity吗企.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_agent成为企业软件的标配就.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_ai_agent必须覆盖阿里奶.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_automation_tool.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_automation_tool_2.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_langchain_smart.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_langchain怎么实现多a.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_mcp协议的分层架构进行版本控.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_protocol_layered.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_real_realistic_.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_skills_retrieval.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_skills是什么体现在哪些方.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_smart_2.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_smart_efficiency.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_产品剖析之ai创作与协作的未来.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_从斯密的分工理论开始汇总下自动.md",
+      "status": "成功"
+    },
+    {
+      "file": "h:\\github\\cowkb\\discover\\newwiki2\\docs\\AI-Agent技术架构\\aag_q10_企业级_ai_agent提升效.md",
+      "status": "成功"
+    }
+  ]
+}

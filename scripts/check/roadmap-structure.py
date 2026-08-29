@@ -1,0 +1,1 @@
+../../skills/roadmap-maintainer/scripts/validate_structure.py

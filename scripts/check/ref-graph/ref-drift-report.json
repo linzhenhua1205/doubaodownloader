@@ -1,0 +1,78 @@
+{
+  "scan_time": "2026-07-16T01:11:38.234089+00:00",
+  "knowledge_root": "/home/lzh/cow/knowledge",
+  "summary": {
+    "total": 3,
+    "green": 3,
+    "touched": 0,
+    "drifted": 0,
+    "missing": 0
+  },
+  "results": [
+    {
+      "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+      "target_file": "../concepts/ai-constraint-association-limitation.md",
+      "target_resolved": "concepts/ai-constraint-association-limitation.md",
+      "section": "",
+      "last_verified": "2026-07-16",
+      "stored_hash": "50e5f8d188e3",
+      "current_hash": "50e5f8d188e3",
+      "status": "GREEN",
+      "detail": "✅ Up to date (verified 2026-07-16)",
+      "line_no": 360
+    },
+    {
+      "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+      "target_file": "../concepts/directory-level-quality-engineering.md",
+      "target_resolved": "concepts/directory-level-quality-engineering.md",
+      "section": "",
+      "last_verified": "2026-07-16",
+      "stored_hash": "0f08346fd81d",
+      "current_hash": "0f08346fd81d",
+      "status": "GREEN",
+      "detail": "✅ Up to date (verified 2026-07-16)",
+      "line_no": 361
+    },
+    {
+      "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+      "target_file": "server-knowledge-artifact-taxonomy.md",
+      "target_resolved": "methodology/server-knowledge-artifact-taxonomy.md",
+      "section": "",
+      "last_verified": "2026-07-16",
+      "stored_hash": "5d0f09929dd2",
+      "current_hash": "5d0f09929dd2",
+      "status": "GREEN",
+      "detail": "✅ Up to date (verified 2026-07-16)",
+      "line_no": 362
+    }
+  ],
+  "dependency_graph": {
+    "concepts/ai-constraint-association-limitation.md": [
+      {
+        "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+        "ref_target": "../concepts/ai-constraint-association-limitation.md",
+        "section": "",
+        "line_no": 360,
+        "last_verified": "2026-07-16"
+      }
+    ],
+    "concepts/directory-level-quality-engineering.md": [
+      {
+        "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+        "ref_target": "../concepts/directory-level-quality-engineering.md",
+        "section": "",
+        "line_no": 361,
+        "last_verified": "2026-07-16"
+      }
+    ],
+    "methodology/server-knowledge-artifact-taxonomy.md": [
+      {
+        "source_file": "knowledge/methodology/content-ref-consistency-system.md",
+        "ref_target": "server-knowledge-artifact-taxonomy.md",
+        "section": "",
+        "line_no": 362,
+        "last_verified": "2026-07-16"
+      }
+    ]
+  }
+}

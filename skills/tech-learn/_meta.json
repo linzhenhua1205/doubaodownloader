@@ -1,0 +1,35 @@
+{
+  "name": "tech-learn",
+  "description": "技术学习技能，用于从会话中提取可复用模式并保存为候选技能或指导",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "工作流",
+  "keywords": [
+    "知识提取",
+    "模式保存",
+    "经验总结",
+    "最佳实践",
+    "错误解决",
+    "调试技巧",
+    "变通方案",
+    "学习"
+  ],
+  "dependencies": {
+    "scripts": [
+      "learn_extractor.py",
+      "learn_saver.py",
+      "learn_lister.py"
+    ]
+  },
+  "related_skills": [
+    "tech-evolve",
+    "method-analysis",
+    "knowledge-wiki",
+    "session-keeper"
+  ],
+  "trigger_conditions": [
+    "用户提及知识提取、模式保存、经验总结",
+    "用户提及最佳实践、学习、文档",
+    "关键词：learn、提取、保存、学习、经验"
+  ]
+}

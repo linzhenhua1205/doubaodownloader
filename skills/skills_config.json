@@ -1,0 +1,737 @@
+{
+    "skill-creator": {
+        "name": "skill-creator",
+        "description": "Create, install, or update skills in the workspace. Use when (1) installing a skill from a URL or remote source, (2) creating a new skill from scratch, (3) updating or restructuring existing skills. Always use this skill for any skill installation or creation task.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "image-generation": {
+        "name": "image-generation",
+        "description": "Generate or edit images from text prompts. Use when the user asks to create, draw, design, or edit an image, illustration, photo, icon, poster, or any visual content.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "knowledge-wiki": {
+        "name": "knowledge-wiki",
+        "description": "Manage the personal knowledge wiki. Use when the user shares articles, documents, or asks to organize knowledge; when a conversation produces insights worth preserving as structured knowledge; or when the user asks about the knowledge base.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "mckinsey-research": {
+        "name": "mckinsey-research",
+        "description": "Run a full McKinsey-level market research and strategy analysis using 12 specialized prompts.\n\nUSE WHEN:\n- market research, competitive analysis, business strategy, TAM analysis\n- customer personas, pricing strategy, go-to-market plan, financial modeling\n- risk assessment, SWOT analysis, market entry strategy, comprehensive business analysis\n- بحث سوق, تحليل استراتيجي, تحليل منافسين, دراسة جدوى, خطة عمل\n- \"حلل لي السوق\" for business entry or investment decisions\n\nDON'T USE WHEN:\n- User wants a quick opinion on a business idea → just answer directly\n- Product recommendations or shopping → use personal-shopper\n- Content strategy for social media → use viral-equation\n- Simple web search for company info → use web_search directly\n- Comparing products to buy → use personal-shopper\n- Analyzing a single competitor briefly → just answer directly\n\nEDGE CASES:\n- \"حلل لي السوق\" with a specific product to buy → personal-shopper (not this skill)\n- \"حلل لي السوق\" for business entry → this skill\n- \"وش أفضل منتج\" → personal-shopper\n- \"وش حجم سوق X\" → this skill\n- \"قارن لي بين منتجين\" → personal-shopper\n- \"قارن لي بين شركتين\" as competitors → this skill\n- \"دراسة جدوى مشروع\" → this skill\n- \"أبغى أفتح مشروع\" → this skill (full analysis)\n- \"أبغى أشتري لابتوب\" → personal-shopper (purchase, not business)\n\nINPUTS: Business description, industry, target customer, geography, financials (optional)\nTOOLS: sessions_spawn (sub-agents), web_search, web_fetch\nOUTPUT: Complete strategy report saved to knowledge/07_industry-research/mckinsey/{date}-{slug}.html\nSUCCESS: User gets 12 consulting-grade analyses synthesized into one actionable report",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "knowledge-index-manager": {
+        "name": "knowledge-index-manager",
+        "description": "统一知识库索引/日志/目录管理。合并了原 index-log-maintainer / index-rebuilder / index-deep-analyzer 三个技能的全部功能，提供 4 种操作模式：\n- audit（审计检查）：index/log 合规、覆盖率、链接、格式\n- rebuild（重建）：全量重建 index.md\n- normalize（规范化）：一站式 6 阶段修复流水线\n- maintain（日常维护）：增量修复、文件迁移\nTriggers: index管理、index重建、日志格式化、索引修复、知识库规范化、文件迁移、目录优化、index覆盖率、log修复",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "roadmap-maintainer": {
+        "name": "roadmap-maintainer",
+        "description": "Maintain and restructure the server product R&D knowledge roadmap (knowledge/server_design_roadmap.md). Use when (1) adding new domains or restructuring the 14-domain × lifecycle matrix, (2) moving version history/changelog to bottom, (3) adding/verifying cross-links to knowledge base files, (4) updating the coverage heatmap, (5) cleaning up misplaced sections or formatting inconsistencies in the roadmap file.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-memory-pm": {
+        "name": "light-memory-pm",
+        "description": "上下文管理、记忆持久化与科研项目管理。当任务涉及长期项目、需要记住项目背景/进展/版本/偏好，或需要把项目拆成阶段任务时使用（常驻）。持续记住研究方向、已定 idea、数据、实验进度、论文/PPT/图表/代码版本、投稿记录、用户偏好、目标期刊。把项目拆成阶段任务并建立任务清单、时间线、里程碑、风险清单与版本记录。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "knowledge-special-reports": {
+        "name": "knowledge-special-reports",
+        "description": "Generate and maintain 4 specialized knowledge base reports: directory evolution, code commit analysis, domain focus shift, and dimension completeness. Use when (1) user asks to generate/update 专项报告/专题报告/special reports, (2) user asks about knowledge base health/directory/commit statistics/dimension coverage, (3) it's time for weekly/biweekly special report updates. Also supports automated periodic updates via cron/定时任务.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "doubao-share": {
+        "name": "doubao-share",
+        "description": "Parse, extract, and archive Doubao (豆包) shared conversation links to the knowledge base. Use when the user shares a Doubao conversation URL/链接, asks to archive/整理/归档 a Doubao conversation, or says '豆包' in context of sharing a conversation. Handles the full workflow: access shared content, extract key insights, generate slug filename, and write to knowledge base following established naming conventions.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-literature-search": {
+        "name": "light-literature-search",
+        "description": "强大地搜索并规范化整理科研资料。当用户需要调研某研究方向、找文献综述、了解某领域有哪些工作、搜集中英文论文/专利/标准/政策/数据集/开源项目/竞赛方案/行业报告/技术博客/官方文档时使用。不只罗列结果，而是筛选去重分类、判断可信度与重要性，整理为文献表、研究脉络、代表方法、优缺点对比与可复用资源。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "docx": {
+        "name": "docx",
+        "description": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "knowledge-health-check": {
+        "name": "knowledge-health-check",
+        "description": "Validate the integrity of the knowledge base (knowledge/) with a comprehensive health check script. Use when the user asks to check/fix/audit knowledge base health, verify link validity, fix log.md ordering, check file location reasonableness, validate markdown table formatting, or scan for format issues. Triggers: 检查知识库、完整性检测、链接检查、格式校验、log排序、知识库健康度、health check、audit knowledge.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "complex-system-function": {
+        "name": "complex-system-function",
+        "description": "Analyze and design complex systems using the \"Function as Life-Giving Mechanism\" framework. Use when user asks about: (1) system analysis from input→function→output→feedback perspective, (2) understanding how \"dead\" information becomes \"alive\" through function processing, (3) experience reuse across different contexts, (4) decision-making based on cost-calibrated analysis, (5) mapping systems to the four creation methods framework. Triggers: \"活的系统\", \"function\", \"输入输出\", \"反馈\", \"系统分析\", \"经验复用\", \"场景变量\", \"complex system\", \"system function\", \"context reuse\".",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "data-query": {
+        "name": "data-query",
+        "description": "查询各类数据信息，包括汇率、农历、历史事件、百科、油价、金价和化学元素。Use when users need exchange rates, lunar calendar, historical events, encyclopedia, commodity prices, or chemical element information.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "web-access": {
+        "name": "web-access",
+        "description": "所有联网操作必须通过此 skill 处理，包括：搜索、网页抓取、登录后操作、网络交互等。 触发场景：用户要求搜索信息、查看网页内容、访问需要登录的网站、操作网页界面、抓取社交媒体内容（小红书、微博、推特等）、读取动态渲染页面、以及任何需要真实浏览器环境的网络任务。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-data-engineering": {
+        "name": "light-data-engineering",
+        "description": "数据处理、数据质量分析与数据集构建。当用户需要清洗数据、处理缺失/异常值、特征工程、数据增强、划分数据集、评估数据质量，或需自建数据集（采集、标注规范、格式、说明文档、隐私合规、发布）时使用。在提 idea 前优先判断现有数据是否足以支撑研究。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "conversation-topic-analyzer": {
+        "name": "conversation-topic-analyzer",
+        "description": "Comprehensive topic analysis and knowledge dimension extraction from conversation logs. Use when: (1) user wants to analyze conversation history for thematic patterns, (2) user needs to understand topic evolution over time, (3) user asks to extract knowledge dimensions and operational thinking from past questions, (4) user wants to cluster and categorize user questions by domain, (5) user wants to generate topic analysis reports with intent classification. Triggers: 对话分析、主题分析、话题聚类、意图分析、知识维度提取、操作思维提取、conversation analysis、topic analysis、knowledge dimension.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-competition": {
+        "name": "light-competition",
+        "description": "竞赛与项目申报材料辅助。当用户做统计建模、数学建模、互联网+、挑战杯、大创、创新创业、科研训练等项目时使用。辅助写申报书、项目计划书、商业计划书、路演 PPT、答辩稿、项目摘要、技术路线、创新点、可行性分析、市场分析、研究基础、预期成果、经费预算、团队分工。用于非论文投稿场景，可与论文/软著/专利/PPT 联动。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-paper-drafting": {
+        "name": "light-paper-drafting",
+        "description": "撰写论文初稿与单章节起草、重写、自检。当用户要写论文、写某个章节（标题/摘要/引言/相关工作/方法/实验/结果/讨论/结论/局限/未来工作）、重写某章节、或对草稿做失败模式自检时使用。五种模式 full/outline-only/abstract-only/section-redraft/self-review；以顶刊/顶会审稿人标准打磨，逻辑严谨、创新点突出、结论不夸大、claim 有引用支撑。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "fault-diagnosis": {
+        "name": "fault-diagnosis",
+        "description": "系统化故障排查方法论技能。Use when user describes a system/software/hardware fault, anomaly, crash, performance degradation, or asks for root cause analysis (RCA). Also use when user mentions: 排障、排查、故障、根因、诊断、宕机、异常、RCA. Covers: event-based root cause analysis, five-layer diagnostic architecture, fishbone+5Why depth analysis, change backtracking, cross-data-source correlation, and AIOps automation patterns.\n",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-idea-generation": {
+        "name": "light-idea-generation",
+        "description": "根据项目实际情况提出有潜力、有差异化、有亮点的研究 idea。当用户需要创新点、研究思路、提方案，或问\"这个方向/数据能做什么\"时使用。结合已有基础、数据条件、技术能力、时间周期、发表/竞赛/课题目标，说明为什么值得做、创新点、相对现有方法的优势、能解决的具体问题、适合的成果形式与投稿层次。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-project-structure": {
+        "name": "light-project-structure",
+        "description": "规范整洁的项目文件夹整理。当任务涉及新建项目、整理已有项目结构、规整文件命名与版本时使用。规划 data、src、models、results、figures、docs、paper、ppt、patent、software-copyright、experiments、logs、configs、references、assets、notebooks 等目录，保证结构清晰、命名规范、版本可追踪，便于写论文、答辩、申请软著专利与复现实验。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "directory-optimizer": {
+        "name": "directory-optimizer",
+        "description": "Knowledge directory architecture optimization: MECE layering, cross-domain coupling analysis, reading path design, decision framework indexing, and comprehensive index.md generation. Triggers: 目录优化、目录架构、MECE分析、关联矩阵、阅读路径、目录增强、知识目录重构、目录深度分析、index生成、知识库目录设计、跨文件关联.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "web-ppt-builder": {
+        "name": "web-ppt-builder",
+        "description": "基于 Web 的单页翻页式汇报 PPT 生成器（深蓝科技风默认样式）。当用户需要创建/生成基于 web 的 PPT、汇报材料、演示页面，要求\"单独一个页面、支持翻页\"、\"web ppt\"、\"汇报 ppt\"、\"五看三定 ppt\"、\"默认 ppt 样式\"时使用。按 7 条铁律产出：①结论先行/自上而下/MECE 拆解 ②每页标题=本页要点（行动式标题） ③红/绿关键色语义（红色=需行动/风险、绿色=强调/已验证） ④汇报类材料用五看三定框架 ⑤结论页四维影响（总结+技术+产品+业务经营，各3~5点） ⑥数据标注来源链接 ⑦多用官方配图（web 直链）增加可信度。参考样式 knowledge/03_AI/train/agentic-cpu-ppt/index.html。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "git-submodule-import": {
+        "name": "git-submodule-import",
+        "description": "用 git submodule 方式导入外部 GitHub 仓库（书籍/资料/工具/参考代码）到工作空间，支持国内镜像通道、版本固定、元信息归档与降级预案。当用户需要导入 GitHub 仓库、书籍、开源资料作为子模块参考时使用，或需要批量/重复导入外部仓库并沉淀索引时使用。 | 导入GitHub仓库, submodule导入, 外部资料归档, 镜像clone, 仓库版本固定",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "kb-effort-churn-diagnosis": {
+        "name": "kb-effort-churn-diagnosis",
+        "description": "知识库投入统计与治理诊断方法论（用户定义分类标准 v3.0 + A/M/R/D 测量 + churn 诊断）。Use when (1) user asks about 工具建设 vs 业务投入占比/时间分配/投入结构统计, (2) user asks to 按目录分类统计知识库产出或从文件数/改动次数衡量工作, (3) user asks 治理诊断/反复修改/高频改动/质量问题的根因分析, (4) 周报/月报/专项报告中涉及投入分类、领域侧重或质量治理部分, (5) user says 分类要对/不要拟合/拆细/全程观察/发现问题的能力. Core: 分类标准须用户定义、不做二分/三分法拟合感知、churn=系统缺陷信号、报告=洞察+解法。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "marketing": {
+        "name": "marketing",
+        "description": "营销技能组。包含45+个专业营销技能，覆盖SEO、内容营销、转化率优化、广告投放、邮件营销、社交媒体等领域。基于 Corey Haines 的 marketingskills 项目，已适配本工程使用。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "server-competitor-analysis": {
+        "name": "server-competitor-analysis",
+        "description": "服务器软硬件固件三维竞品分析框架与工具。基于 knowledge/02_rd/03_management/08_competitive-analysis/ 方法论体系，提供完整的竞品信息采集、维度对比、深度解读与报告生成能力。 使用场景：(1) AI服务器/GPU服务器竞品对比 (2) 硬件/软件/固件全栈竞品分析 (3) 竞品战略意图推断与应对策略 (4) 竞品分析报告自动生成 触发词：竞品分析、竞品对比、竞争对手分析、同类产品分析、对标分析、竞争分析、competitor analysis\n",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "github-activity-report": {
+        "name": "github-activity-report",
+        "description": "每日 GitHub 开源活动日报生成器。聚合 AI/部件/项目管理/Agent/算力平台/运维/云计算/操作系统 8 领域的热点项目最新进展，覆盖最新亮点项目（star 飙升/新发布）与成熟项目关键提交（commits/releases）。Use when generating daily GitHub activity reports, tracking open-source project progress, or surveying trending repos. | github日报, 开源项目追踪, 热点仓库, 关键提交, trending, open source activity",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "evolver": {
+        "name": "evolver",
+        "description": "Agent自进化引擎。让你的AI助手越用越聪明——自动识别短板、优化策略、迭代进化。基于GEP基因组进化协议，实现协议约束下的自主进化。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-orchestrator": {
+        "name": "light-orchestrator",
+        "description": "编排器。当用户给出跨多个阶段的大任务（如\"从这个数据集做到一篇论文\"\"帮我把这个项目从调研做到投稿\"）或要求\"继续/刚断了/接手/恢复上下文\"时，规划或恢复阶段化 pipeline，按 CONVENTIONS 阶段主线逐阶段调用相应技能，并在阶段间设置强制检查点（决策点 + 确认点），维护产物台账与断点交接。小任务（改摘要、画一张图、查引用）不走 pipeline，直接路由到单技能。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "wechat-article-fetch": {
+        "name": "wechat-article-fetch",
+        "description": "微信公众号文章抓取与解析。当用户分享 mp.weixin.qq.com 链接（含 poc_token 分享链接）需要读取/归档内容时使用。内置微信反爬绕过（微信UA + chksm参数 + 剥离poc_token），一条命令输出精简摘要/全文/JSON，避免把 3MB HTML 载入上下文浪费 token。也适用于 web-archive 主流程的微信自动绕过。| 微信公众号, mp.weixin.qq.com, 微信文章, 抓取微信, 微信反爬, 环境异常, 绕过验证",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "depth-completer": {
+        "name": "depth-completer",
+        "description": "补齐内容深度的专用技能。检测产出是否停留在\"框架堆名词\"层面而非深入原理，然后基于知识库挖掘、来源优先级排序、第一性原理推导来补充深度。当文档看起来\"面面俱到但都不深\"、\"名词堆叠但无原理分析\"、\"断言多但无推导过程\"时使用。与 doc-reviewer 互补（doc-reviewer 查逻辑谬误，本技能补内容深度）。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-idea-critique": {
+        "name": "light-idea-critique",
+        "description": "以顶刊/顶会审稿人标准严格判断 idea 是否真有突破，还是常规组合、套壳、概念堆叠、缺乏理论深度或实验支撑。当用户问\"这个 idea 行不行/够不够创新/帮我挑刺\"，或 m03 产出 idea 后必须使用。先盲后明立标准、八维度加权打分、五视角对抗、反谄媚硬协议，给判决 + Revision Roadmap，引导回 m03。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "zhihu": {
+        "name": "zhihu",
+        "description": "使用知乎开放平台搜索知乎和全网内容、获取热榜、调用知乎直答，或读取当前用户自己的知乎创作、关注与收藏。用户提到知乎搜索、社区观点、真实经验、热点、热榜、知乎直答、我的知乎内容、我的关注、我的收藏、开放平台、API、MCP、Access Secret，或要求查看、安装和配置知乎 Skill 时使用。深度研究优先返回搜索原始来源；本人数据只读取完成任务所需的最小范围。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "deep-tech-writer": {
+        "name": "deep-tech-writer",
+        "description": "Create in-depth technical analysis documents following a strict quality workflow. Use when the user asks to: (1) create or expand a deep technical analysis of protocols/chips/systems, (2) write a technical report/survey/white paper on a server/AI/storage/networking topic, (3) produce a document requiring \"first principle depth\" or \"principle deep dive\" (4) 深度分析、原理深潜、技术调研、全面分析、不要流于形式、写出深度, (5) convert shallow technical content into a rigorous analysis with citations and quantified data. Do NOT use for: general web search results summarization, quick opinion or recommendations, email/chat writing, creative writing.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "markdown-format-standards": {
+        "name": "markdown-format-standards",
+        "description": "Enforce markdown formatting standards for monospace code blocks in Chinese tech docs.\nUse when: (1) creating or editing .md files with code-block diagrams, (2) fixing\nmisaligned ASCII art caused by CJK/ASCII width mismatch, (3) reviewing markdown\nfor formatting consistency, (4) running check scripts to validate file format,\n(5) generating new markdown documents that need to be rendered correctly.\nTriggers: \"markdown格式\", \"格式规范\", \"对齐\", \"format standards\", \"代码块变形\",\n\"图形错位\", \"ascii art\", \"check format\", \"格式检查\", \"文档生成规范\".",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-citation": {
+        "name": "light-citation",
+        "description": "论文引用规划、审查与多格式生成。当用户需要处理参考文献、引用、bibtex 时使用。审查引用的关联度、真实性、权威性、时效性、数量、中外占比，是否引用了经典/最新/代表性/对比工作。避免虚假引用、过度引用、无关引用、堆砌、遗漏关键文献、低质量来源、引用与正文不匹配。生成 BibTeX/EndNote/GB-T 7714/APA/IEEE 等格式并按目标 venue 调整。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "industry-insight": {
+        "name": "industry-insight",
+        "description": "行业洞察与商业机会分析技能。基于五看三定方法论，对技术领域进行深度调研、商业分析、场景发现，并生成完整的专题化报告（归档至 knowledge/07_industry-research/）。\n\nUSE WHEN:\n- 行业洞察 / 市场调研 / 商业机会分析 / 赛道评估\n- 技术原理深度解析 + 演进路径 + 应用场景发现\n- 商业化可行性评估 + 落地路径 + 监控指标设计\n- 需要「五看三定」方法论的完整行业分析\n- 需要将某个技术领域专题化沉淀到知识库\n- 需要连贯性设计（目的→指标→方案→监控全链路）\n- \"帮我分析XX行业\"、\"XX技术市场调研\"、\"XX赛道机会\"、\"行业洞察\"\n- \"五看三定分析XX\"、\"从商业角度看XX技术\"\n- \"深度分析XX技术的应用场景和商业化路径\"\n- \"专题研究XX领域\"、\"建立XX专题跟踪\"\n\nDON'T USE WHEN:\n- 简单搜索几个信息点 → 直接用 web_search\n- 快速的产品对比/购买建议 → 用 personal-shopper\n- 单一技术深度原理（不需商业分析） → 用 deep-tech-writer\n- 竞品详细对比（关键词对比） → 用 competitor-analysis\n- 文献调研（纯学术） → 用 light-literature-search\n- 文档技术撰写（不涉及行业分析） → 用 knowledge-doc-writer\n- 市场研究（纯商业，不需技术原理） → 用 mckinsey-research\n\nINPUTS: 技术/行业主题、目标客户/地理范围、已有知识基础（可选）\nTOOLS: read, write, edit, web_fetch, bash, memory_search\nOUTPUT: 专题化报告归档到 knowledge/07_industry-research/（按日期命名，含索引+日志更新）\nSUCCESS: 一份可交付的行业洞察专题报告，覆盖技术原理→演进路径→商业机会→应用场景→落地路径→监控指标全链路，并以专题化方式持续跟踪",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "method-analysis": {
+        "name": "method-analysis",
+        "description": "Analyze and solidify methodology frameworks (MECE, First Principles, Five-Look-Three-Decide, etc.). Use when: (1) user asks to create/expand methodology documents, (2) user mentions MECE/第一性原理/五看三定/鱼骨图/架构五工具, (3) user wants to solidify a framework into knowledge base, (4) user asks to validate or improve an existing methodology, (5) 方法论制定、固化、验证、优化. Do NOT use for: general technical analysis, code review, document formatting.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "spec-consistency-checker": {
+        "name": "spec-consistency-checker",
+        "description": "Spec一致性检测器。验证 spec/ 文档体系（AR→Design→Skills/Scripts）的6层层间一致性。Use when: (1) user asks to check spec consistency/一致性检测, (2) user mentions AR mapping/Design trace/Constraint source/Pipeline boundary/Cross-layer refs, (3) running periodic spec audit. Detects layer-level inconsistencies and generates reports.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "session-intent-analysis": {
+        "name": "session-intent-analysis",
+        "description": "定期分析会话日志，提取用户真实意图，识别话题边界和任务切换，生成意图分析报告。用于优化技能和脚本的需求分析。触发词：意图分析、会话分析、用户需求分析、优化用户画像、定期分析、topic analysis、intent analysis。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "open-source-skill-packer": {
+        "name": "open-source-skill-packer",
+        "description": "将GitHub开源项目封装为可复用的Skills。遵循\"需求→搜索→封装→验证→迭代\"的完整流程，让开源世界成为你的超级技能库。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "web-archive": {
+        "name": "web-archive",
+        "description": "Archive web page URLs (non-Doubao) into the knowledge base with proper markdown formatting, image-as-web-link, noise filtering, critical dialectical analysis + principles + market opportunity, index/log/roadmap updates, and link verification. Framework-based with site-specific adapters for accelerated processing. Use when: (1) user pastes a URL to archive/save/record, (2) user shares an article or web page and asks to keep it, (3) user says 归档 with a URL that is NOT a Doubao shared link. Do NOT use for Doubao (豆包) shared links — use doubao-share skill instead.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "daily-news-60s": {
+        "name": "daily-news-60s",
+        "description": "获取每天60秒读懂世界的每日新闻，包含15条精选国内外新闻和每日微语。Use when users need daily news summaries, current events, or want to stay informed about world news in Chinese.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-system-design": {
+        "name": "light-system-design",
+        "description": "后端系统设计与数据库能力。当任务涉及系统架构、数据库设计、接口设计、权限/日志/异常/性能/部署时使用。设计 ER 图、数据表结构、接口文档、用户权限、数据流转、模块划分、API 规范、数据库索引、安全策略、部署方案，尤其适合科研系统、管理系统、数据分析平台、可视化平台、竞赛作品与软著项目。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-frontend-design": {
+        "name": "light-frontend-design",
+        "description": "独特吸睛、审美好、有特色、美观全面的前端设计。当任务涉及前端界面、项目展示页、系统演示、大屏可视化、可视化平台、微信小程序 UI、移动端界面、设计系统、Tailwind v4、shadcn/ui、Next.js、React、Vite、可访问性、动效、重设计审计时使用。不只是能用，而是好看、统一、清晰、有亮点、有视觉记忆点，适合展示/答辩/演示/落地。按主题选风格：科技感、学术感、农业智慧化、数据可视化、极简、玻璃拟态、卡片式、大屏、管理系统、移动端、小程序等。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-tool-selection": {
+        "name": "light-tool-selection",
+        "description": "工具选择与多工具协同。根据任务自动判断适合用什么工具——搜索、Python、R、MATLAB、LaTeX、Word、Excel、PowerPoint、Visio、Origin、数据库、Git、前端/后端框架、绘图工具、文献管理工具等（常驻，所有任务后台生效）。不盲目用工具，而是按实际任务选最高效、最稳定、最专业的实现方式。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "baidu-scholar-search": {
+        "name": "baidu-scholar-search",
+        "description": "Baidu Academic Search Tool enables the retrieval of both Chinese and English literature, covering various types of literature such as academic journals, conference papers, and dissertations.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "qiaomu-markdown-proxy": {
+        "name": "qiaomu-markdown-proxy",
+        "description": "Read, fetch, extract, parse, or convert a URL or link into clean Markdown. Use FIRST whenever a user asks to read source content from a webpage, especially WeChat/微信公众号 mp.weixin.qq.com, Feishu/Lark docs, X/Twitter, PDFs, arXiv papers, or a URL that will feed a later summary, rewrite, article, podcast, or analysis. For WeChat and Feishu, prefer this specialist extractor over generic web open or generic content parsers. Exclude YouTube, pure web search, already-pasted text, and local non-PDF files.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "official-writing": {
+        "name": "official-writing",
+        "description": "党政机关公文写作技能 - 提供国家标准格式规范、各类公文模板、写作技巧",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-research-ethics": {
+        "name": "light-research-ethics",
+        "description": "科研伦理、学术规范与风险审查。在所有科研任务中默认检查学术不端、数据造假、图片重复使用、引用不规范、隐私泄露、版权、结论夸大、过度包装、论文代写、专利权属、软著材料不真实等风险（常驻，所有任务后台生效）。对论文、项目、软著、专利与比赛材料做合规审查，确保内容真实、规范、可解释、可追溯。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-orchestrator": {
+        "name": "pipeline-orchestrator",
+        "description": "AI生产流水线全流程编排器。按pipeline-orchestrator配置串联6个阶段Skill（input-qa→multi-path→convergence→verification-loop→constraint-enforcer→expert-gate），维护全局任务状态、阶段间断点续传、异常处理与失败分析。Use when: (1) 需要运⾏完整的AI高质量产出流水线，(2) 跨多个阶段的大任务需要系统编排，(3) 要求'全流程'/'流水线'/'pipeline'，(4) 需要断点续传或状态追踪的复杂任务，(5) 启动完整pipeline：从输入校验到专家终审的端到端执行。不用于：单阶段任务（路由到单个阶段Skill）、简单问答。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "profile-optimizer": {
+        "name": "profile-optimizer",
+        "description": "Optimize and maintain the four workspace identity files (AGENT.md, USER.md, MEMORY.md, RULE.md). Use when the user asks to: (1) optimize/restructure/slim down the workspace profile files, (2) extract user identity/patterns from conversation logs into profile files, (3) audit and fix content that's in the wrong file, (4) consolidate scattered user information into proper locations, (5) 优化身份/记忆/规则/用户文件, 重构配置文件. Do NOT use for: writing knowledge base documents, daily memory entries.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-constraint-enforcer": {
+        "name": "pipeline-constraint-enforcer",
+        "description": "约束体系引擎——AI生产流水线阶段5 of 6。三层约束模型强制执行：安全红线（不可触碰）、质量标线（必须遵守）、工程约束（最佳实践）。自动检测约束失效模式（中间文件污染/依赖膨胀/复用不足/术语不一致等）。解析.agignore、审计依赖、校验格式。Use when: (1) 需要对输出做约束合规检查，(2) 要求'约束检查'/'安全红线'/'依赖审计'，(3) 检查是否遵守.agignore规则，(4) 检测复用不足或重复造轮子，(5) 项目需风格一致性校验，(6) part of pipeline-orchestrator pipeline execution。不用于：内容质量判断、创新性评估。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "markdown-converter": {
+        "name": "markdown-converter",
+        "description": "Convert documents and files to Markdown using markitdown. Use when converting PDF, Word (.docx), PowerPoint (.pptx), Excel (.xlsx, .xls), HTML, CSV, JSON, XML, images (with EXIF/OCR), audio (with transcription), ZIP archives, YouTube URLs, or EPubs to Markdown format for LLM processing or text analysis.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "skill-evolver": {
+        "name": "skill-evolver",
+        "description": "Skill自进化引擎。让AI助手越用越聪明——自动识别短板、优化策略、迭代进化。基于GEP基因组进化协议，实现协议约束下的自主进化。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-figure-drawing": {
+        "name": "light-figure-drawing",
+        "description": "从顶会大牛角度进行专业绘图与组图。当用户需要把规划好的图实际画出来时使用。按情况用 Python(matplotlib/seaborn/plotly/altair)、R(ggplot2)、MATLAB、Visio、Origin、LaTeX/TikZ、Illustrator、PowerPoint 等。审美统一、专业清晰、配色合理、字体规范、线条清楚、高分辨率，适合直接投稿。不仅画图，还从论文表达角度判断怎么排、怎么组、怎么标注、怎么突出重点。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pdf": {
+        "name": "pdf",
+        "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "thesis-helper": {
+        "name": "thesis-helper",
+        "description": "论文写作助手。论文大纲生成、文献综述框架、摘要生成、引用格式转换、格式规范检查、答辩准备。Thesis helper with outline generation, literature review, abstract writing, citation formatting, style guide.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-verification-loop": {
+        "name": "pipeline-verification-loop",
+        "description": "Ralph循环验证引擎——AI生产流水线的心脏，阶段4 of 6。通过Plan→Do→Check→Act四步循环，让AI自主迭代直到满足客观验证标准。核心组件：明确的完成条件（check gate列表）、Stop Hook拦截（AI尝试退出时自动触发验证）、最大迭代次数（防止无限循环）。Use when: (1) 需要自动迭代验证产出质量，(2) 要求'循环验证'/'Ralph循环'/'loop until达标'，(3) 需要验证：事实准确性/逻辑一致性/结构完整性/格式规范性/来源可追溯/数据可验证，(4) part of pipeline-orchestrator pipeline execution。不用于：单次review、主观质量判断。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "open-code-review-delegate": {
+        "name": "open-code-review-delegate",
+        "description": "Delegation mode for open-code-review (OCR). Instead of OCR calling an LLM endpoint, this skill instructs the host agent to perform the code review itself, using OCR only for deterministic engineering: file selection and rule resolution. Use when the host agent should drive the review with its own LLM capabilities.\n",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "knowledge-doc-writer": {
+        "name": "knowledge-doc-writer",
+        "description": "Create deep technical reports/documents for the knowledge base, focused on server hardware and AI infrastructure topics. Use when the user asks to: (1) create or expand a deep technical knowledge document covering server/AI topics (BMC/hardware/interconnect/storage/compute/cluster/RAS/thermal/power/memory/storage), (2) write a knowledge base report that requires extracting information from existing KB entries, import/ directories, and online sources, (3) produce a structured technical document with proper index/log updates, (4) 服务器专题调研/AI专题调研/技术报告/知识库文档撰写, (5) convert scattered notes and imported materials into a consolidated, well-structured knowledge base document. Do NOT use for: quick opinion or recommendations, email/chat writing, creative writing, general web search summarization without deep analysis, simple daily notes or scratchpad content. When user asks to \"归档\" a URL or share link → use web-archive or doubao-share skills instead.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "open-code-review": {
+        "name": "open-code-review",
+        "description": "Performs AI-powered code review on Git changes using the `ocr` CLI from alibaba/open-code-review. Use when the user asks to review code, review a pull request, review staged/unstaged changes, review a commit, or compare branches for code quality issues. Produces line-level review comments and can automatically apply fixes when requested. With appropriate review rules, can detect various types of issues including bugs, security vulnerabilities, performance problems, and code quality concerns.\n",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "idea-vault": {
+        "name": "idea-vault",
+        "description": "Idea 暂存与管理（先暂存、后提取）。当用户提出想法/点子/灵感（尤其是知识库建设、系统改进、研究方向、待验证判断），或说'先记录下来''这个事值得研究''形成专题''先缓一缓'时使用。核心原则：idea 不直接写成正式知识库文档，先记入 knowledge/06_others/ideas/ 暂存区（与 sources 平级），保留内容记录+挖掘线索+待办+资源关系，格式从简；待挖掘成熟后再提取为正式文档。Use when: (1) 用户说'有个想法/idea/点子' (2) 用户要求'先记录下来再说' (3) 讨论产生新方向但尚未成体系 (4) 需要盘点/回顾已记录的 ideas (5) 需要把 idea 提取为正式知识库文档。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-slides": {
+        "name": "light-slides",
+        "description": "制作精美 PPT。当用户需要为论文、项目、竞赛、答辩、汇报、路演做幻灯片时使用。设计封面/目录/过渡/内容/图表/流程/时间线/对比/团队/结论/致谢等页。逻辑清晰、排版高级、审美统一、重点突出，按主题选风格（学术/科技/农业/医学/商务/极简/浅色/深色/数据可视化/竞赛路演）。不仅生成内容，还规划整套叙事逻辑、视觉风格、页面层次与演讲节奏。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-convergence": {
+        "name": "pipeline-convergence",
+        "description": "Convergence and collation engine for the AI production pipeline. Stage 3 of 6. Merges results from multiple parallel processing paths into a coherent output — resolves conflicts via weighted source credibility, selects best versions per section, and cross-validates across paths. Use when: (1) needing to merge/consolidate multiple parallel analysis results, (2) asked to '汇聚' or '冲突消解', (3) multiple outputs need systematic merging (not simple concatenation), (4) resolving contradictions between different sources/viewpoints, (5) part of pipeline-orchestrator pipeline execution. Does NOT run parallel processing nor verification — only merge.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "codereview-mantis-security": {
+        "name": "codereview-mantis-security",
+        "description": "代码走读安全专项审查。基于 Google mantis（import/mantis/）17 阶段安全审查 流水线，对走读目标执行威胁建模→漏洞挖掘→误报过滤→复现验证的深度安全审查。 Use when: (1) 代码走读中用户要求\"安全审查/漏洞挖掘/威胁建模/安全检查\"， (2) 走读目标是安全敏感代码（BMC 固件/网络栈/认证授权/加密/解析器/权限边界）， (3) 发布前专项安全审查（三阶段走读体系阶段三）， (4) 与 open-code-review 协同：OCR 做通用质量审查，本 skill 做安全专项纵深。 提供 Lite（静态分析，默认）与 Full（含沙箱复现/补丁，需 Docker）两种模式。\n",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "skill-security-vetter": {
+        "name": "skill-security-vetter",
+        "description": "Skill安全审查工具。在安装或使用任何Skill前进行安全扫描，检测恶意代码、API密钥泄露、文件访问越权、shell命令执行等安全风险。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "wechat-article-search": {
+        "name": "wechat-article-search",
+        "description": "搜索微信公众号文章技能。通过微信搜索获取文章列表，覆盖科技/AI、社会热点、财经、教育、职场等各类中文资讯；可按关键词检索并返回标题、概要、发布时间、来源公众号与链接。当用户需要查找微信公众号文章、整理参考资料或快速获取文章信息时使用此技能。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "discover": {
+        "name": "discover",
+        "description": "AI批量化知识加工与内容提升。Use when: (1) processing import/素材 to extract questions, classify, and extract keywords; (2) batch-enhancing discover/ content quality; (3) generating knowledge documents from extracted questions/insights; (4) importing processed content from discover/ to knowledge/; (5) user mentions '提拉内容'/'加工素材'/'批量处理'/'内容提升'/'知识发现'/'discover' in context of content processing. Do NOT use for: single-article deep research (→ deep-tech-writer), knowledge base writing (→ knowledge-doc-writer), web archiving (→ web-archive).",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "weekly-report-generator": {
+        "name": "weekly-report-generator",
+        "description": "Generate knowledge base daily reports (v4.2 增强版) and weekly reports summarizing activities, extracting insights, and identifying action items for server R&D. Use when: (1) user asks to generate 知识库每日调研日报 / 生成日报 / 日报, (2) user asks to generate/create/make a weekly report or says \"生成周报\", (3) it's time for the daily 08:10 report or the weekly Sunday report. Daily v4.2 workflow consumes 6 scripts (kb-daily-data-gather.sh, kb-daily-git-analysis.py, kb-daily-memory-analysis.py, kb-daily-survey-coverage.py, kb-daily-effort-analysis.py, kb-token-context-stats.py) and writes 00_daily/{日期}.md with Top5 + coverage matrix + Git/memory analysis + 产出四分类(调研输出/系统监控/深度专题/数据源处理) + AI 健康度(目标≥90%) + 用户干预评价 + 内容质量三维评价 + 上下文 Token 监控(system/skills/file 三类 + 30K/80K 告警) modules.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "session-keeper": {
+        "name": "session-keeper",
+        "description": "Universal session persistence skill for managing multi-session work progress. Use when: (1) user wants to save task progress for later continuation, (2) user wants to resume a previous task, (3) task spans multiple sessions, (4) user wants to track task status across sessions, (5) 会话持久化、任务保存、进度恢复、跨会话跟踪. Do NOT use for: single-session tasks, trivial changes.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-multi-path": {
+        "name": "pipeline-multi-path",
+        "description": "Multi-path parallel processing engine for the AI production pipeline. Stage 2 of 6. Splits a single task into multiple independent processing paths running in parallel — each with isolated context, separate token budgets, and independent failure domains. Use when: (1) running a task that benefits from multiple perspectives/viewpoints, (2) asked to '多路并行' or '多视角处理', (3) processing high-value tasks that need cross-validation, (4) decomposing large complex tasks into parallel sub-tasks, (5) part of pipeline-orchestrator pipeline execution. Does NOT merge results — output to convergence stage.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-input-qa": {
+        "name": "pipeline-input-qa",
+        "description": "Input quality gate for the AI production pipeline. Stage 1 of 6. Validates task inputs for completeness, source credibility, consistency, and feasibility before entering the pipeline. Use when: (1) starting a new AI-assisted task that needs quality-gated input, (2) checking input materials for completeness and source credibility, (3) asked to '质量把关' or '输入校验', (4) enhancing/patching incomplete input before processing, (5) part of pipeline-orchestrator pipeline execution. Does NOT process or generate output content — only validates/enhances input.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-file-reading": {
+        "name": "light-file-reading",
+        "description": "强大地读文件并学习——Word、PDF、PPTX、Excel、CSV、图片、视频、代码、压缩包等。当用户提供任何文件、问\"这个文件讲了什么\"、或任务需要理解已有材料时使用（常驻，自动触发）。不只提取文字，而是理解结构、逻辑、图表、数据、实验结果、格式要求、章节关系、视觉风格、隐含要求与可复用内容，并转化为可执行任务。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-consistency": {
+        "name": "light-consistency",
+        "description": "统一风格与一致性维护。在论文、PPT、图表、代码、项目文档之间保持术语一致、视觉风格一致、逻辑线索一致、创新点表述一致（常驻，所有任务后台生效）。避免同一项目在不同材料中出现说法不一致、指标名称不统一、图表风格混乱、创新点前后矛盾、方法名称变化、数据集名称不统一、论文与 PPT 逻辑不一致、软著与系统功能不一致。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-typesetting": {
+        "name": "light-typesetting",
+        "description": "根据目标期刊/会议/学校/比赛要求做 LaTeX 或 Word 排版并编译导出最终 PDF/Word。当用户需要套模板、排版、解决编译错误、导出论文时使用。处理标题层级、页边距、目录、摘要、关键词、公式、图表、算法伪代码、参考文献、附录、页眉页脚、页码、单/双栏、编号、交叉引用，并检查 LaTeX 编译错误、Word 格式问题、引用错误、图片位置、字体一致性、编号混乱。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-research-plan": {
+        "name": "light-research-plan",
+        "description": "对已确认可行的 idea 制定极其详细的研究方案、实验设计与执行规划。当用户的 idea 已通过 m04 审查、需要把 idea 拆成可执行可复现的完整科研流程时使用。覆盖研究目标、技术路线、数据流程、实验/消融/敏感性/鲁棒性/显著性检验、时间安排、风险与备选，并保证全程可复现。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "doc-reviewer": {
+        "name": "doc-reviewer",
+        "description": "Review technical documents for logic fallacies, structure compliance, citation quality, and format standards. Use when the user asks to: (1) review/audit/check a document for quality or completeness, (2) identify logical flaws or structural issues in a technical report, (3) 审查、评审、确认合理性、检查格式、修正、review, (4) run quality assurance on a markdown document before final delivery, (5) check for common writing pitfalls like 结论前置、二元对立、假精确、术语漂移. Do NOT use for: spell-check or grammar-check only (use standard tools), creative writing review, code review.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "tech-learn": {
+        "name": "tech-learn",
+        "description": "Extract reusable patterns from sessions and save them as candidate skills or guidance. Use when: (1) user asks to save knowledge from a session, (2) user wants to document a workaround/solution, (3) user wants to create a reference for future use, (4) 知识提取、模式保存、经验总结、最佳实践. Do NOT use for: trivial fixes, one-time issues, simple syntax errors.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-review-rebuttal": {
+        "name": "light-review-rebuttal",
+        "description": "审稿意见模拟与返修回复。当用户需要在投稿前预审论文、或收到真实审稿意见后做返修时使用。模拟顶刊/顶会审稿人严格审稿，给出贡献评价、优点、缺点、必改问题、建议补充实验、拒稿风险、可能追问。收到真实意见后分析审稿人关注点、制定返修策略、逐条撰写 response letter、修改论文对应部分。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "patent-disclosure-writer": {
+        "name": "patent-disclosure-writer",
+        "description": "专利交底书（技术交底书）专业撰写技能。严格按照五段式格式（发明名称→技术领域→现有技术→发明内容→保护关键点）生成符合专利审查要求的交底书。Use when user asks to: (1) 写/生成专利交底书/技术交底书, (2) 为某个技术点写专利, (3) 把专利点子写成完整交底书, (4) 专利申报材料准备, (5) 专利idea转化为正式交底文档. 自动包含: 创新性分析、查新检索、逻辑审查、数据正确性校验.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "monthly-report-generator": {
+        "name": "monthly-report-generator",
+        "description": "Generate structured monthly knowledge base reports covering 5 dimensions (KB changes with commit/size/charts, domain focus, quality analysis, key industry insights, todo list). Use when: (1) user asks to generate/create/make a monthly report, (2) user says \"生成月报\"/\"月度报告\", (3) it's the last day of the month scheduled at 23:20. Depends on scripts/monthly-report-data-gather.sh for data collection.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "tech-evolve": {
+        "name": "tech-evolve",
+        "description": "Analyze instincts and suggest or generate evolved structures (commands, skills, agents). Use when: (1) user wants to extract patterns from conversations, (2) user wants to create new skills/commands/agents from repeated patterns, (3) user wants to evolve existing workflows, (4) 模式提取、技能进化、命令生成、工作流优化. Do NOT use for: one-time tasks, trivial fixes.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "arch-presentation-builder": {
+        "name": "arch-presentation-builder",
+        "description": "Generate PPT-style architecture review presentation materials from technical analysis data. Use when: (1) user asks to generate/create/revise a汇报材料/汇报/报告 from an architecture review document, (2) user has a .html or .md analysis document and wants PPT-style presentation output, (3) user needs MECE-structured competitive analysis that decomposes from market to R&D metrics, (4) user wants indicators broken down from user-facing to technical R&D level with same-dimension comparisons, (5) user mentions 汇报/汇报材料/汇报PPT/指标体系/竞争力拆解. Do NOT use for: general document writing, simple data summarization, creative writing, or slides that are not architecture-review oriented.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "hot-topics": {
+        "name": "hot-topics",
+        "description": "获取微博、知乎、百度、抖音、今日头条、B站等主流中文平台的实时热搜榜单和热门话题。Use when users want to know trending topics, hot searches, or popular content on Chinese social media platforms.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "API (Stripe, OpenAI, Notion & 100+ more)": {
+        "name": "API (Stripe, OpenAI, Notion & 100+ more)",
+        "description": "REST API reference for 147 services. Authentication patterns, endpoints, rate limits, and common gotchas.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pipeline-expert-gate": {
+        "name": "pipeline-expert-gate",
+        "description": "专家把关——AI生产流水线阶段6 of 6（终审）。自动化流程可跑99%工序，但最终责任归属和判断力在人。生成结构化专家审查清单、标注AI生成内容边界、差异化标注需要人类判断的维度、提供退回路由（退回哪个阶段+原因）。Use when: (1) 需要做最终质量把关/终审，(2) 要求'专家把关'/'专家审查'/'终审'，(3) 需要判断自动化无法验证的定性维度，(4) 检查AI产出是否可归责、边界条件是否清晰，(5) part of pipeline-orchestrator pipeline execution。不用于：自动化验证（已在Stage 4完成）、内容生成。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-backend-coding": {
+        "name": "light-backend-coding",
+        "description": "后端代码编写、逻辑强、安全性高、可读性好、版本控制、代码审查。当任务需要写实验代码、模型代码、数据处理代码、可视化代码、后端接口或系统逻辑时使用。要求逻辑清晰、安全、可读、可维护、便于复现/扩展/部署。支持 Git 版本管理、代码审查、注释规范、README、依赖管理、环境配置、运行说明与项目结构整理。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "xlsx": {
+        "name": "xlsx",
+        "description": "Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \"the xlsx in my downloads\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-venue-matching": {
+        "name": "light-venue-matching",
+        "description": "投稿定位与期刊/会议匹配。当用户问投哪个期刊/会议、要评估录用可能性/录用概率、做投稿规划时使用。根据论文质量、方向、创新程度、实验完整性、语言水平、作者背景和预算，推荐中文/英文期刊、SCI/SSCI/EI/CCF/核心、国际/国内会议。分析投稿难度、方向匹配度、审稿周期、版面费、以可核查信号做录用可能性定性分级(高/中/低,不编百分比)、是否适合本科生/弱导师资源、预警风险，给出冲刺/稳妥/保底分层选择。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "tech-planner": {
+        "name": "tech-planner",
+        "description": "Create comprehensive implementation plans for technical features and refactoring. Use when: (1) user asks to plan a new feature, (2) user wants to refactor code, (3) user needs architectural changes, (4) requirements are complex or ambiguous, (5) 技术规划、实现计划、架构设计、功能开发. Do NOT use for: trivial changes, bug fixes without design implications.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "utility-tools": {
+        "name": "utility-tools",
+        "description": "提供实用工具功能，包括IP地址查询、文本翻译、二维码生成、哈希计算、网页元数据提取、域名WHOIS查询和密码生成。Use when users need translation, IP lookup, QR codes, hashing, domain info, or password generation.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-ip-application": {
+        "name": "light-ip-application",
+        "description": "辅助软件著作权与专利申请。当用户需要做软著或专利材料时使用。软著：软件名称、功能说明、操作说明书、源代码整理、文档撰写、材料清单、流程、界面截图、功能模块说明、版本与完成日期。专利：判断是否可申发明/实用新型/外观，梳理技术问题、技术方案、有益效果、创新点、实施例、权利要求书与说明书草案、附图说明。最终文本须由专业代理人审核。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-result-analysis": {
+        "name": "light-result-analysis",
+        "description": "对执行出来的结果、实验数据、模型输出、图表结果进行详细专业深入的分析。当用户实验跑完、需要解读数据、问\"这些结果说明什么\"时使用。不只描述好坏，而是解释为什么、哪些结果证明方法有效、哪些暴露问题、哪些异常需排查、哪些规律可成为论文亮点、哪些需补充实验。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "log-reformatter": {
+        "name": "log-reformatter",
+        "description": "Reformat knowledge base log.md files into a consistent changelog format. Use when log.md files have mixed formats (blockquotes, tables, plain bullets, duplicate date headers, out-of-order entries), need standardization, or when verifying format compliance. Triggers: 格式化log、log排序、log重整、changelog格式、log.md修复、reformat log、log格式校验.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "karpathy-guidelines": {
+        "name": "karpathy-guidelines",
+        "description": "Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "pptx": {
+        "name": "pptx",
+        "description": "Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "constraint-verifier": {
+        "name": "constraint-verifier",
+        "description": "主动检测 AI 行为是否偏离 AGENT.md/RULE.md/USER.md/MEMORY.md 等约束文件的设定，以及 A-J 十类约束失效模式的检测。当用户怀疑\"AI没有遵守约束\"或需要做合规审计时使用。与 light-self-review 互补（后者是通用自检，本技能聚焦约束文件遵守度和失效模式分类检测）。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-figure-planning": {
+        "name": "light-figure-planning",
+        "description": "根据论文内容规划应该做哪些图、哪些表、插在哪里、各起什么作用。当用户需要论文图表规划时使用。图表不限于统计图，也包括数据集真实效果图、模型输出示例、案例展示、可解释性可视化等。规划框架图、技术路线图、数据集示意图、模型结构图、算法流程图、结果对比/消融/敏感性图、真实效果图、统计表/对比表等，以审稿人标准判断哪些必做、哪些冗余。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-self-review": {
+        "name": "light-self-review",
+        "description": "自动反思与自我审查。每次完成任务后自动检查是否存在逻辑漏洞、事实错误、格式问题、表达不清、创新不足、引用不准、结果夸大、审美不统一、重复内容、结构混乱、不可执行等问题（常驻，所有任务收尾时生效）。基于AI使用哲学的五层管道框架（信源层→注意层→知识层→推理层→输出层+元层），逐层覆盖A-J十类失效模式。不一次性给出粗糙结果，而是先自我审查与迭代后再输出。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "system-guardian": {
+        "name": "system-guardian",
+        "description": "系统守护 — 统一入口，对工程基础设施执行三重守护检查。task integrity(进程隔离/定时任务一致性) + skill registration(注册完整性/游离检测) + config consistency(config vs 实际目录一致性)。Use when: (1) 用户要求检查任务/定时任务状态 (2) 用户询问Skills注册是否完整 (3) 怀疑有游离Skill (4) 需要做系统审计/健康度检查 (5) 用户说\"检查一下系统状态\"/\"系统守护\"/\"守护检查\"/\"健康检查\"。Do NOT use: 单次创建Skill(用skill-creator) 单次排查具体Bug(用fault-diagnosis) 知识库健康检查(用knowledge-health-check)。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "frontend-design": {
+        "name": "frontend-design",
+        "description": "Expert frontend design guidelines for creating beautiful, modern UIs. Use when building landing pages, dashboards, or any user interface.",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "light-paper-polishing": {
+        "name": "light-paper-polishing",
+        "description": "对论文分模块润色——语言润色、逻辑重构、结构优化、创新点强化、论证补强、摘要精炼、引言增强、实验分析深化、结论提升。当用户需要改论文、觉得某段不通顺/逻辑弱/创新点不突出时使用。从审稿人角度找逻辑薄弱、论证不足、表达不专业、易被质疑、缺引用、需重组之处，给出具体修改方案与修改后文本。",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    }
+}

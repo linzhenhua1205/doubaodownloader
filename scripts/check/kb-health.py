@@ -1,0 +1,1 @@
+../../skills/knowledge-health-check/scripts/knowledge_health_check.py

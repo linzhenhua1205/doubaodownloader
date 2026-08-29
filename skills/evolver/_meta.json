@@ -1,0 +1,41 @@
+{
+  "name": "evolver",
+  "description": "Agent自进化引擎。让你的AI助手越用越聪明——自动识别短板、优化策略、迭代进化。基于GEP基因组进化协议，实现协议约束下的自主进化。",
+  "category": "AI & LLMs",
+  "user_invocable": true,
+  "version": "1.0",
+  "author": "EvoMap",
+  "homepage": "https://github.com/EvoMap/evolver",
+  "clawhub": {
+    "downloads": "36000+",
+    "security_scan": "passed",
+    "security_providers": ["VirusTotal", "OpenClaw"]
+  },
+  "requires": [],
+  "provides": [
+    "Auto-Log Analysis",
+    "Self-Repair",
+    "GEP Protocol Support",
+    "One-Command Evolution"
+  ],
+  "environment": {
+    "GEP_ASSETS_DIR": "skills/evolver/assets/gep",
+    "EVOLVE_STRATEGY": "balanced",
+    "EVOLVER_ROLLBACK_MODE": "stash"
+  },
+  "scripts": [
+    "scripts/scan_logs.py",
+    "scripts/match_genes.py",
+    "scripts/apply_changes.py",
+    "scripts/validate.py",
+    "scripts/evolve.py"
+  ],
+  "data": [
+    "assets/gep/genes.json",
+    "assets/gep/capsules.json",
+    "assets/gep/events.jsonl",
+    "assets/gep/node_id",
+    "memory/narrative.log",
+    "memory/reflection.log"
+  ]
+}

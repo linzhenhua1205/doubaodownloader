@@ -1,0 +1,39 @@
+{
+  "name": "interconnect-analyzer",
+  "description": "互连分析技能，用于服务器硬件系统的PCIe、CXL、UPI等互连技术评估",
+  "version": "1.0.0",
+  "created_at": "2026-06-27",
+  "category": "硬件分析",
+  "keywords": [
+    "互连分析",
+    "PCIe",
+    "CXL",
+    "UPI",
+    "QPI",
+    "HyperTransport",
+    "系统拓扑",
+    "带宽",
+    "延迟",
+    "CPU-GPU互连"
+  ],
+  "dependencies": {
+    "scripts": [
+      "interconnect_analysis.py",
+      "pcie_analyzer.py",
+      "interconnect_topology.py"
+    ]
+  },
+  "related_skills": [
+    "si-analyzer",
+    "rdma-analyzer",
+    "cache-coherence-analyzer",
+    "deep-tech-writer",
+    "doc-reviewer",
+    "knowledge-wiki"
+  ],
+  "trigger_conditions": [
+    "用户提及PCIe、CXL、UPI、QPI、HyperTransport",
+    "用户提及系统拓扑、CPU-GPU互连、带宽、延迟",
+    "关键词：互连分析、扩展槽、Root Port、Switch"
+  ]
+}
